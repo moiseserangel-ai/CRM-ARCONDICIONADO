@@ -48,7 +48,7 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
         } else if (payload.eventType === 'UPDATE') {
           setInvoices(prev => prev.map(inv => inv.id === payload.new.id ? payload.new as Invoice : inv));
         } else if (payload.eventType === 'DELETE') {
-          setInvoices(prev => prev.filter(inv => inv.id === payload.old.id));
+          setInvoices(prev => prev.filter(inv => inv.id !== payload.old.id));
         }
       })
       .subscribe();

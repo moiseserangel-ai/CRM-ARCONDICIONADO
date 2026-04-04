@@ -65,7 +65,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
               prev.map((p) => (p.id === payload.new.id ? (payload.new as Product) : p))
             );
           } else if (payload.eventType === 'DELETE') {
-            setProducts((prev) => prev.filter((p) => p.id === payload.old.id));
+            setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
           }
         }
       )
@@ -94,7 +94,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
     (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   const getProductStock = (p: Product) => {
-    if (p.stock !== undefined) return p.stock;
+    if (p.stock_quantity !== undefined) return p.stock_quantity;
     if (p.sku) {
       try {
         const skuData = JSON.parse(p.sku);

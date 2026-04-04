@@ -73,7 +73,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
           } else if (payload.eventType === 'UPDATE') {
             setSystemUsers(prev => prev.map(u => u.id === payload.new.id ? payload.new as SystemUser : u));
           } else if (payload.eventType === 'DELETE') {
-            setSystemUsers(prev => prev.filter(u => u.id === payload.old.id));
+            setSystemUsers(prev => prev.filter(u => u.id !== payload.old.id));
           }
         })
         .subscribe();

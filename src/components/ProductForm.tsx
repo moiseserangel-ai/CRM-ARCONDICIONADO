@@ -18,7 +18,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
     description: '',
     price: '',
     category: '',
-    stock: 0,
+    stock_quantity: 0,
     unit: 'un'
   });
 
@@ -29,13 +29,14 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
         currency: 'BRL'
       }).format(typeof product.price === 'number' ? product.price : parseFloat(String(product.price)) || 0);
 
-      let parsedStock = product.stock || 0;
+      let parsedStock = product.stock_quantity || 0;
       let parsedUnit = product.unit || 'un';
       
       if (product.sku) {
         try {
           const skuData = JSON.parse(product.sku);
           if (skuData.stock !== undefined) parsedStock = skuData.stock;
+          if (skuData.stock_quantity !== undefined) parsedStock = skuData.stock_quantity;
           if (skuData.unit !== undefined) parsedUnit = skuData.unit;
         } catch (e) {
           // Ignore if sku is not JSON
@@ -47,7 +48,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
         description: product.description,
         price: formattedPrice,
         category: product.category,
-        stock: parsedStock,
+        stock_quantity: parsedStock,
         unit: parsedUnit
       });
     }
@@ -77,7 +78,8 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
         price: priceValue,
         category: formData.category,
         userId: user.id,
-        sku: JSON.stringify({ stock: formData.stock, unit: formData.unit })
+        stock_quantity: formData.stock_quantity,
+        sku: JSON.stringify({ stock_quantity: formData.stock_quantity, unit: formData.unit })
       };
       
       delete (payload as any).id;
@@ -212,8 +214,8 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
                 type="number" 
                 required
                 min="0"
-                value={formData.stock || ''}
-                onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) || 0 })}
+                value={formData.stock_quantity || ''}
+                onChange={(e) => setFormData({ ...formData, stock_quantity: parseInt(e.target.value) || 0 })}
                 className="w-full bg-surface-container-low border border-outline-variant/20 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
               />
             </div>

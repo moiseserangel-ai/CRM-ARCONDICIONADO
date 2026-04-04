@@ -74,7 +74,7 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess }: Fi
         } else if (payload.eventType === 'UPDATE') {
           setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
         } else if (payload.eventType === 'DELETE') {
-          setContacts(prev => prev.filter(c => c.id === payload.old.id));
+          setContacts(prev => prev.filter(c => c.id !== payload.old.id));
         }
       })
       .subscribe();

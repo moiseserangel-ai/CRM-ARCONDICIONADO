@@ -88,7 +88,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
               prev.map((c) => (c.id === payload.new.id ? (payload.new as Contact) : c))
             );
           } else if (payload.eventType === 'DELETE') {
-            setContacts((prev) => prev.filter((c) => c.id === payload.old.id));
+            setContacts((prev) => prev.filter((c) => c.id !== payload.old.id));
           }
         }
       )
@@ -111,7 +111,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
               prev.map((so) => (so.id === payload.new.id ? (payload.new as ServiceOrder) : so))
             );
           } else if (payload.eventType === 'DELETE') {
-            setServiceOrders((prev) => prev.filter((so) => so.id === payload.old.id));
+            setServiceOrders((prev) => prev.filter((so) => so.id !== payload.old.id));
           }
         }
       )

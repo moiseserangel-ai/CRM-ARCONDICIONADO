@@ -99,6 +99,33 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
     usedProducts: []
   });
 
+  const getProductStock = (p: Product) => {
+    if (p.stock_quantity !== undefined && p.stock_quantity !== null) return p.stock_quantity;
+    if (p.sku) {
+      try {
+        const skuData = JSON.parse(p.sku);
+        if (skuData.stock !== undefined) return skuData.stock;
+        if (skuData.stock_quantity !== undefined) return skuData.stock_quantity;
+      } catch (e) {
+        // Ignore
+      }
+    }
+    return 0;
+  };
+
+  const getProductUnit = (p: Product) => {
+    if (p.unit !== undefined && p.unit !== null) return p.unit;
+    if (p.sku) {
+      try {
+        const skuData = JSON.parse(p.sku);
+        if (skuData.unit !== undefined) return skuData.unit;
+      } catch (e) {
+        // Ignore
+      }
+    }
+    return 'un';
+  };
+
   const handleDownloadPDFFromForm = async () => {
     if (!osData.subject || !osData.description) {
       alert('Preencha o assunto e a descrição para gerar o PDF.');
@@ -243,10 +270,25 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         for (const usedProd of finalizeData.usedProducts) {
           const currentProduct = products.find(p => p.id === usedProd.productId);
           if (currentProduct) {
+            const currentStock = getProductStock(currentProduct);
+            const newStock = Math.max(0, currentStock - usedProd.quantity);
+            
+            // Update both stock_quantity and sku to ensure backward compatibility
+            let newSku = currentProduct.sku;
+            try {
+              const skuData = currentProduct.sku ? JSON.parse(currentProduct.sku) : {};
+              skuData.stock = newStock;
+              skuData.stock_quantity = newStock;
+              newSku = JSON.stringify(skuData);
+            } catch (e) {
+              newSku = JSON.stringify({ stock: newStock, stock_quantity: newStock, unit: getProductUnit(currentProduct) });
+            }
+
             const { error: prodError } = await supabase
               .from('products')
               .update({
-                stock: Math.max(0, currentProduct.stock - usedProd.quantity)
+                stock_quantity: newStock,
+                sku: newSku
               })
               .eq('id', usedProd.productId);
             
@@ -1333,10 +1375,9 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                     >
                       <option value="">+ Adicionar produto do estoque...</option>
                       {products
-                        .filter(p => p.stock > 0)
                         .map(p => (
                           <option key={p.id} value={p.id}>
-                            {p.name} (Estoque: {p.stock} {p.unit})
+                            {p.name} (Estoque: {getProductStock(p)} {getProductUnit(p)})
                           </option>
                         ))}
                     </select>

@@ -58,7 +58,7 @@ export default function Reports({ user }: { user: User }) {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts', filter: `userId=eq.${user.id}` }, (payload) => {
         if (payload.eventType === 'INSERT') setContacts(prev => [payload.new as Contact, ...prev]);
         else if (payload.eventType === 'UPDATE') setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
-        else if (payload.eventType === 'DELETE') setContacts(prev => prev.filter(c => c.id === payload.old.id));
+        else if (payload.eventType === 'DELETE') setContacts(prev => prev.filter(c => c.id !== payload.old.id));
       })
       .subscribe();
 
@@ -67,7 +67,7 @@ export default function Reports({ user }: { user: User }) {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'serviceOrders' }, (payload) => {
         if (payload.eventType === 'INSERT') setServiceOrders(prev => [payload.new as ServiceOrder, ...prev]);
         else if (payload.eventType === 'UPDATE') setServiceOrders(prev => prev.map(so => so.id === payload.new.id ? payload.new as ServiceOrder : so));
-        else if (payload.eventType === 'DELETE') setServiceOrders(prev => prev.filter(so => so.id === payload.old.id));
+        else if (payload.eventType === 'DELETE') setServiceOrders(prev => prev.filter(so => so.id !== payload.old.id));
       })
       .subscribe();
 

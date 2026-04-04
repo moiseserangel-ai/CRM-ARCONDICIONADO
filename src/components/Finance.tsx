@@ -106,7 +106,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
               prev.map((t) => (t.id === payload.new.id ? (payload.new as Transaction) : t))
             );
           } else if (payload.eventType === 'DELETE') {
-            setTransactions((prev) => prev.filter((t) => t.id === payload.old.id));
+            setTransactions((prev) => prev.filter((t) => t.id !== payload.old.id));
           }
         }
       )
@@ -129,7 +129,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
               prev.map((so) => (so.id === payload.new.id ? (payload.new as ServiceOrder) : so))
             );
           } else if (payload.eventType === 'DELETE') {
-            setServiceOrders((prev) => prev.filter((so) => so.id === payload.old.id));
+            setServiceOrders((prev) => prev.filter((so) => so.id !== payload.old.id));
           }
         }
       )

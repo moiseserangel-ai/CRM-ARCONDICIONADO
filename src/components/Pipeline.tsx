@@ -33,6 +33,33 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
     finalizationNotes: '',
     usedProducts: []
   });
+
+  const getProductStock = (p: Product) => {
+    if (p.stock_quantity !== undefined && p.stock_quantity !== null) return p.stock_quantity;
+    if (p.sku) {
+      try {
+        const skuData = JSON.parse(p.sku);
+        if (skuData.stock !== undefined) return skuData.stock;
+        if (skuData.stock_quantity !== undefined) return skuData.stock_quantity;
+      } catch (e) {
+        // Ignore
+      }
+    }
+    return 0;
+  };
+
+  const getProductUnit = (p: Product) => {
+    if (p.unit !== undefined && p.unit !== null) return p.unit;
+    if (p.sku) {
+      try {
+        const skuData = JSON.parse(p.sku);
+        if (skuData.unit !== undefined) return skuData.unit;
+      } catch (e) {
+        // Ignore
+      }
+    }
+    return 'un';
+  };
   const [expandedContactId, setExpandedContactId] = useState<string | null>(null);
   const [finalizingOS, setFinalizingOS] = useState(false);
   const [defaultOSSubject, setDefaultOSSubject] = useState('');
@@ -76,7 +103,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
       .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts', filter: `userId=eq.${user.id}` }, (payload) => {
         if (payload.eventType === 'INSERT') setContacts(prev => [payload.new as Contact, ...prev]);
         else if (payload.eventType === 'UPDATE') setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
-        else if (payload.eventType === 'DELETE') setContacts(prev => prev.filter(c => c.id === payload.old.id));
+        else if (payload.eventType === 'DELETE') setContacts(prev => prev.filter(c => c.id !== payload.old.id));
       })
       .subscribe();
 
@@ -85,7 +112,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
       .on('postgres_changes', { event: '*', schema: 'public', table: 'serviceOrders' }, (payload) => {
         if (payload.eventType === 'INSERT') setServiceOrders(prev => [payload.new as ServiceOrder, ...prev]);
         else if (payload.eventType === 'UPDATE') setServiceOrders(prev => prev.map(so => so.id === payload.new.id ? payload.new as ServiceOrder : so));
-        else if (payload.eventType === 'DELETE') setServiceOrders(prev => prev.filter(so => so.id === payload.old.id));
+        else if (payload.eventType === 'DELETE') setServiceOrders(prev => prev.filter(so => so.id !== payload.old.id));
       })
       .subscribe();
 
@@ -94,7 +121,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
       .on('postgres_changes', { event: '*', schema: 'public', table: 'products', filter: `userId=eq.${user.id}` }, (payload) => {
         if (payload.eventType === 'INSERT') setProducts(prev => [payload.new as Product, ...prev]);
         else if (payload.eventType === 'UPDATE') setProducts(prev => prev.map(p => p.id === payload.new.id ? payload.new as Product : p));
-        else if (payload.eventType === 'DELETE') setProducts(prev => prev.filter(p => p.id === payload.old.id));
+        else if (payload.eventType === 'DELETE') setProducts(prev => prev.filter(p => p.id !== payload.old.id));
       })
       .subscribe();
 
@@ -280,10 +307,25 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
         for (const usedProd of finalizeData.usedProducts) {
           const currentProduct = products.find(p => p.id === usedProd.productId);
           if (currentProduct) {
+            const currentStock = getProductStock(currentProduct);
+            const newStock = Math.max(0, currentStock - usedProd.quantity);
+            
+            // Update both stock_quantity and sku to ensure backward compatibility
+            let newSku = currentProduct.sku;
+            try {
+              const skuData = currentProduct.sku ? JSON.parse(currentProduct.sku) : {};
+              skuData.stock = newStock;
+              skuData.stock_quantity = newStock;
+              newSku = JSON.stringify(skuData);
+            } catch (e) {
+              newSku = JSON.stringify({ stock: newStock, stock_quantity: newStock, unit: getProductUnit(currentProduct) });
+            }
+
             await supabase
               .from('products')
               .update({
-                stock: Math.max(0, currentProduct.stock - usedProd.quantity)
+                stock_quantity: newStock,
+                sku: newSku
               })
               .eq('id', usedProd.productId);
           }
@@ -523,10 +565,9 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                           >
                             <option value="">+ Adicionar produto do estoque...</option>
                             {products
-                              .filter(p => p.stock > 0)
                               .map(p => (
                                 <option key={p.id} value={p.id}>
-                                  {p.name} (Estoque: {p.stock} {p.unit})
+                                  {p.name} (Estoque: {getProductStock(p)} {getProductUnit(p)})
                                 </option>
                               ))}
                           </select>
