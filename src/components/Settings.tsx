@@ -49,7 +49,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       
       const fetchUsers = async () => {
         const { data, error } = await supabase
-          .from('system_users')
+          .from('systemUsers')
           .select('*')
           .eq('userId', user.id)
           .order('createdAt', { ascending: false });
@@ -67,7 +67,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       // Set up real-time subscription
       const channel = supabase
         .channel('system-users-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'system_users', filter: `userId=eq.${user.id}` }, (payload) => {
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'systemUsers', filter: `userId=eq.${user.id}` }, (payload) => {
           if (payload.eventType === 'INSERT') {
             setSystemUsers(prev => [payload.new as SystemUser, ...prev]);
           } else if (payload.eventType === 'UPDATE') {
@@ -123,7 +123,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
         delete (payload as any).createdAt;
         
         const { error } = await supabase
-          .from('system_users')
+          .from('systemUsers')
           .update(payload)
           .eq('id', editingUser.id);
         
@@ -137,7 +137,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
         delete (payload as any).createdAt;
         
         const { error } = await supabase
-          .from('system_users')
+          .from('systemUsers')
           .insert(payload);
         
         if (error) throw error;
@@ -155,7 +155,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
   const handleDeleteUser = async (userId: string) => {
     try {
       const { error } = await supabase
-        .from('system_users')
+        .from('systemUsers')
         .delete()
         .eq('id', userId);
       
