@@ -1,0 +1,335 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: contacts
+    // Document ID: {contactId}
+    // Fields:
+    //   - id: string (required) - Unique identifier
+    //   - name: string (required) - Full name
+    //   - cnpjCpf: string (required) - CPF/CNPJ
+    //   - address: string (required) - Address
+    //   - email: string (required) - Email address
+    //   - phone: string (optional) - Phone number
+    //   - location: string (optional) - Physical location
+    //   - status: string (optional) - Relationship status
+    //   - portfolioValue: string (optional) - Monetary value
+    //   - growth: string (optional) - Growth percentage
+    //   - lastInteraction: string (optional) - Date of last interaction
+    //   - lastInteractionTime: string (optional) - Time of last interaction
+    //   - avatar: string (optional) - URL to avatar
+    //   - initials: string (optional) - Initials
+    //   - ownerUid: string (required) - UID of owner
+    //   - createdAt: string (required) - ISO 8601 timestamp
+    //   - equipmentType: string (optional) - Type of HVAC equipment
+    //   - equipmentBrand: string (optional) - Brand of HVAC equipment
+    //   - btus: string (optional) - BTU capacity
+    //   - lastMaintenanceDate: string (optional) - ISO 8601 date
+    //   - nextMaintenanceDate: string (optional) - ISO 8601 date
+    //   - installationDate: string (optional) - ISO 8601 date
+    //   - financialStatus: string (optional) - Adimplente, Inadimplente, Pendente
+    //   - paymentMethod: string (optional) - Pix, Cartão de Crédito, Dinheiro
+    //
+    // Collection: settings
+    // Document ID: {userId}
+    // Fields:
+    //   - companyName: string (optional) - Name of the company
+    //   - cnpj: string (optional) - Company CNPJ
+    //   - email: string (optional) - Contact email
+    //   - phone: string (optional) - Contact phone
+    //   - address: string (optional) - Company address
+    //   - website: string (optional) - Company website
+    //   - logo: string (optional) - Base64 or URL of the company logo
+    //
+    // Collection: products
+    // Document ID: {productId}
+    // Fields:
+    //   - id: string (optional) - Unique identifier
+    //   - name: string (required) - Product name
+    //   - description: string (optional) - Product description
+    //   - price: string (required) - Unit price formatted
+    //   - category: string (required) - Product category
+    //   - stock: number (required) - Current stock level
+    //   - unit: string (required) - Unit of measure
+    //   - ownerUid: string (required) - UID of owner
+    //   - createdAt: string (required) - ISO 8601 timestamp
+    //
+    // Collection: transactions
+    // Document ID: {transactionId}
+    // Fields:
+    //   - id: string (optional)
+    //   - description: string (required)
+    //   - amount: string (required)
+    //   - type: string (required) - Entrada, Saída
+    //   - category: string (required)
+    //   - date: string (required) - ISO 8601 timestamp
+    //   - contactId: string (optional)
+    //   - ownerUid: string (required)
+    //   - createdAt: string (required)
+    //
+    // Collection: system_users
+    // Document ID: {userId}
+    // Fields:
+    //   - name: string (required)
+    //   - email: string (required)
+    //   - username: string (optional)
+    //   - password: string (optional)
+    //   - role: string (required) - Cargo
+    //   - privilege: string (required) - Admin, Técnico, Vendedor, Visualizador
+    //   - status: string (required) - Ativo, Inativo
+    //   - ownerUid: string (required)
+    //   - createdAt: string (required)
+    //
+    // Collection: notifications
+    // Document ID: {notificationId}
+    // Fields:
+    //   - title: string (required)
+    //   - description: string (required)
+    //   - type: string (required) - lead, os, contact, system
+    //   - createdAt: string (required)
+    //   - read: bool (required)
+    //   - ownerUid: string (required)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.ownerUid;
+    }
+
+    function uidUnchanged() {
+      return !('ownerUid' in request.resource.data) ||
+        request.resource.data.ownerUid == request.auth.uid;
+    }
+
+    function uidNotModified() {
+      return !('ownerUid' in request.resource.data) ||
+        request.resource.data.ownerUid == resource.data.ownerUid;
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function isValidEmail(email) {
+      return email is string &&
+        email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidContact(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.address is string && data.address.size() > 0 && data.address.size() < 100 &&
+             isValidEmail(data.email) &&
+             data.cnpjCpf is string && data.cnpjCpf.size() > 0 && data.cnpjCpf.size() < 100 &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() < 30)) &&
+             (!('location' in data) || (data.location is string && data.location.size() < 200)) &&
+             (!('status' in data) || (data.status in ['Contrato Ativo', 'Manutenção Pendente', 'Orçamento Enviado', 'Instalação Pendente', 'Visita Técnica Agendada', 'Aguardando Peças', 'Serviço Concluído', 'Em Negociação'])) &&
+             (!('portfolioValue' in data) || (data.portfolioValue is string && data.portfolioValue.size() < 50)) &&
+             (!('growth' in data) || (data.growth is string && data.growth.size() < 20)) &&
+             (!('lastInteraction' in data) || (data.lastInteraction is string && data.lastInteraction.size() < 50)) &&
+             (!('lastInteractionTime' in data) || (data.lastInteractionTime is string && data.lastInteractionTime.size() < 50)) &&
+             (!('avatar' in data) || (data.avatar is string && data.avatar.size() < 1000)) &&
+             (!('initials' in data) || (data.initials is string && data.initials.size() < 5)) &&
+             (!('equipmentType' in data) || (data.equipmentType is string && data.equipmentType.size() < 100)) &&
+             (!('equipmentBrand' in data) || (data.equipmentBrand is string && data.equipmentBrand.size() < 100)) &&
+             (!('btus' in data) || (data.btus is string && data.btus.size() < 50)) &&
+             (!('lastMaintenanceDate' in data) || (data.lastMaintenanceDate is string && data.lastMaintenanceDate.size() < 50)) &&
+             (!('nextMaintenanceDate' in data) || (data.nextMaintenanceDate is string && data.nextMaintenanceDate.size() < 50)) &&
+             (!('installationDate' in data) || (data.installationDate is string && data.installationDate.size() < 50)) &&
+             (!('financialStatus' in data) || (data.financialStatus in ['Adimplente', 'Inadimplente', 'Pendente'])) &&
+             (!('paymentMethod' in data) || (data.paymentMethod in ['Pix', 'Cartão de Crédito', 'Dinheiro'])) &&
+             data.ownerUid is string &&
+             data.createdAt is string;
+    }
+
+    function isValidSettings(data) {
+      return (!('companyName' in data) || (data.companyName is string && data.companyName.size() < 200)) &&
+             (!('cnpj' in data) || (data.cnpj is string && data.cnpj.size() < 50)) &&
+             (!('email' in data) || (data.email is string && data.email.size() < 200)) &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() < 50)) &&
+             (!('address' in data) || (data.address is string && data.address.size() < 500)) &&
+             (!('website' in data) || (data.website is string && data.website.size() < 200)) &&
+             (!('logo' in data) || (data.logo is string && data.logo.size() < 2000000)); // 2MB limit for base64 logo
+    }
+
+    function isValidServiceOrder(data) {
+      return data.contactId is string &&
+             (!('contactName' in data) || (data.contactName is string && data.contactName.size() < 200)) &&
+             data.subject is string && data.subject.size() > 0 && data.subject.size() < 200 &&
+             data.description is string && data.description.size() > 0 && data.description.size() < 2000 &&
+             (!('materials' in data) || (data.materials is string && data.materials.size() < 1000)) &&
+             (!('finalizationNotes' in data) || (data.finalizationNotes is string && data.finalizationNotes.size() < 2000)) &&
+             (!('value' in data) || (data.value is string && data.value.size() < 50)) &&
+             data.ownerUid is string &&
+             data.createdAt is string &&
+             (!('status' in data) || (data.status in ['Aberta', 'Finalizada', 'Orçamento Aceito', 'Orçamento Rejeitado']));
+    }
+
+    function isValidProduct(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 200 &&
+             (!('description' in data) || (data.description is string && data.description.size() < 2000)) &&
+             data.price is string && data.price.size() > 0 && data.price.size() < 50 &&
+             data.category is string && data.category.size() > 0 && data.category.size() < 100 &&
+             data.stock is int && data.stock >= 0 &&
+             data.unit is string && data.unit.size() > 0 && data.unit.size() < 20 &&
+             data.ownerUid is string &&
+             data.createdAt is string;
+    }
+
+    function isValidTransaction(data) {
+      return data.description is string && data.description.size() > 0 && data.description.size() < 200 &&
+             data.amount is string && data.amount.size() > 0 && data.amount.size() < 50 &&
+             data.type in ['Entrada', 'Saída'] &&
+             data.category is string && data.category.size() > 0 && data.category.size() < 100 &&
+             data.date is string &&
+             (!('contactId' in data) || (data.contactId is string && data.contactId.size() < 100)) &&
+             data.ownerUid is string &&
+             data.createdAt is string;
+    }
+
+    function isValidSystemUser(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 200 &&
+             isValidEmail(data.email) &&
+             (!('username' in data) || (data.username is string && data.username.size() < 100)) &&
+             (!('password' in data) || (data.password is string && data.password.size() < 100)) &&
+             data.role is string && data.role.size() > 0 && data.role.size() < 200 &&
+             data.privilege in ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] &&
+             data.status in ['Ativo', 'Inativo'] &&
+             data.ownerUid is string &&
+             data.createdAt is string;
+    }
+
+    function isValidNotification(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.description is string && data.description.size() > 0 && data.description.size() < 1000 &&
+             data.type in ['lead', 'os', 'contact', 'system'] &&
+             data.createdAt is string &&
+             data.read is bool &&
+             data.ownerUid is string;
+    }
+
+    function isValidInvoice(data) {
+      return data.number is string && data.number.size() > 0 && data.number.size() < 50 &&
+             data.type in ['Produto', 'Serviço'] &&
+             data.contactId is string &&
+             data.contactName is string && data.contactName.size() > 0 && data.contactName.size() < 200 &&
+             data.issueDate is string &&
+             data.items is list && data.items.size() > 0 && data.items.size() < 100 &&
+             data.totalAmount is number && data.totalAmount >= 0 &&
+             data.status in ['Emitida', 'Cancelada', 'Rascunho'] &&
+             data.ownerUid is string &&
+             data.createdAt is string &&
+             (!('series' in data) || (data.series is string && data.series.size() < 20)) &&
+             (!('contactCnpjCpf' in data) || (data.contactCnpjCpf is string && data.contactCnpjCpf.size() < 30)) &&
+             (!('xmlUrl' in data) || (data.xmlUrl is string && data.xmlUrl.size() < 1000)) &&
+             (!('pdfUrl' in data) || (data.pdfUrl is string && data.pdfUrl.size() < 1000)) &&
+             (!('observations' in data) || (data.observations is string && data.observations.size() < 2000));
+    }
+
+    match /contacts/{contactId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                      isValidContact(request.resource.data) && 
+                      request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isDocOwner() && 
+                      isValidContact(request.resource.data) && 
+                      uidNotModified() &&
+                      request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isDocOwner();
+    }
+
+    match /service_orders/{osId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                      isValidServiceOrder(request.resource.data) && 
+                      request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isDocOwner() && 
+                      isValidServiceOrder(request.resource.data) && 
+                      uidNotModified() &&
+                      request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isDocOwner();
+    }
+
+    match /products/{productId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                      isValidProduct(request.resource.data) && 
+                      request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isDocOwner() && 
+                      isValidProduct(request.resource.data) && 
+                      uidNotModified() &&
+                      request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isDocOwner();
+    }
+
+    match /transactions/{transactionId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                      isValidTransaction(request.resource.data) && 
+                      request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isDocOwner() && 
+                      isValidTransaction(request.resource.data) && 
+                      uidNotModified() &&
+                      request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isDocOwner();
+    }
+
+    match /system_users/{userId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                      isValidSystemUser(request.resource.data) && 
+                      request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isDocOwner() && 
+                      isValidSystemUser(request.resource.data) && 
+                      uidNotModified() &&
+                      request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isDocOwner();
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                      isValidNotification(request.resource.data) && 
+                      request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isDocOwner() && 
+                      isValidNotification(request.resource.data) && 
+                      uidNotModified() &&
+                      request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isDocOwner();
+    }
+
+    match /invoices/{invoiceId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                      isValidInvoice(request.resource.data) && 
+                      request.resource.data.ownerUid == request.auth.uid;
+      allow update: if isDocOwner() && 
+                      isValidInvoice(request.resource.data) && 
+                      uidNotModified() &&
+                      request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isDocOwner();
+    }
+
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    match /settings/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId) && isValidSettings(request.resource.data);
+    }
+  }
+}
