@@ -12,7 +12,6 @@ export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
 export const createNotification = async (userId: string, title: string, description: string, type: 'lead' | 'os' | 'contact' | 'system') => {
   try {
     const payload = {
-      userId,
       title,
       description,
       type,

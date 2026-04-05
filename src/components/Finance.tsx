@@ -225,6 +225,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
   }, [allMovements, currentYear]);
 
   function parseCurrency(value: any): number {
+    if (typeof value === 'number') return value;
     if (typeof value !== 'string') return 0;
     // Remove everything except digits and the decimal comma
     const cleanValue = value.replace(/[^0-9,]+/g, "").replace(",", ".");
@@ -661,7 +662,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                             "text-base font-black font-headline",
                             t.type === 'Entrada' ? "text-emerald-600" : "text-rose-600"
                           )}>
-                            {t.type === 'Entrada' ? '+' : '-'} {t.amount}
+                            {t.type === 'Entrada' ? '+' : '-'} {typeof t.amount === 'number' ? formatCurrency(t.amount) : t.amount}
                           </span>
                           <span className="text-[9px] font-bold text-secondary uppercase tracking-tighter">Liquidado</span>
                         </div>

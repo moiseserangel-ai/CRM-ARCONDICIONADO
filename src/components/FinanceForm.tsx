@@ -93,40 +93,19 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess }: Fi
     }).format(amount) });
   };
 
-  /*const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
     setLoading(true);
 
+    const numericAmount = Number(formData.amount.toString().replace(/\D/g, '')) / 100;
+
     const transactionData = {
       ...formData,
+      amount: numericAmount,
       date: new Date(formData.date).toISOString(),
       userId: user.id
     };
-    */
-//teste finan
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!user) return;
-  setLoading(true);
-
-  // --- ADICIONE ESTA LINHA PARA LIMPAR O VALOR ---
-  const numericAmount = Number(formData.amount.toString().replace(/\D/g, '')) / 100;
-
-  const transactionData = {
-    ...formData,
-    amount: numericAmount, // Substitui a string formatada pelo número puro
-    date: new Date(formData.date).toISOString(),
-    userId: user.id
-  };
-  
-  // O restante do código permanece igual...
-  //delete (transactionData as any).id;
-  // ...
-
-
-// fim do teste
 
     delete (transactionData as any).id;
     delete (transactionData as any).createdAt;
@@ -281,23 +260,6 @@ const handleSubmit = async (e: React.FormEvent) => {
                 >
                   {CATEGORIES.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Cliente Relacionado (Opcional)</label>
-              <div className="relative">
-                <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
-                <select 
-                  value={formData.contactId || ''}
-                  onChange={(e) => setFormData({ ...formData, contactId: e.target.value })}
-                  className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-3.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none"
-                >
-                  <option value="">Nenhum cliente</option>
-                  {contacts.map(c => (
-                    <option key={c.id} value={c.id}>{c.name} ({c.address})</option>
                   ))}
                 </select>
               </div>

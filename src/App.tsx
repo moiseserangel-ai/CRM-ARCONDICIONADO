@@ -264,6 +264,8 @@ export default function App() {
             onBack={() => setCurrentView('contacts')} 
             onEdit={() => handleEditContact(selectedContact)}
             onViewChange={setCurrentView}
+            companyLogo={companyLogo}
+            companyName={settings.companyName}
           />
         ) : <Contacts user={user} onSelectContact={handleSelectContact} onAddContact={handleAddContact} />;
       case 'contact-form':

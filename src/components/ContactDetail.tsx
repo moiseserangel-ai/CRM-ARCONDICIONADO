@@ -12,9 +12,11 @@ interface ContactDetailProps {
   onBack: () => void;
   onEdit: () => void;
   onViewChange: (view: View) => void;
+  companyLogo?: string | null;
+  companyName?: string;
 }
 
-export default function ContactDetail({ user, contact, onBack, onEdit, onViewChange }: ContactDetailProps) {
+export default function ContactDetail({ user, contact, onBack, onEdit, onViewChange, companyLogo, companyName = 'Cardoso Ar Condicionado' }: ContactDetailProps) {
   const [deleting, setDeleting] = useState(false);
   const [savingOS, setSavingOS] = useState(false);
   const [finalizingOS, setFinalizingOS] = useState(false);
@@ -146,7 +148,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
     };
 
     try {
-      await generateOSPDF(tempOS, contact);
+      await generateOSPDF(tempOS, contact, companyLogo, companyName);
     } catch (err) {
       alert('Erro ao gerar PDF. Tente novamente.');
     }
@@ -438,13 +440,15 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
   const handleDownloadPDF = async (os: ServiceOrder) => {
     try {
-      await generateOSPDF(os, contact);
+      await generateOSPDF(os, contact, companyLogo, companyName);
     } catch (err) {
       alert('Erro ao gerar PDF. Tente novamente.');
     }
   };
 
   const handlePrintExistingOS = (os: ServiceOrder) => {
+    const logoHtml = companyLogo ? `<img src="${companyLogo}" alt="Logo" style="max-height: 60px; max-width: 150px; object-fit: contain;" />` : '';
+
     const html = `
       <!DOCTYPE html>
       <html>
@@ -454,6 +458,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
             @page { size: auto; margin: 0mm; }
             body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 40px; color: #333; line-height: 1.5; }
             .header { border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+            .header-left { display: flex; align-items: center; gap: 20px; }
             .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
             .header p { margin: 5px 0 0; font-weight: bold; color: #666; }
             .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
@@ -474,9 +479,12 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         </head>
         <body>
           <div class="header">
-            <div>
-              <h1>Ordem de Serviço</h1>
-              <p>Cardoso Ar Condicionado</p>
+            <div class="header-left">
+              ${logoHtml}
+              <div>
+                <h1>Ordem de Serviço</h1>
+                <p>${companyName}</p>
+              </div>
             </div>
             <div class="status-badge">${os.status}</div>
           </div>
@@ -1055,136 +1063,138 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   <p className="text-sm text-secondary font-bold">Nenhuma ordem de serviço corresponde aos filtros selecionados.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {filteredServiceOrders.map((os) => {
-                    const isExpanded = expandedOSId === os.id;
-                    return (
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        key={os.id}
-                        onClick={() => setExpandedOSId(isExpanded ? null : os.id)}
-                        className={cn(
-                          "group p-6 rounded-[32px] border transition-all cursor-pointer relative overflow-hidden",
-                          os.status === 'Finalizada' 
-                            ? "bg-surface-container-low border-outline-variant/10" 
-                            : "bg-surface-container-low border-primary/20 hover:border-primary/40 shadow-sm",
-                          isExpanded && "md:col-span-2 ring-2 ring-primary/20"
-                        )}
-                      >
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex items-center gap-3">
-                            <div className={cn(
-                              "w-10 h-10 rounded-xl flex items-center justify-center",
-                              os.status === 'Orçamento Aceito' || os.status === 'Finalizada' 
-                                ? "bg-green-100 text-green-700" 
-                                : os.status === 'Orçamento Rejeitado'
-                                  ? "bg-error-container/20 text-error"
-                                  : "bg-primary/10 text-primary"
-                            )}>
-                              <FileText className="w-5 h-5" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{os.subject}</p>
-                              <p className="text-[10px] text-secondary uppercase tracking-widest font-bold">
-                                {new Date(os.createdAt).toLocaleDateString('pt-BR')}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className={cn(
-                              "text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md",
-                              os.status === 'Orçamento Aceito' || os.status === 'Finalizada' 
-                                ? "bg-green-100 text-green-700" 
-                                : os.status === 'Orçamento Rejeitado'
-                                  ? "bg-error-container/20 text-error"
-                                  : "bg-amber-100 text-amber-700"
-                            )}>
-                              {os.status}
-                            </span>
-                            <ChevronRight className={cn("w-4 h-4 text-secondary transition-transform", isExpanded && "rotate-90")} />
-                          </div>
-                        </div>
-                        
-                        <p className={cn(
-                          "text-xs text-secondary leading-relaxed mb-4 transition-all",
-                          !isExpanded && "line-clamp-2"
-                        )}>
-                          {os.description}
-                        </p>
-                        
-                        <AnimatePresence>
-                          {isExpanded && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="overflow-hidden"
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-outline-variant/20 text-[10px] font-black text-secondary uppercase tracking-widest">
+                        <th className="p-4">Data</th>
+                        <th className="p-4">Assunto</th>
+                        <th className="p-4">Status</th>
+                        <th className="p-4">Valor</th>
+                        <th className="p-4 text-right">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredServiceOrders.map((os) => {
+                        const isExpanded = expandedOSId === os.id;
+                        return (
+                          <React.Fragment key={os.id}>
+                            <tr 
+                              onClick={() => setExpandedOSId(isExpanded ? null : os.id)}
+                              className="border-b border-outline-variant/10 hover:bg-surface-container-lowest transition-colors cursor-pointer group"
                             >
-                              <div className="space-y-4 pt-4 border-t border-outline-variant/10">
-                                {os.materials && (
-                                  <div className="bg-surface-container-high/50 p-4 rounded-2xl">
-                                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2">Materiais Utilizados</p>
-                                    <p className="text-xs text-on-surface-variant italic leading-relaxed">{os.materials}</p>
-                                  </div>
+                              <td className="p-4 text-sm font-medium text-on-surface whitespace-nowrap">
+                                {new Date(os.createdAt).toLocaleDateString('pt-BR')}
+                              </td>
+                              <td className="p-4">
+                                <p className="text-sm font-bold text-on-surface">{os.subject}</p>
+                                <p className="text-xs text-secondary line-clamp-1">{os.description}</p>
+                              </td>
+                              <td className="p-4">
+                                <span className={cn(
+                                  "text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md whitespace-nowrap",
+                                  os.status === 'Orçamento Aceito' || os.status === 'Finalizada' 
+                                    ? "bg-green-100 text-green-700" 
+                                    : os.status === 'Orçamento Rejeitado'
+                                      ? "bg-error-container/20 text-error"
+                                      : "bg-amber-100 text-amber-700"
+                                )}>
+                                  {os.status}
+                                </span>
+                              </td>
+                              <td className="p-4 text-sm font-black text-on-surface whitespace-nowrap">
+                                {os.value}
+                              </td>
+                              <td className="p-4 text-right space-x-2 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                                {os.status === 'Aberta' && (
+                                  <button 
+                                    onClick={() => {
+                                      setSelectedOS(os);
+                                      setShowFinalizeModal(true);
+                                    }}
+                                    className="p-2 hover:bg-green-100 rounded-xl text-green-600 transition-all inline-flex items-center justify-center"
+                                    title="Finalizar OS"
+                                  >
+                                    <CheckCircle className="w-4 h-4" />
+                                  </button>
                                 )}
+                                <button 
+                                  onClick={() => handlePrintExistingOS(os)}
+                                  className="p-2 hover:bg-surface-container rounded-xl text-secondary transition-all inline-flex items-center justify-center"
+                                  title="Imprimir OS"
+                                >
+                                  <Printer className="w-4 h-4" />
+                                </button>
+                                <button 
+                                  onClick={() => generateOSPDF(os, contact, companyLogo, companyName)}
+                                  className="p-2 hover:bg-surface-container rounded-xl text-secondary transition-all inline-flex items-center justify-center"
+                                  title="Baixar PDF"
+                                >
+                                  <Download className="w-4 h-4" />
+                                </button>
+                                <ChevronRight className={cn("w-4 h-4 text-secondary transition-transform inline-block ml-2", isExpanded && "rotate-90")} />
+                              </td>
+                            </tr>
+                            <AnimatePresence>
+                              {isExpanded && (
+                                <tr>
+                                  <td colSpan={5} className="p-0 border-b border-outline-variant/10">
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: 'auto', opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      className="overflow-hidden bg-surface-container-lowest/50"
+                                    >
+                                      <div className="p-6 space-y-4">
+                                        {os.materials && (
+                                          <div className="bg-surface-container-high/50 p-4 rounded-2xl">
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2">Materiais Utilizados</p>
+                                            <p className="text-xs text-on-surface-variant italic leading-relaxed">{os.materials}</p>
+                                          </div>
+                                        )}
 
-                                {os.usedProducts && os.usedProducts.length > 0 && (
-                                  <div className="bg-surface-container-high/50 p-4 rounded-2xl">
-                                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-3">Produtos do Estoque</p>
-                                    <div className="space-y-2">
-                                      {os.usedProducts.map((up, idx) => (
-                                        <div key={idx} className="flex justify-between items-center text-xs bg-surface-container-lowest/50 p-2 rounded-lg">
-                                          <span className="font-bold text-on-surface">{up.name}</span>
-                                          <span className="text-secondary font-black">{up.quantity} {up.unit}</span>
+                                        {os.usedProducts && os.usedProducts.length > 0 && (
+                                          <div className="bg-surface-container-high/50 p-4 rounded-2xl">
+                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-3">Produtos do Estoque</p>
+                                            <div className="space-y-2">
+                                              {os.usedProducts.map((up, idx) => (
+                                                <div key={idx} className="flex justify-between items-center text-xs bg-surface-container-lowest/50 p-2 rounded-lg">
+                                                  <span className="font-bold text-on-surface">{up.name}</span>
+                                                  <span className="text-secondary font-black">{up.quantity} {up.unit}</span>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
+
+                                        {os.finalizationNotes && (
+                                          <div className="bg-surface-container-high/50 p-4 rounded-2xl">
+                                            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2">Relatório de Finalização</p>
+                                            <p className="text-xs text-on-surface-variant leading-relaxed">{os.finalizationNotes}</p>
+                                          </div>
+                                        )}
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                          <div className="bg-surface-container-high/30 p-3 rounded-xl">
+                                            <p className="text-[8px] font-black text-secondary uppercase tracking-widest mb-1">ID da OS</p>
+                                            <p className="text-[10px] font-mono font-bold text-on-surface">{os.id.substring(0, 12).toUpperCase()}</p>
+                                          </div>
+                                          <div className="bg-surface-container-high/30 p-3 rounded-xl">
+                                            <p className="text-[8px] font-black text-secondary uppercase tracking-widest mb-1">Valor do Serviço</p>
+                                            <p className="text-[10px] font-bold text-on-surface">{os.value}</p>
+                                          </div>
                                         </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {os.finalizationNotes && (
-                                  <div className="bg-surface-container-high/50 p-4 rounded-2xl">
-                                    <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2">Relatório de Finalização</p>
-                                    <p className="text-xs text-on-surface-variant leading-relaxed">{os.finalizationNotes}</p>
-                                  </div>
-                                )}
-
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div className="bg-surface-container-high/30 p-3 rounded-xl">
-                                    <p className="text-[8px] font-black text-secondary uppercase tracking-widest mb-1">ID da OS</p>
-                                    <p className="text-[10px] font-mono font-bold text-on-surface">{os.id.substring(0, 12).toUpperCase()}</p>
-                                  </div>
-                                  <div className="bg-surface-container-high/30 p-3 rounded-xl">
-                                    <p className="text-[8px] font-black text-secondary uppercase tracking-widest mb-1">Valor do Serviço</p>
-                                    <p className="text-[10px] font-bold text-on-surface">{os.value}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-
-                        <div className="flex justify-between items-center pt-4 mt-4 border-t border-outline-variant/10" onClick={(e) => e.stopPropagation()}>
-                          {!isExpanded && <span className="text-sm font-black text-on-surface">{os.value}</span>}
-                          <div className={cn("flex items-center gap-2", isExpanded && "w-full justify-end")}>
-                            {os.status === 'Aberta' && (
-                              <button 
-                                onClick={() => {
-                                  setSelectedOS(os);
-                                  setShowFinalizeModal(true);
-                                }}
-                                className="p-2.5 hover:bg-green-100 rounded-xl text-green-600 transition-all"
-                                title="Finalizar OS"
-                              >
-                                <CheckCircle className="w-5 h-5" />
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
+                                      </div>
+                                    </motion.div>
+                                  </td>
+                                </tr>
+                              )}
+                            </AnimatePresence>
+                          </React.Fragment>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </section>

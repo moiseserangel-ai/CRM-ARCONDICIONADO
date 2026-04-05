@@ -94,7 +94,7 @@ export default function InvoiceForm({ user, invoice, onBack, onSuccess }: Invoic
     }
   };
 
-  const handleProductSelect = (index: number, productId: string) => {
+ /* const handleProductSelect = (index: number, productId: string) => {
     const product = products.find(p => p.id === productId);
     if (product) {
       const price = parseFloat(product.price.replace(/[^\d,]/g, '').replace(',', '.'));
@@ -102,8 +102,30 @@ export default function InvoiceForm({ user, invoice, onBack, onSuccess }: Invoic
       handleItemChange(index, 'unitPrice', price);
       handleItemChange(index, 'code', product.id);
     }
-  };
+  }; */
+//começo do teste replace
 
+// 1. Substitua o seu bloco de "teste" por este (corrigido):
+const handleProductSelect = (index: number, productId: string) => {
+  const product = products.find(p => p.id === productId);
+  if (product) {
+    // Tratamento seguro do preço
+    const priceString = String(product.price || "0")
+      .replace(/[^\d,.]/g, '') 
+      .replace(',', '.');      
+
+    const price = parseFloat(priceString);
+
+    handleItemChange(index, 'description', product.name);
+    handleItemChange(index, 'unitPrice', isNaN(price) ? 0 : price);
+    // Removi as linhas que causavam erro (totalAmount e items não definidos)
+  }
+};
+
+
+
+// fim do teste
+/*
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -139,7 +161,57 @@ export default function InvoiceForm({ user, invoice, onBack, onSuccess }: Invoic
       setLoading(false);
     }
   };
+  */
 
+  //teste handleSumit
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!user) return;
+  setLoading(true);
+
+  try {
+    // Monta o objeto com os nomes exatos das colunas que vi na sua imagem
+    const data = {
+      userId: user.id,
+      number: formData.number,
+      series: formData.series,
+      type: formData.type,
+      contactId: formData.contactId,
+      contactName: formData.contactName,
+      contactCnpjCpf: formData.contactCnpjCpf,
+      issueDate: formData.issueDate,
+      status: formData.status,
+      observations: formData.observations,
+      items: formData.items,
+      // Enviando para as duas colunas para garantir que não dê erro de 'not-null'
+      amount: formData.totalAmount || 0, 
+      totalAmount: formData.totalAmount || 0 
+    };
+
+    if (invoice?.id) {
+      const { error } = await supabase
+        .from('invoices')
+        .update(data)
+        .eq('id', invoice.id);
+      if (error) throw error;
+    } else {
+      const { error } = await supabase
+        .from('invoices')
+        .insert([data]); // Sempre use array [] no insert do Supabase v2
+      if (error) throw error;
+    }
+    onSuccess();
+  } catch (error: any) {
+    console.error('Erro ao salvar:', error.message);
+    alert('Erro: ' + error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+ // fim do teste
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="flex items-center justify-between">

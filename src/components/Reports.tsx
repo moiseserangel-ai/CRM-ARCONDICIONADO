@@ -77,7 +77,8 @@ export default function Reports({ user }: { user: User }) {
     };
   }, [user]);
 
-  const parseCurrency = (value: string) => {
+  const parseCurrency = (value: any) => {
+    if (typeof value === 'number') return value;
     const digits = (value || 'R$ 0,00').replace(/[^0-9]/g, '');
     return (parseInt(digits) || 0) / 100;
   };

@@ -23,7 +23,6 @@ export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
-        .eq('userId', user.id)
         .order('createdAt', { ascending: false })
         .limit(20);
 
@@ -44,7 +43,6 @@ export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps
           event: '*',
           schema: 'public',
           table: 'notifications',
-          filter: `userId=eq.${user.id}`,
         },
         () => {
           fetchNotifications();

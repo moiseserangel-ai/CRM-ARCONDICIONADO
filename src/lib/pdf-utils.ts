@@ -2,7 +2,9 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Contact, ServiceOrder } from '../types';
 
-export const generateOSPDF = async (os: ServiceOrder, contact: Contact) => {
+export const generateOSPDF = async (os: ServiceOrder, contact: Contact, companyLogo?: string | null, companyName: string = 'Cardoso Ar Condicionado') => {
+  const logoHtml = companyLogo ? `<img src="${companyLogo}" alt="Logo" style="max-height: 60px; max-width: 150px; object-fit: contain;" />` : '';
+
   const container = document.createElement('div');
   container.style.position = 'absolute';
   container.style.left = '-9999px';
@@ -13,9 +15,12 @@ export const generateOSPDF = async (os: ServiceOrder, contact: Contact) => {
   container.innerHTML = `
     <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; line-height: 1.5;">
       <div style="border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <h1 style="margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px;">Ordem de Serviço</h1>
-          <p style="margin: 5px 0 0; font-weight: bold; color: #666;">Cardoso Ar Condicionado</p>
+        <div style="display: flex; align-items: center; gap: 20px;">
+          ${logoHtml}
+          <div>
+            <h1 style="margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px;">Ordem de Serviço</h1>
+            <p style="margin: 5px 0 0; font-weight: bold; color: #666;">${companyName}</p>
+          </div>
         </div>
         <div style="display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; border: 1px solid #000;">${os.status}</div>
       </div>
