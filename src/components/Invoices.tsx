@@ -74,8 +74,8 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
 
   const filteredInvoices = invoices.filter(invoice => {
     const matchesSearch = 
-      invoice.contactName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.number.includes(searchTerm);
+      (invoice.contactName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (invoice.number || '').includes(searchTerm);
     const matchesType = filterType === 'Todos' || invoice.type === filterType;
     return matchesSearch && matchesType;
   });

@@ -138,7 +138,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           .filter(os => os.status === 'Aberta')
           .sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime())[0];
         
-        const subject = mostRecentOpen.subject.toLowerCase();
+        const subject = (mostRecentOpen.subject || '').toLowerCase();
         let detectedStage = '';
         
         if (subject.includes('instalação')) detectedStage = 'INSTALAÇÃO';

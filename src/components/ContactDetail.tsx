@@ -203,7 +203,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
       // Update Contact Status based on subject to move it in the Pipeline
       let newStatus = contact.status;
-      const subjectLower = osData.subject.toLowerCase();
+      const subjectLower = (osData.subject || '').toLowerCase();
       
       if (subjectLower.includes('visita técnica')) {
         newStatus = 'Visita Técnica Agendada';
@@ -1430,7 +1430,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               >
                 Cancelar
               </button>
-              {selectedOS.subject.toLowerCase().includes('orçamento') ? (
+              {(selectedOS.subject || '').toLowerCase().includes('orçamento') ? (
                 <>
                   <button 
                     onClick={() => handleFinalizeOS('Orçamento Rejeitado')}

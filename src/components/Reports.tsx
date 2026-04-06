@@ -205,7 +205,7 @@ export default function Reports({ user }: { user: User }) {
     };
 
     filteredOS.forEach(os => {
-      const subject = os.subject.toLowerCase();
+      const subject = (os.subject || '').toLowerCase();
       if (subject.includes('instala')) types['Instalação']++;
       else if (subject.includes('manuten')) types['Manutenção']++;
       else if (subject.includes('visita')) types['Visita Técnica']++;

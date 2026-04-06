@@ -141,8 +141,8 @@ export default function Contacts({ user, onSelectContact, onAddContact, searchTe
 
   const filteredContacts = contacts.filter(contact => {
     const matchesSearch = 
-      contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      contact.address.toLowerCase().includes(searchQuery.toLowerCase());
+      (contact.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (contact.address || '').toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesStatus = !statusFilter || contact.status === statusFilter;
     

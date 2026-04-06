@@ -133,7 +133,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
   }, [user]);
 
   const normalize = (str: string) => 
-    str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   const getContactsByStage = (stage: string) => {
     const normalizedSearch = normalize(localSearchTerm);
@@ -160,7 +160,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
           .filter(os => os.status === 'Aberta')
           .sort((a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime())[0];
         
-        const subject = mostRecentOpen.subject.toLowerCase();
+        const subject = (mostRecentOpen.subject || '').toLowerCase();
         let detectedStage = '';
         
         if (subject.includes('instalação')) detectedStage = 'INSTALAÇÃO';
@@ -610,7 +610,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                     >
                       Voltar
                     </button>
-                    {selectedOS.subject.toLowerCase().includes('orçamento') ? (
+                    {(selectedOS.subject || '').toLowerCase().includes('orçamento') ? (
                       <>
                         <button
                           onClick={() => handleFinalizeOS('Orçamento Rejeitado')}

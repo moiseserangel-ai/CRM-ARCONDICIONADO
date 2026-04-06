@@ -33,8 +33,8 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
 
   const filteredContacts = useMemo(() => {
     return contacts.filter(c => 
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.address.toLowerCase().includes(search.toLowerCase())
+      (c.name || '').toLowerCase().includes(search.toLowerCase()) ||
+      (c.address || '').toLowerCase().includes(search.toLowerCase())
     );
   }, [contacts, search]);
 
@@ -231,7 +231,7 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
 
       // Update Contact Status based on subject to move it in the Pipeline
       let newStatus = selectedContact.status;
-      const subjectLower = osData.subject.toLowerCase();
+      const subjectLower = (osData.subject || '').toLowerCase();
       
       if (subjectLower.includes('visita técnica')) {
         newStatus = 'Visita Técnica Agendada';

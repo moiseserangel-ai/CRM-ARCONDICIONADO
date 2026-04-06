@@ -182,8 +182,8 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
 
   const filteredTransactions = useMemo(() => {
     return periodMovements.filter(t => {
-      const matchesSearch = t.description.toLowerCase().includes(localSearchTerm.toLowerCase()) ||
-                          t.category.toLowerCase().includes(localSearchTerm.toLowerCase());
+      const matchesSearch = (t.description || '').toLowerCase().includes(localSearchTerm.toLowerCase()) ||
+                          (t.category || '').toLowerCase().includes(localSearchTerm.toLowerCase());
       const matchesType = filterType === 'Todos' || t.type === filterType;
       const matchesCategory = filterCategory === 'Todas' || t.category === filterCategory;
       const isNotOS = !t.isOS;
