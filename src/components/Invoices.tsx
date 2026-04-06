@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, FileText, Download, Trash2, MoreVertical, ExternalLink, AlertCircle } from 'lucide-react';
+import { Plus, Search, Filter, FileText, Download, Trash2, MoreVertical, ExternalLink, AlertCircle, Printer } from 'lucide-react';
 import { Invoice, User } from '../types';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
+import { generateInvoicePDF } from '../lib/pdf-utils';
 
 interface InvoicesProps {
   user: User;
   onAddInvoice: () => void;
   onEditInvoice: (invoice: Invoice) => void;
   searchTerm: string;
+  companyLogo?: string | null;
+  companyName?: string;
 }
 
-export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm }: InvoicesProps) {
+export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm, companyLogo, companyName = 'Cardoso Ar Condicionado' }: InvoicesProps) {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState<'Todos' | 'Produto' | 'Serviço'>('Todos');
@@ -69,6 +72,141 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
       if (error) throw error;
     } catch (error) {
       console.error('Error deleting invoice:', error);
+    }
+  };
+
+  const handleDownloadInvoice = async (invoice: Invoice) => {
+    try {
+      await generateInvoicePDF(invoice, companyLogo, companyName);
+    } catch (err) {
+      alert('Erro ao gerar PDF. Tente novamente.');
+    }
+  };
+
+  const handlePrintInvoice = (invoice: Invoice) => {
+    const logoHtml = companyLogo ? `<img src="${companyLogo}" alt="Logo" style="max-height: 60px; max-width: 150px; object-fit: contain;" />` : '';
+    
+    const itemsHtml = invoice.items.map(item => `
+      <tr>
+        <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.description}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.unitPrice)}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.totalPrice)}</td>
+      </tr>
+    `).join('');
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Nota Fiscal - ${invoice.number}</title>
+          <style>
+            @page { size: auto; margin: 0mm; }
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 40px; color: #333; line-height: 1.5; }
+            .header { border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+            .header-left { display: flex; align-items: center; gap: 20px; }
+            .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
+            .header p { margin: 5px 0 0; font-weight: bold; color: #666; }
+            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+            .info-box h3 { font-size: 12px; text-transform: uppercase; color: #888; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+            .info-box p { margin: 5px 0; font-size: 14px; }
+            .section { margin-bottom: 35px; }
+            .section h3 { font-size: 14px; text-transform: uppercase; background: #f9f9f9; padding: 8px 12px; margin-bottom: 15px; border-left: 4px solid #000; }
+            .content { font-size: 15px; white-space: pre-wrap; padding: 0 12px; }
+            .status-badge { display: inline-block; margin-top: 5px; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; border: 1px solid #000; }
+            table { width: 100%; border-collapse: collapse; font-size: 14px; }
+            th { padding: 8px; border-bottom: 2px solid #000; text-align: left; }
+            th.center { text-align: center; }
+            th.right { text-align: right; }
+            td { padding: 8px; border-bottom: 1px solid #eee; }
+            td.center { text-align: center; }
+            td.right { text-align: right; }
+            tfoot td { padding: 12px 8px; font-weight: bold; }
+            @media print {
+              body { padding: 20px; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="header-left">
+              ${logoHtml}
+              <div>
+                <h1>Nota Fiscal de ${invoice.type}</h1>
+                <p>${companyName}</p>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 18px; font-weight: bold;">Nº ${invoice.number}</div>
+              <div style="font-size: 12px; color: #666;">Série: ${invoice.series}</div>
+              <div class="status-badge">${invoice.status}</div>
+            </div>
+          </div>
+          
+          <div class="info-grid">
+            <div class="info-box">
+              <h3>Dados do Cliente</h3>
+              <p><strong>Nome:</strong> ${invoice.contactName}</p>
+              <p><strong>CPF/CNPJ:</strong> ${invoice.contactCnpjCpf}</p>
+            </div>
+            <div class="info-box">
+              <h3>Detalhes da Nota</h3>
+              <p><strong>Data de Emissão:</strong> ${new Date(invoice.issueDate).toLocaleDateString('pt-BR')}</p>
+              <p><strong>Valor Total:</strong> ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(invoice.totalAmount)}</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Itens</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Descrição</th>
+                  <th class="center">Qtd</th>
+                  <th class="right">V. Unitário</th>
+                  <th class="right">V. Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsHtml}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="right">Total da Nota:</td>
+                  <td class="right" style="font-size: 16px;">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(invoice.totalAmount)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          ${invoice.observations ? `
+          <div class="section">
+            <h3>Observações</h3>
+            <div class="content">${invoice.observations}</div>
+          </div>
+          ` : ''}
+
+          <div style="margin-top: 80px; text-align: center; font-size: 10px; color: #999;">
+            <p>Documento gerado em ${new Date().toLocaleString('pt-BR')}</p>
+          </div>
+          
+          <script>
+            window.onload = () => {
+              window.print();
+              setTimeout(() => {
+                window.close();
+              }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
     }
   };
 
@@ -189,6 +327,14 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
                     <MoreVertical className="w-5 h-5" />
                   </button>
                   <button 
+                    onClick={() => handlePrintInvoice(invoice)}
+                    className="p-3 text-secondary hover:text-primary hover:bg-primary/5 rounded-2xl transition-all"
+                    title="Imprimir"
+                  >
+                    <Printer className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={() => handleDownloadInvoice(invoice)}
                     className="p-3 text-secondary hover:text-blue-600 hover:bg-blue-50 rounded-2xl transition-all"
                     title="Download PDF"
                   >

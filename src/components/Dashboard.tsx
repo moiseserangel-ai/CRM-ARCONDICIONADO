@@ -285,24 +285,6 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           <h2 className="text-4xl font-black font-headline tracking-tight text-on-surface">Painel de Controle</h2>
           <p className="text-secondary text-sm mt-1 font-medium">Acompanhe métricas, leads e ordens de serviço em tempo real.</p>
         </motion.div>
-        
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex flex-wrap gap-3"
-        >
-          <button className="bg-surface-container-low text-secondary px-5 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest border border-outline-variant/10 hover:bg-surface-container transition-all flex items-center shadow-sm">
-            <Calendar className="w-4 h-4 mr-2.5 text-primary" />
-            Últimos 30 Dias
-          </button>
-          <button 
-            onClick={handleExport}
-            className="milled-gradient text-white px-6 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center"
-          >
-            <Download className="w-4 h-4 mr-2.5" />
-            Exportar Relatório
-          </button>
-        </motion.div>
       </div>
 
       {/* Bento Grid: Key Metrics */}
