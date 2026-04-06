@@ -453,15 +453,6 @@ export default function App() {
             </button>
           </form>
 
-          <div className="mt-8 flex flex-col items-center gap-4">
-            <button 
-              onClick={() => setIsRegistering(!isRegistering)}
-              className="text-sm font-bold text-primary hover:underline"
-            >
-              {isRegistering ? 'Já tem uma conta? Entre aqui' : 'Não tem uma conta? Registre-se'}
-            </button>
-          </div>
-
           <p className="mt-10 text-[10px] text-secondary/40 font-bold uppercase tracking-widest text-center">Segurança de Nível Empresarial Ativada</p>
         </div>
       </div>
