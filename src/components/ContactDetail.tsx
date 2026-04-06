@@ -680,7 +680,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               <p className="text-lg text-secondary font-medium mb-6">
                 {contact.cnpjCpf} • 
                 <a 
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address || contact.location || '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary font-black hover:underline transition-all"
@@ -699,7 +699,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   {contact.phone}
                 </div>
                 <a 
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address || contact.location || '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-xs font-bold text-secondary hover:text-primary transition-colors"
@@ -915,7 +915,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               </section>
 
               <a 
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address)}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address || contact.location || '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-surface-container-lowest rounded-[32px] overflow-hidden shadow-sm h-64 relative group border border-outline-variant/10 block"
