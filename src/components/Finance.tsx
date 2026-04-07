@@ -46,6 +46,8 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
   const [selectedPeriod, setSelectedPeriod] = useState<'Geral' | 'Mensal' | 'Anual'>('Geral');
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setLocalSearchTerm(searchTerm);
@@ -240,16 +242,22 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
     }).format(value);
   }
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir esta transação?')) return;
+  const handleDelete = async () => {
+    if (!transactionToDelete) return;
+    setDeleting(true);
     try {
       const { error } = await supabase
         .from('transactions')
         .delete()
-        .eq('id', id);
+        .eq('id', transactionToDelete.id);
       if (error) throw error;
+      
+      setTransactions(prev => prev.filter(t => t.id !== transactionToDelete.id));
     } catch (error) {
       console.error('Error deleting transaction:', error);
+    } finally {
+      setDeleting(false);
+      setTransactionToDelete(null);
     }
   };
 
@@ -684,7 +692,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                               <button 
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleDelete(t.id);
+                                  setTransactionToDelete(t);
                                 }}
                                 className="p-2.5 hover:bg-rose-500/10 rounded-xl transition-all text-rose-500"
                                 title="Excluir"
@@ -793,6 +801,43 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
           </div>
         </div>
       </section>
+
+      {/* Confirmation Modal */}
+      {transactionToDelete && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+            <div className="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center mb-6">
+              <Trash2 className="w-8 h-8 text-rose-500" />
+            </div>
+            <h3 className="text-2xl font-bold font-headline text-on-surface mb-2">Excluir Transação?</h3>
+            <p className="text-secondary mb-8 leading-relaxed">
+              Você está prestes a remover permanentemente a transação <span className="font-bold text-on-surface">{transactionToDelete.description}</span>. Esta ação é irreversível e afetará o saldo.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setTransactionToDelete(null)}
+                className="flex-1 py-3 bg-surface-container-low text-secondary rounded-xl font-bold hover:bg-surface-container-high transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex-1 py-3 bg-rose-500 text-white rounded-xl font-bold shadow-lg hover:bg-rose-600 transition-all flex items-center justify-center gap-2"
+              >
+                {deleting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Excluindo...
+                  </>
+                ) : (
+                  'Excluir Transação'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

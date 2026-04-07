@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileUp, UserPlus as PersonAdd, Filter, ChevronDown, X, ChevronLeft, ChevronRight, MoreVertical, Loader2, Search, Users, TrendingUp, ShieldCheck, Zap } from 'lucide-react';
+import { FileUp, UserPlus as PersonAdd, Filter, ChevronDown, X, ChevronLeft, ChevronRight, MoreVertical, Loader2, Search, Users, TrendingUp, ShieldCheck, Zap, Edit, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 import { Contact, ServiceOrder, User } from '../types';
@@ -9,10 +9,11 @@ interface ContactsProps {
   user: User;
   onSelectContact: (contact: Contact) => void;
   onAddContact: () => void;
+  onEditContact: (contact: Contact) => void;
   searchTerm?: string;
 }
 
-export default function Contacts({ user, onSelectContact, onAddContact, searchTerm = '' }: ContactsProps) {
+export default function Contacts({ user, onSelectContact, onAddContact, onEditContact, searchTerm = '' }: ContactsProps) {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [serviceOrders, setServiceOrders] = useState<ServiceOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,6 +21,8 @@ export default function Contacts({ user, onSelectContact, onAddContact, searchTe
   const [searchQuery, setSearchQuery] = useState(searchTerm);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setSearchQuery(searchTerm);
@@ -127,6 +130,25 @@ export default function Contacts({ user, onSelectContact, onAddContact, searchTe
       supabase.removeChannel(soChannel);
     };
   }, [user]);
+
+  const handleDeleteContact = async () => {
+    if (!contactToDelete) return;
+    setDeleting(true);
+    try {
+      const { error } = await supabase
+        .from('contacts')
+        .delete()
+        .eq('id', contactToDelete.id);
+      if (error) throw error;
+      
+      setContacts(prev => prev.filter(c => c.id !== contactToDelete.id));
+    } catch (err) {
+      console.error('Error deleting contact:', err);
+    } finally {
+      setDeleting(false);
+      setContactToDelete(null);
+    }
+  };
 
   const getContactFinalizedTotal = (contact: Contact) => {
     const finalizedValue = serviceOrders
@@ -393,9 +415,22 @@ export default function Contacts({ user, onSelectContact, onAddContact, searchTe
                         </div>
                       </td>
                       <td className="px-10 py-7 text-center">
-                        <button className="p-3 bg-surface-container-low/50 rounded-xl text-secondary hover:text-primary hover:bg-primary/5 transition-all">
-                          <MoreVertical className="w-5 h-5" />
-                        </button>
+                        <div className="flex items-center justify-center gap-2">
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); onEditContact(contact); }}
+                            className="p-3 bg-surface-container-low/50 rounded-xl text-secondary hover:text-primary hover:bg-primary/5 transition-all"
+                            title="Editar"
+                          >
+                            <Edit className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); setContactToDelete(contact); }}
+                            className="p-3 bg-surface-container-low/50 rounded-xl text-secondary hover:text-error hover:bg-error/5 transition-all"
+                            title="Excluir"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
                       </td>
                     </motion.tr>
                   ))}
@@ -484,6 +519,20 @@ export default function Contacts({ user, onSelectContact, onAddContact, searchTe
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); onEditContact(contact); }}
+                        className="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary hover:bg-primary hover:text-white transition-all shadow-sm"
+                        title="Editar"
+                      >
+                        <Edit className="w-5 h-5" />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setContactToDelete(contact); }}
+                        className="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary hover:bg-error hover:text-white transition-all shadow-sm"
+                        title="Excluir"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
                       <div className="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                         <ChevronRight className="w-5 h-5" />
                       </div>
@@ -495,6 +544,43 @@ export default function Contacts({ user, onSelectContact, onAddContact, searchTe
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      {contactToDelete && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+            <div className="w-16 h-16 bg-error-container/20 rounded-2xl flex items-center justify-center mb-6">
+              <Trash2 className="w-8 h-8 text-error" />
+            </div>
+            <h3 className="text-2xl font-bold font-headline text-on-surface mb-2">Excluir Cliente?</h3>
+            <p className="text-secondary mb-8 leading-relaxed">
+              Você está prestes a remover permanentemente o cliente <span className="font-bold text-on-surface">{contactToDelete.name}</span>. Esta ação é irreversível e todos os dados associados serão perdidos.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setContactToDelete(null)}
+                className="flex-1 py-3 bg-surface-container-low text-secondary rounded-xl font-bold hover:bg-surface-container-high transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleDeleteContact}
+                disabled={deleting}
+                className="flex-1 py-3 bg-error text-white rounded-xl font-bold shadow-lg hover:bg-error/90 transition-all flex items-center justify-center gap-2"
+              >
+                {deleting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Excluindo...
+                  </>
+                ) : (
+                  'Excluir Cliente'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }

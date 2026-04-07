@@ -237,7 +237,7 @@ export default function App() {
       case 'pipeline':
         return <Pipeline user={user} onViewChange={setCurrentView} onSelectContact={handleSelectContact} searchTerm={globalSearchTerm} />;
       case 'contacts':
-        return <Contacts user={user} onSelectContact={handleSelectContact} onAddContact={handleAddContact} searchTerm={globalSearchTerm} />;
+        return <Contacts user={user} onSelectContact={handleSelectContact} onAddContact={handleAddContact} onEditContact={handleEditContact} searchTerm={globalSearchTerm} />;
       case 'products':
         return <Products user={user} onAddProduct={handleAddProduct} onEditProduct={handleEditProduct} searchTerm={globalSearchTerm} />;
       case 'finance':
@@ -267,7 +267,7 @@ export default function App() {
             companyLogo={companyLogo}
             companyName={settings.companyName}
           />
-        ) : <Contacts user={user} onSelectContact={handleSelectContact} onAddContact={handleAddContact} />;
+        ) : <Contacts user={user} onSelectContact={handleSelectContact} onAddContact={handleAddContact} onEditContact={handleEditContact} />;
       case 'contact-form':
         return (
           <ContactForm 

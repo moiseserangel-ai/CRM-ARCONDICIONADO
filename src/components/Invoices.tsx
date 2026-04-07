@@ -19,6 +19,8 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState<'Todos' | 'Produto' | 'Serviço'>('Todos');
+  const [invoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -61,17 +63,23 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
     };
   }, [user]);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Deseja realmente excluir esta nota fiscal?')) return;
+  const handleDelete = async () => {
+    if (!invoiceToDelete) return;
+    setDeleting(true);
     try {
       const { error } = await supabase
         .from('invoices')
         .delete()
-        .eq('id', id);
+        .eq('id', invoiceToDelete.id);
 
       if (error) throw error;
+      
+      setInvoices(prev => prev.filter(i => i.id !== invoiceToDelete.id));
     } catch (error) {
       console.error('Error deleting invoice:', error);
+    } finally {
+      setDeleting(false);
+      setInvoiceToDelete(null);
     }
   };
 
@@ -341,7 +349,7 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
                     <Download className="w-5 h-5" />
                   </button>
                   <button 
-                    onClick={() => handleDelete(invoice.id)}
+                    onClick={() => setInvoiceToDelete(invoice)}
                     className="p-3 text-secondary hover:text-error hover:bg-error/5 rounded-2xl transition-all"
                     title="Excluir"
                   >
@@ -369,6 +377,43 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      {invoiceToDelete && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+            <div className="w-16 h-16 bg-error-container/20 rounded-2xl flex items-center justify-center mb-6">
+              <Trash2 className="w-8 h-8 text-error" />
+            </div>
+            <h3 className="text-2xl font-bold font-headline text-on-surface mb-2">Excluir Nota Fiscal?</h3>
+            <p className="text-secondary mb-8 leading-relaxed">
+              Você está prestes a remover permanentemente a nota fiscal <span className="font-bold text-on-surface">Nº {invoiceToDelete.number}</span>. Esta ação é irreversível e todos os dados associados serão perdidos.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setInvoiceToDelete(null)}
+                className="flex-1 py-3 bg-surface-container-low text-secondary rounded-xl font-bold hover:bg-surface-container-high transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex-1 py-3 bg-error text-white rounded-xl font-bold shadow-lg hover:bg-error/90 transition-all flex items-center justify-center gap-2"
+              >
+                {deleting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Excluindo...
+                  </>
+                ) : (
+                  'Excluir Nota'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

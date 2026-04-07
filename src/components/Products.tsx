@@ -18,6 +18,8 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
   const [error, setError] = useState<string | null>(null);
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('grid');
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     setLocalSearchTerm(searchTerm);
@@ -76,17 +78,23 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
     };
   }, [user]);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir este produto?')) return;
+  const handleDelete = async () => {
+    if (!productToDelete) return;
+    setDeleting(true);
     try {
       const { error } = await supabase
         .from('products')
         .delete()
-        .eq('id', id);
+        .eq('id', productToDelete.id);
 
       if (error) throw error;
+      
+      setProducts(prev => prev.filter(p => p.id !== productToDelete.id));
     } catch (err) {
       console.error('Error deleting product:', err);
+    } finally {
+      setDeleting(false);
+      setProductToDelete(null);
     }
   };
 
@@ -283,7 +291,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
                       <button 
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDelete(product.id);
+                          setProductToDelete(product);
                         }}
                         className="p-2 hover:bg-error-container/20 text-error rounded-xl transition-colors"
                       >
@@ -406,7 +414,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDelete(product.id);
+                            setProductToDelete(product);
                           }}
                           className="p-2.5 text-secondary hover:text-error hover:bg-error-container/20 rounded-xl transition-all"
                         >
@@ -469,6 +477,43 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
           </div>
         </div>
       </section>
+
+      {/* Confirmation Modal */}
+      {productToDelete && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+            <div className="w-16 h-16 bg-error-container/20 rounded-2xl flex items-center justify-center mb-6">
+              <Trash2 className="w-8 h-8 text-error" />
+            </div>
+            <h3 className="text-2xl font-bold font-headline text-on-surface mb-2">Excluir Produto?</h3>
+            <p className="text-secondary mb-8 leading-relaxed">
+              Você está prestes a remover permanentemente o produto <span className="font-bold text-on-surface">{productToDelete.name}</span>. Esta ação é irreversível e todos os dados associados serão perdidos.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setProductToDelete(null)}
+                className="flex-1 py-3 bg-surface-container-low text-secondary rounded-xl font-bold hover:bg-surface-container-high transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex-1 py-3 bg-error text-white rounded-xl font-bold shadow-lg hover:bg-error/90 transition-all flex items-center justify-center gap-2"
+              >
+                {deleting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Excluindo...
+                  </>
+                ) : (
+                  'Excluir Produto'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
