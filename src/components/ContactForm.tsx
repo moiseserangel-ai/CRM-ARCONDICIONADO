@@ -44,7 +44,26 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
 
   useEffect(() => {
     if (contact) {
-      setFormData(contact);
+      let address = contact.address || '';
+      let location = contact.location || '';
+      
+      // If address is empty but location has a dash, try to split it
+      // This handles the case where address was merged into location
+      if (!address && location && location.includes(' - ')) {
+        const parts = location.split(' - ');
+        if (parts.length > 1) {
+          // Assume the last part is the city/UF (e.g., "São Paulo, SP")
+          location = parts.pop()?.trim() || '';
+          // The rest is the address
+          address = parts.join(' - ').trim();
+        }
+      }
+
+      setFormData({
+        ...contact,
+        address,
+        location
+      });
     }
   }, [contact]);
 
