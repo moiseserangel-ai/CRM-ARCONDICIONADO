@@ -44,12 +44,12 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
         onClick={handleLogoClick}
       >
         {companyLogo ? (
-          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-outline-variant/10">
+          <div className="w-14 h-14 rounded-xl overflow-hidden shadow-sm border border-outline-variant/10 shrink-0">
             <img src={companyLogo} alt="Logo" className="w-full h-full object-contain" />
           </div>
         ) : (
-          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-            <span className="text-primary font-bold text-xl">C</span>
+          <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+            <span className="text-primary font-bold text-2xl">C</span>
           </div>
         )}
         <div className="flex-1 min-w-0">

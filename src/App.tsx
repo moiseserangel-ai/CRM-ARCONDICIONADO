@@ -140,6 +140,34 @@ export default function App() {
     };
   }, [user]);
 
+  // Inactivity Timeout
+  useEffect(() => {
+    if (!user) return;
+
+    let timeoutId: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      // 30 minutes = 30 * 60 * 1000 = 1800000 ms
+      timeoutId = setTimeout(() => {
+        supabase.auth.signOut();
+        showToast('Sessão Expirada', 'Você foi desconectado por inatividade.', 'error');
+      }, 1800000);
+    };
+
+    // Initialize timer
+    resetTimer();
+
+    // Event listeners for user activity
+    const events = ['mousemove', 'keydown', 'click', 'scroll'];
+    events.forEach(event => window.addEventListener(event, resetTimer));
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach(event => window.removeEventListener(event, resetTimer));
+    };
+  }, [user]);
+
   const showToast = (message: string, subtext: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, subtext, type });
     setTimeout(() => setToast(null), 3000);
