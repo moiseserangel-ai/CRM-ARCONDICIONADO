@@ -335,6 +335,19 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
                   className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm font-semibold placeholder:text-secondary/30"
                 />
               </div>
+
+              <div className="space-y-2.5">
+                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                  <DollarSign className="w-3 h-3" /> Volume de Serviço
+                </label>
+                <input
+                  name="portfolioValue"
+                  value={formData.portfolioValue || ''}
+                  onChange={handleChange}
+                  placeholder="R$ 0,00"
+                  className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm font-semibold placeholder:text-secondary/30"
+                />
+              </div>
             </div>
             <div className="space-y-2.5 mt-8">
               <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
@@ -469,20 +482,6 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
             </div>
 
             <div className="space-y-6">
-              <div className="bg-surface-container-low/50 p-6 rounded-3xl border border-outline-variant/10">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary mb-3 block">Volume Total em Serviço</label>
-                <div className="relative">
-                  <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-600" />
-                  <input
-                    name="portfolioValue"
-                    value={formData.portfolioValue || ''}
-                    onChange={handleChange}
-                    placeholder="R$ 0,00"
-                    className="w-full bg-surface-container-lowest border border-outline-variant/20 rounded-2xl py-5 pl-12 pr-5 text-2xl font-black text-on-surface focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
-                  />
-                </div>
-              </div>
-
               <div className="space-y-2.5">
                 <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1">Status de Adimplência</label>
                 <select

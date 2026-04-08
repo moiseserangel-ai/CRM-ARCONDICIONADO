@@ -403,20 +403,20 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                 Meta: 150k
               </div>
             </div>
-            <p className="text-secondary text-[10px] font-black mb-1 uppercase tracking-widest">FATURAMENTO (FECHADOS)</p>
+            <p className="text-secondary text-[10px] font-black mb-1 uppercase tracking-widest">VOLUME DE SERVIÇO</p>
             <h3 className="text-2xl font-black font-headline text-on-surface">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(closedValue)}
+              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPipelineValue)}
             </h3>
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
             <div className="flex items-center justify-between mb-2">
               <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">Progresso da Meta</p>
-              <span className="text-[10px] font-black text-primary">{((closedValue / 150000) * 100).toFixed(1)}%</span>
+              <span className="text-[10px] font-black text-primary">{((totalPipelineValue / 150000) * 100).toFixed(1)}%</span>
             </div>
             <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
-                animate={{ width: `${Math.min((closedValue / 150000) * 100, 100)}%` }}
+                animate={{ width: `${Math.min((totalPipelineValue / 150000) * 100, 100)}%` }}
                 transition={{ duration: 1, delay: 0.6 }}
                 className="h-full bg-emerald-500"
               ></motion.div>

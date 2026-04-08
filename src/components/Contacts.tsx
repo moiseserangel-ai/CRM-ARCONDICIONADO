@@ -192,6 +192,14 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
       return sum + val;
     }, 0);
 
+  const closedVolume = serviceOrders
+    .filter(os => (os.status === 'Finalizada' || os.status === 'Orçamento Aceito') && filteredContacts.some(c => c.id === os.contactId))
+    .reduce((sum, os) => {
+      const digits = (os.value || 'R$ 0,00').replace(/[^0-9]/g, '');
+      const val = (parseInt(digits) || 0) / 100;
+      return sum + val;
+    }, 0);
+
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
 
   return (
@@ -251,7 +259,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
         {[
           { label: 'Total Gerenciado', value: totalManaged.toString(), trend: '+12%', trendColor: 'bg-primary/10 text-primary', icon: Users },
           { label: 'Pipeline Ativo', value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(activePipeline), trend: 'Alta Cap', trendColor: 'bg-tertiary-container/30 text-tertiary', icon: TrendingUp },
-          { label: 'Taxa de Retenção', value: '98,2%', progress: 98, icon: ShieldCheck },
+          { label: 'Volume Fechado', value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(closedVolume), trend: 'Concluído', trendColor: 'bg-emerald-500/10 text-emerald-600', icon: ShieldCheck },
           { label: 'Velocidade de Lead', value: '14,5d', trend: '-2,1d', trendColor: 'bg-error-container/30 text-error', icon: Zap },
         ].map((m, i) => (
           <motion.div 
