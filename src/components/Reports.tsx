@@ -55,17 +55,30 @@ export default function Reports({ user }: { user: User }) {
     // Set up real-time subscriptions
     const contactsChannel = supabase
       .channel('reports-contacts')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts', filter: `userId=eq.${user.id}` }, (payload) => {
-        if (payload.eventType === 'INSERT') setContacts(prev => [payload.new as Contact, ...prev]);
-        else if (payload.eventType === 'UPDATE') setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
-        else if (payload.eventType === 'DELETE') setContacts(prev => prev.filter(c => c.id !== payload.old.id));
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts' }, (payload) => {
+        const isRelevant = 
+          (payload.new && (payload.new as Contact).userId === user.id) || 
+          (payload.old && (payload.old as Contact).userId === user.id) ||
+          payload.eventType === 'DELETE';
+          
+        if (isRelevant) {
+          if (payload.eventType === 'INSERT') setContacts(prev => {
+            if (prev.some(c => c.id === payload.new.id)) return prev;
+            return [payload.new as Contact, ...prev];
+          });
+          else if (payload.eventType === 'UPDATE') setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
+          else if (payload.eventType === 'DELETE') setContacts(prev => prev.filter(c => c.id !== payload.old.id));
+        }
       })
       .subscribe();
 
     const soChannel = supabase
       .channel('reports-so')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'serviceOrders' }, (payload) => {
-        if (payload.eventType === 'INSERT') setServiceOrders(prev => [payload.new as ServiceOrder, ...prev]);
+        if (payload.eventType === 'INSERT') setServiceOrders(prev => {
+          if (prev.some(so => so.id === payload.new.id)) return prev;
+          return [payload.new as ServiceOrder, ...prev];
+        });
         else if (payload.eventType === 'UPDATE') setServiceOrders(prev => prev.map(so => so.id === payload.new.id ? payload.new as ServiceOrder : so));
         else if (payload.eventType === 'DELETE') setServiceOrders(prev => prev.filter(so => so.id !== payload.old.id));
       })

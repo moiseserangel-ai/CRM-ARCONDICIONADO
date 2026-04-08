@@ -68,13 +68,23 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess }: Fi
     // Set up real-time subscription
     const channel = supabase
       .channel('finance-form-contacts')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts', filter: `userId=eq.${user.id}` }, (payload) => {
-        if (payload.eventType === 'INSERT') {
-          setContacts(prev => [payload.new as Contact, ...prev]);
-        } else if (payload.eventType === 'UPDATE') {
-          setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
-        } else if (payload.eventType === 'DELETE') {
-          setContacts(prev => prev.filter(c => c.id !== payload.old.id));
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts' }, (payload) => {
+        const isRelevant = 
+          (payload.new && (payload.new as Contact).userId === user.id) || 
+          (payload.old && (payload.old as Contact).userId === user.id) ||
+          payload.eventType === 'DELETE';
+          
+        if (isRelevant) {
+          if (payload.eventType === 'INSERT') {
+            setContacts(prev => {
+              if (prev.some(c => c.id === payload.new.id)) return prev;
+              return [payload.new as Contact, ...prev];
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
+          } else if (payload.eventType === 'DELETE') {
+            setContacts(prev => prev.filter(c => c.id !== payload.old.id));
+          }
         }
       })
       .subscribe();

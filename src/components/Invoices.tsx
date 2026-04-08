@@ -47,13 +47,23 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
     // Set up real-time subscription
     const channel = supabase
       .channel('invoices-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices', filter: `userId=eq.${user.id}` }, (payload) => {
-        if (payload.eventType === 'INSERT') {
-          setInvoices(prev => [payload.new as Invoice, ...prev]);
-        } else if (payload.eventType === 'UPDATE') {
-          setInvoices(prev => prev.map(inv => inv.id === payload.new.id ? payload.new as Invoice : inv));
-        } else if (payload.eventType === 'DELETE') {
-          setInvoices(prev => prev.filter(inv => inv.id !== payload.old.id));
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'invoices' }, (payload) => {
+        const isRelevant = 
+          (payload.new && (payload.new as Invoice).userId === user.id) || 
+          (payload.old && (payload.old as Invoice).userId === user.id) ||
+          payload.eventType === 'DELETE';
+          
+        if (isRelevant) {
+          if (payload.eventType === 'INSERT') {
+            setInvoices(prev => {
+              if (prev.some(inv => inv.id === payload.new.id)) return prev;
+              return [payload.new as Invoice, ...prev];
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            setInvoices(prev => prev.map(inv => inv.id === payload.new.id ? payload.new as Invoice : inv));
+          } else if (payload.eventType === 'DELETE') {
+            setInvoices(prev => prev.filter(inv => inv.id !== payload.old.id));
+          }
         }
       })
       .subscribe();

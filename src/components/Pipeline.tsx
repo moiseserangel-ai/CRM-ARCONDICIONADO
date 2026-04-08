@@ -100,17 +100,30 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
     // Set up real-time subscriptions
     const contactsChannel = supabase
       .channel('pipeline-contacts')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts', filter: `userId=eq.${user.id}` }, (payload) => {
-        if (payload.eventType === 'INSERT') setContacts(prev => [payload.new as Contact, ...prev]);
-        else if (payload.eventType === 'UPDATE') setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
-        else if (payload.eventType === 'DELETE') setContacts(prev => prev.filter(c => c.id !== payload.old.id));
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'contacts' }, (payload) => {
+        const isRelevant = 
+          (payload.new && (payload.new as Contact).userId === user.id) || 
+          (payload.old && (payload.old as Contact).userId === user.id) ||
+          payload.eventType === 'DELETE'; // For DELETE, we might not have userId, so we process it anyway
+          
+        if (isRelevant) {
+          if (payload.eventType === 'INSERT') setContacts(prev => {
+            if (prev.some(c => c.id === payload.new.id)) return prev;
+            return [payload.new as Contact, ...prev];
+          });
+          else if (payload.eventType === 'UPDATE') setContacts(prev => prev.map(c => c.id === payload.new.id ? payload.new as Contact : c));
+          else if (payload.eventType === 'DELETE') setContacts(prev => prev.filter(c => c.id !== payload.old.id));
+        }
       })
       .subscribe();
 
     const soChannel = supabase
       .channel('pipeline-so')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'serviceOrders' }, (payload) => {
-        if (payload.eventType === 'INSERT') setServiceOrders(prev => [payload.new as ServiceOrder, ...prev]);
+        if (payload.eventType === 'INSERT') setServiceOrders(prev => {
+          if (prev.some(so => so.id === payload.new.id)) return prev;
+          return [payload.new as ServiceOrder, ...prev];
+        });
         else if (payload.eventType === 'UPDATE') setServiceOrders(prev => prev.map(so => so.id === payload.new.id ? payload.new as ServiceOrder : so));
         else if (payload.eventType === 'DELETE') setServiceOrders(prev => prev.filter(so => so.id !== payload.old.id));
       })
@@ -118,10 +131,20 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
 
     const productsChannel = supabase
       .channel('pipeline-products')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'products', filter: `userId=eq.${user.id}` }, (payload) => {
-        if (payload.eventType === 'INSERT') setProducts(prev => [payload.new as Product, ...prev]);
-        else if (payload.eventType === 'UPDATE') setProducts(prev => prev.map(p => p.id === payload.new.id ? payload.new as Product : p));
-        else if (payload.eventType === 'DELETE') setProducts(prev => prev.filter(p => p.id !== payload.old.id));
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, (payload) => {
+        const isRelevant = 
+          (payload.new && (payload.new as Product).userId === user.id) || 
+          (payload.old && (payload.old as Product).userId === user.id) ||
+          payload.eventType === 'DELETE';
+          
+        if (isRelevant) {
+          if (payload.eventType === 'INSERT') setProducts(prev => {
+            if (prev.some(p => p.id === payload.new.id)) return prev;
+            return [payload.new as Product, ...prev];
+          });
+          else if (payload.eventType === 'UPDATE') setProducts(prev => prev.map(p => p.id === payload.new.id ? payload.new as Product : p));
+          else if (payload.eventType === 'DELETE') setProducts(prev => prev.filter(p => p.id !== payload.old.id));
+        }
       })
       .subscribe();
 
@@ -290,7 +313,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
 
     setFinalizingOS(true);
     try {
-      const { error: osError } = await supabase
+      const { data: updatedOS, error: osError } = await supabase
         .from('serviceOrders')
         .update({
           materials: finalizeData.materials,
@@ -298,9 +321,15 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
           usedProducts: finalizeData.usedProducts,
           status: finalStatus
         })
-        .eq('id', selectedOS.id);
+        .eq('id', selectedOS.id)
+        .select()
+        .single();
 
       if (osError) throw osError;
+
+      if (updatedOS) {
+        setServiceOrders(prev => prev.map(so => so.id === updatedOS.id ? (updatedOS as ServiceOrder) : so));
+      }
 
       // Deduct stock if OS is finalized or accepted
       if (finalStatus === 'Finalizada' || finalStatus === 'Orçamento Aceito') {
@@ -359,15 +388,21 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
         newStatus = 'Serviço Concluído';
       }
 
-      const { error: contactError } = await supabase
+      const { data: updatedContact, error: contactError } = await supabase
         .from('contacts')
         .update({
           status: newStatus,
           portfolioValue: formattedValue
         })
-        .eq('id', selectedContactForFinalize.id);
+        .eq('id', selectedContactForFinalize.id)
+        .select()
+        .single();
 
       if (contactError) throw contactError;
+
+      if (updatedContact) {
+        setContacts(prev => prev.map(c => c.id === updatedContact.id ? (updatedContact as Contact) : c));
+      }
 
       setShowFinalizeModal(false);
       setSelectedOS(null);
@@ -403,6 +438,13 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
           onClose={() => {
             setShowQuickOSModal(false);
             setSelectedContactForOS(null);
+          }}
+          onSuccess={(newOS, updatedContact) => {
+            setServiceOrders(prev => {
+              if (prev.some(so => so.id === newOS.id)) return prev;
+              return [newOS, ...prev];
+            });
+            setContacts(prev => prev.map(c => c.id === updatedContact.id ? updatedContact : c));
           }}
           onViewChange={onViewChange}
           defaultSubject={defaultOSSubject}

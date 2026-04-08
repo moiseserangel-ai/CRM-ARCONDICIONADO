@@ -57,17 +57,26 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
           event: '*',
           schema: 'public',
           table: 'products',
-          filter: `userId=eq.${user.id}`,
         },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setProducts((prev) => [payload.new as Product, ...prev]);
-          } else if (payload.eventType === 'UPDATE') {
-            setProducts((prev) =>
-              prev.map((p) => (p.id === payload.new.id ? (payload.new as Product) : p))
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
+          const isRelevant = 
+            (payload.new && (payload.new as Product).userId === user.id) || 
+            (payload.old && (payload.old as Product).userId === user.id) ||
+            payload.eventType === 'DELETE';
+            
+          if (isRelevant) {
+            if (payload.eventType === 'INSERT') {
+              setProducts((prev) => {
+                if (prev.some(p => p.id === payload.new.id)) return prev;
+                return [payload.new as Product, ...prev];
+              });
+            } else if (payload.eventType === 'UPDATE') {
+              setProducts((prev) =>
+                prev.map((p) => (p.id === payload.new.id ? (payload.new as Product) : p))
+              );
+            } else if (payload.eventType === 'DELETE') {
+              setProducts((prev) => prev.filter((p) => p.id !== payload.old.id));
+            }
           }
         }
       )

@@ -12,9 +12,10 @@ interface QuickOSModalProps {
   onViewChange: (view: View) => void;
   defaultSubject?: string;
   initialContact?: Contact | null;
+  onSuccess?: (os: ServiceOrder, contact: Contact) => void;
 }
 
-export default function QuickOSModal({ user, contacts, onClose, onViewChange, defaultSubject = '', initialContact = null }: QuickOSModalProps) {
+export default function QuickOSModal({ user, contacts, onClose, onViewChange, defaultSubject = '', initialContact = null, onSuccess }: QuickOSModalProps) {
   const [step, setStep] = useState<'select' | 'form'>(initialContact ? 'form' : 'select');
   const [selectedContact, setSelectedContact] = useState<Contact | null>(initialContact);
   const [search, setSearch] = useState('');
@@ -225,7 +226,7 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
         userId: user.id
       };
       
-      const { error: osError } = await supabase.from('serviceOrders').insert(payload);
+      const { data: newOS, error: osError } = await supabase.from('serviceOrders').insert(payload).select().single();
 
       if (osError) throw osError;
 
@@ -247,13 +248,22 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
         }
       }
 
+      let updatedContact = { ...selectedContact, status: newStatus };
+
       if (newStatus !== selectedContact.status) {
-        const { error: contactError } = await supabase
+        const { data: contactData, error: contactError } = await supabase
           .from('contacts')
           .update({ status: newStatus })
-          .eq('id', selectedContact.id);
+          .eq('id', selectedContact.id)
+          .select()
+          .single();
         
         if (contactError) throw contactError;
+        if (contactData) updatedContact = contactData as Contact;
+      }
+
+      if (onSuccess && newOS) {
+        onSuccess(newOS as ServiceOrder, updatedContact);
       }
 
       onClose();

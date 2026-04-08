@@ -98,17 +98,26 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
           event: '*',
           schema: 'public',
           table: 'transactions',
-          filter: `userId=eq.${user.id}`,
         },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setTransactions((prev) => [payload.new as Transaction, ...prev]);
-          } else if (payload.eventType === 'UPDATE') {
-            setTransactions((prev) =>
-              prev.map((t) => (t.id === payload.new.id ? (payload.new as Transaction) : t))
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setTransactions((prev) => prev.filter((t) => t.id !== payload.old.id));
+          const isRelevant = 
+            (payload.new && (payload.new as Transaction).userId === user.id) || 
+            (payload.old && (payload.old as Transaction).userId === user.id) ||
+            payload.eventType === 'DELETE';
+            
+          if (isRelevant) {
+            if (payload.eventType === 'INSERT') {
+              setTransactions((prev) => {
+                if (prev.some(t => t.id === payload.new.id)) return prev;
+                return [payload.new as Transaction, ...prev];
+              });
+            } else if (payload.eventType === 'UPDATE') {
+              setTransactions((prev) =>
+                prev.map((t) => (t.id === payload.new.id ? (payload.new as Transaction) : t))
+              );
+            } else if (payload.eventType === 'DELETE') {
+              setTransactions((prev) => prev.filter((t) => t.id !== payload.old.id));
+            }
           }
         }
       )
@@ -125,7 +134,10 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
         },
         (payload) => {
           if (payload.eventType === 'INSERT') {
-            setServiceOrders((prev) => [payload.new as ServiceOrder, ...prev]);
+            setServiceOrders((prev) => {
+              if (prev.some(so => so.id === payload.new.id)) return prev;
+              return [payload.new as ServiceOrder, ...prev];
+            });
           } else if (payload.eventType === 'UPDATE') {
             setServiceOrders((prev) =>
               prev.map((so) => (so.id === payload.new.id ? (payload.new as ServiceOrder) : so))

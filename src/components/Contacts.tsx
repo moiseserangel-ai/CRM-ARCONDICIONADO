@@ -86,17 +86,26 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
           event: '*',
           schema: 'public',
           table: 'contacts',
-          filter: `userId=eq.${user.id}`,
         },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setContacts((prev) => [payload.new as Contact, ...prev]);
-          } else if (payload.eventType === 'UPDATE') {
-            setContacts((prev) =>
-              prev.map((c) => (c.id === payload.new.id ? (payload.new as Contact) : c))
-            );
-          } else if (payload.eventType === 'DELETE') {
-            setContacts((prev) => prev.filter((c) => c.id !== payload.old.id));
+          const isRelevant = 
+            (payload.new && (payload.new as Contact).userId === user.id) || 
+            (payload.old && (payload.old as Contact).userId === user.id) ||
+            payload.eventType === 'DELETE';
+            
+          if (isRelevant) {
+            if (payload.eventType === 'INSERT') {
+              setContacts((prev) => {
+                if (prev.some(c => c.id === payload.new.id)) return prev;
+                return [payload.new as Contact, ...prev];
+              });
+            } else if (payload.eventType === 'UPDATE') {
+              setContacts((prev) =>
+                prev.map((c) => (c.id === payload.new.id ? (payload.new as Contact) : c))
+              );
+            } else if (payload.eventType === 'DELETE') {
+              setContacts((prev) => prev.filter((c) => c.id !== payload.old.id));
+            }
           }
         }
       )
@@ -113,7 +122,10 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
         },
         (payload) => {
           if (payload.eventType === 'INSERT') {
-            setServiceOrders((prev) => [payload.new as ServiceOrder, ...prev]);
+            setServiceOrders((prev) => {
+              if (prev.some(so => so.id === payload.new.id)) return prev;
+              return [payload.new as ServiceOrder, ...prev];
+            });
           } else if (payload.eventType === 'UPDATE') {
             setServiceOrders((prev) =>
               prev.map((so) => (so.id === payload.new.id ? (payload.new as ServiceOrder) : so))

@@ -197,9 +197,13 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         userId: user.id
       };
       
-      const { error: osError } = await supabase.from('serviceOrders').insert(payload);
+      const { data: newOS, error: osError } = await supabase.from('serviceOrders').insert(payload).select().single();
 
       if (osError) throw osError;
+      
+      if (newOS) {
+        setServiceOrders(prev => [newOS as ServiceOrder, ...prev]);
+      }
 
       // Update Contact Status based on subject to move it in the Pipeline
       let newStatus = contact.status;
@@ -255,7 +259,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
     setFinalizingOS(true);
     try {
-      const { error: osError } = await supabase
+      const { data: updatedOS, error: osError } = await supabase
         .from('serviceOrders')
         .update({
           materials: finalizeData.materials,
@@ -263,9 +267,15 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           usedProducts: finalizeData.usedProducts,
           status: finalStatus
         })
-        .eq('id', selectedOS.id);
+        .eq('id', selectedOS.id)
+        .select()
+        .single();
       
       if (osError) throw osError;
+      
+      if (updatedOS) {
+        setServiceOrders(prev => prev.map(so => so.id === updatedOS.id ? (updatedOS as ServiceOrder) : so));
+      }
 
       // Deduct stock if OS is finalized or accepted
       if (finalStatus === 'Finalizada' || finalStatus === 'Orçamento Aceito') {
@@ -386,10 +396,25 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           event: '*',
           schema: 'public',
           table: 'serviceOrders',
-          filter: `contactId=eq.${contact.id}`
         },
-        () => {
-          fetchServiceOrders();
+        (payload) => {
+          // Only process if it belongs to this contact
+          const isRelevant = 
+            (payload.new && (payload.new as ServiceOrder).contactId === contact.id) || 
+            (payload.old && (payload.old as ServiceOrder).contactId === contact.id);
+            
+          if (isRelevant) {
+            if (payload.eventType === 'INSERT') {
+              setServiceOrders(prev => {
+                if (prev.some(so => so.id === payload.new.id)) return prev;
+                return [payload.new as ServiceOrder, ...prev];
+              });
+            } else if (payload.eventType === 'UPDATE') {
+              setServiceOrders(prev => prev.map(so => so.id === payload.new.id ? payload.new as ServiceOrder : so));
+            } else if (payload.eventType === 'DELETE') {
+              setServiceOrders(prev => prev.filter(so => so.id !== payload.old.id));
+            }
+          }
         }
       )
       .subscribe();
@@ -425,10 +450,16 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           event: '*',
           schema: 'public',
           table: 'products',
-          filter: `userId=eq.${user.id}`
         },
-        () => {
-          fetchProducts();
+        (payload) => {
+          const isRelevant = 
+            (payload.new && (payload.new as Product).userId === user.id) || 
+            (payload.old && (payload.old as Product).userId === user.id) ||
+            payload.eventType === 'DELETE';
+            
+          if (isRelevant) {
+            fetchProducts();
+          }
         }
       )
       .subscribe();

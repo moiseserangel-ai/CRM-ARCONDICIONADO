@@ -67,13 +67,23 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       // Set up real-time subscription
       const channel = supabase
         .channel('system-users-changes')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'systemUsers', filter: `userId=eq.${user.id}` }, (payload) => {
-          if (payload.eventType === 'INSERT') {
-            setSystemUsers(prev => [payload.new as SystemUser, ...prev]);
-          } else if (payload.eventType === 'UPDATE') {
-            setSystemUsers(prev => prev.map(u => u.id === payload.new.id ? payload.new as SystemUser : u));
-          } else if (payload.eventType === 'DELETE') {
-            setSystemUsers(prev => prev.filter(u => u.id !== payload.old.id));
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'systemUsers' }, (payload) => {
+          const isRelevant = 
+            (payload.new && (payload.new as SystemUser).userId === user.id) || 
+            (payload.old && (payload.old as SystemUser).userId === user.id) ||
+            payload.eventType === 'DELETE';
+            
+          if (isRelevant) {
+            if (payload.eventType === 'INSERT') {
+              setSystemUsers(prev => {
+                if (prev.some(u => u.id === payload.new.id)) return prev;
+                return [payload.new as SystemUser, ...prev];
+              });
+            } else if (payload.eventType === 'UPDATE') {
+              setSystemUsers(prev => prev.map(u => u.id === payload.new.id ? payload.new as SystemUser : u));
+            } else if (payload.eventType === 'DELETE') {
+              setSystemUsers(prev => prev.filter(u => u.id !== payload.old.id));
+            }
           }
         })
         .subscribe();
