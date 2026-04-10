@@ -295,7 +295,7 @@ export default function Reports({ user }: { user: User }) {
       </div>
 
       {/* Key Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <MetricCard 
           title="Faturamento Total" 
           value={formatCurrency(metrics.totalRevenue)} 
@@ -324,7 +324,7 @@ export default function Reports({ user }: { user: User }) {
 
       <div className="grid grid-cols-12 gap-8">
         {/* Revenue Chart */}
-        <div className="col-span-12 lg:col-span-8 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
+        <div className="col-span-12 xl:col-span-8 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-bold font-headline text-on-surface">Evolução do Faturamento</h3>
             <div className="flex items-center gap-2 text-[10px] font-bold text-secondary uppercase tracking-widest">
@@ -367,7 +367,7 @@ export default function Reports({ user }: { user: User }) {
         </div>
 
         {/* OS Status Distribution */}
-        <div className="col-span-12 lg:col-span-4 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
+        <div className="col-span-12 xl:col-span-4 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
           <h3 className="text-xl font-bold font-headline text-on-surface mb-8">Status das Ordens</h3>
           <div className="h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -408,7 +408,7 @@ export default function Reports({ user }: { user: User }) {
         </div>
 
         {/* Service Type Distribution */}
-        <div className="col-span-12 lg:col-span-5 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
+        <div className="col-span-12 xl:col-span-5 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
           <h3 className="text-xl font-bold font-headline text-on-surface mb-8">Tipos de Serviço</h3>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -432,7 +432,7 @@ export default function Reports({ user }: { user: User }) {
         </div>
 
         {/* Top Clients */}
-        <div className="col-span-12 lg:col-span-7 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
+        <div className="col-span-12 xl:col-span-7 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-bold font-headline text-on-surface">Top Clientes (Faturamento)</h3>
             <button className="text-primary text-xs font-bold hover:underline">Ver Todos</button>

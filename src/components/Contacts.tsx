@@ -255,7 +255,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
       </div>
 
       {/* Metrics Bento Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
         {[
           { label: 'Total Gerenciado', value: totalManaged.toString(), trend: '+12%', trendColor: 'bg-primary/10 text-primary', icon: Users },
           { label: 'Pipeline Ativo', value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(activePipeline), trend: 'Alta Cap', trendColor: 'bg-tertiary-container/30 text-tertiary', icon: TrendingUp },
@@ -298,7 +298,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col md:flex-row items-center justify-between bg-surface-container-low/30 backdrop-blur-sm p-4 rounded-[32px] border border-outline-variant/10 gap-4">
+      <div className="flex flex-col xl:flex-row items-center justify-between bg-surface-container-low/30 backdrop-blur-sm p-4 rounded-[32px] border border-outline-variant/10 gap-4">
         <div className="flex-1 flex items-center gap-4 w-full">
           <div className="relative flex-1">
             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary">
@@ -313,13 +313,13 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             />
           </div>
           
-          <div className="hidden md:flex items-center gap-2 bg-surface-container-lowest px-5 py-4 rounded-2xl text-[10px] font-black text-secondary uppercase tracking-widest border border-outline-variant/10 cursor-pointer hover:bg-surface-container-low transition-all">
+          <div className="hidden sm:flex items-center gap-2 bg-surface-container-lowest px-5 py-4 rounded-2xl text-[10px] font-black text-secondary uppercase tracking-widest border border-outline-variant/10 cursor-pointer hover:bg-surface-container-low transition-all shrink-0">
             <Filter className="w-4 h-4" />
             <span>Filtros Avançados</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+        <div className="flex items-center gap-4 w-full xl:w-auto justify-between xl:justify-end shrink-0">
           <span className="text-[10px] font-black text-secondary uppercase tracking-widest">Exibindo {filteredContacts.length} Clientes</span>
           <div className="flex gap-2">
             <button className="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/10 text-secondary hover:text-primary transition-all shadow-sm">
@@ -370,7 +370,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
           </div>
         ) : viewMode === 'table' ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
                 <tr className="bg-surface-container-low/30">
                   <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-secondary/60">Cliente / Identidade</th>
@@ -459,7 +459,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             </table>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             <AnimatePresence>
               {filteredContacts.map((contact, idx) => (
                 <motion.div

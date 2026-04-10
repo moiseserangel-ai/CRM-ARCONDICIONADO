@@ -691,9 +691,9 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
       {/* Bento Layout Header */}
       <div className="grid grid-cols-12 gap-8">
         {/* Main Identity Card */}
-        <div className="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-[40px] p-10 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center gap-10 group border border-outline-variant/5">
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
-            <div className="relative">
+        <div className="col-span-12 xl:col-span-8 bg-surface-container-lowest rounded-[40px] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center gap-10 group border border-outline-variant/5">
+          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-10 w-full">
+            <div className="relative shrink-0">
               {contact.avatar ? (
                 <img src={contact.avatar} className="w-32 h-32 rounded-[32px] border-4 border-surface shadow-xl object-cover" alt={contact.name} referrerPolicy="no-referrer" />
               ) : (
@@ -703,30 +703,30 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               )}
               <span className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 border-4 border-surface-container-lowest rounded-full shadow-lg"></span>
             </div>
-            <div className="text-center md:text-left">
-              <div className="flex flex-col md:flex-row items-center gap-4 mb-3">
-                <h2 className="text-4xl font-black font-headline tracking-tight text-on-surface">{contact.name}</h2>
-                <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Enterprise</span>
+            <div className="text-center md:text-left flex-1 min-w-0 w-full">
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-3 w-full">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black font-headline tracking-tight text-on-surface w-full break-words line-clamp-3 md:line-clamp-none">{contact.name}</h2>
+                <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shrink-0 mt-1 md:mt-2">Enterprise</span>
               </div>
-              <p className="text-lg text-secondary font-medium mb-6">
+              <p className="text-base md:text-lg text-secondary font-medium mb-6">
                 {contact.cnpjCpf} • 
                 <a 
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address || contact.location || '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary font-black hover:underline transition-all"
+                  className="text-primary font-black hover:underline transition-all ml-1"
                   title="Ver no Google Maps"
                 >
                   {contact.address}
                 </a>
               </p>
-              <div className="flex flex-wrap justify-center md:justify-start gap-6">
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 md:gap-6">
                 <div className="flex items-center gap-2 text-xs font-bold text-secondary">
-                  <Mail className="w-4 h-4 text-primary/60" />
-                  {contact.email}
+                  <Mail className="w-4 h-4 text-primary/60 shrink-0" />
+                  <span className="truncate max-w-[200px]">{contact.email}</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-bold text-secondary">
-                  <Call className="w-4 h-4 text-primary/60" />
+                  <Call className="w-4 h-4 text-primary/60 shrink-0" />
                   {contact.phone}
                 </div>
                 <a 
@@ -736,8 +736,8 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   className="flex items-center gap-2 text-xs font-bold text-secondary hover:text-primary transition-colors"
                   title="Ver no Google Maps"
                 >
-                  <LocationOn className="w-4 h-4 text-primary/60" />
-                  {contact.location}
+                  <LocationOn className="w-4 h-4 text-primary/60 shrink-0" />
+                  <span className="truncate max-w-[200px]">{contact.location}</span>
                 </a>
               </div>
             </div>
@@ -746,10 +746,10 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         </div>
 
         {/* Relationship Score */}
-        <div className="col-span-12 lg:col-span-4 milled-gradient text-white rounded-[40px] p-10 flex flex-col items-center justify-center relative overflow-hidden shadow-xl">
+        <div className="col-span-12 xl:col-span-4 milled-gradient text-white rounded-[40px] p-8 md:p-10 flex flex-col items-center justify-center relative overflow-hidden shadow-xl">
           <div className="relative z-10 text-center">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-80">Relationship Score</p>
-            <h3 className="text-8xl font-black font-headline leading-none mb-4">94</h3>
+            <h3 className="text-6xl md:text-8xl font-black font-headline leading-none mb-4">94</h3>
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
               <TrendingUp className="w-4 h-4" />
               <span className="text-[10px] font-black uppercase tracking-widest">+12% este mês</span>
@@ -788,7 +788,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         {activeTab === 'geral' ? (
           <>
             {/* Timeline & Notes */}
-            <div className="col-span-12 lg:col-span-8 space-y-8">
+            <div className="col-span-12 xl:col-span-8 space-y-8">
               {/* Technical Specs Section */}
               <section className="bg-surface-container-lowest rounded-[32px] p-8 shadow-sm border border-outline-variant/5">
                 <div className="flex items-center gap-3 mb-8">
@@ -912,7 +912,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
             </div>
 
             {/* Sidebar for Geral */}
-            <div className="col-span-12 lg:col-span-4 space-y-8">
+            <div className="col-span-12 xl:col-span-4 space-y-8">
               <section className="bg-surface-container-lowest rounded-[32px] p-8 border border-outline-variant/10 relative overflow-hidden shadow-sm">
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-8">
@@ -975,25 +975,25 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         ) : (
           <div className="col-span-12 space-y-10">
             {/* Financial Tab Content */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
               {[
                 { label: 'Total em Serviço', value: formattedClosedValue, sub: 'Soma de ordens finalizadas', icon: TrendingUp, trend: 'Acumulado', color: 'primary' },
                 { label: 'Valor em Aberto', value: formattedOpenValue, sub: 'Soma de ordens pendentes', icon: Clock, trend: 'Pendente', color: 'amber' },
                 { label: 'Status Financeiro', value: contact.financialStatus || 'Adimplente', sub: `Forma: ${contact.paymentMethod || 'Pix'}`, icon: ShieldCheck, trend: 'Status', color: 'emerald' },
                 { label: 'Ordens Ativas', value: serviceOrders.filter(os => os.status === 'Aberta').length.toString(), sub: 'Serviços em andamento', icon: FileText, trend: 'Volume', color: 'primary' },
               ].map((m, i) => (
-                <div key={i} className="bg-surface-container-lowest p-8 rounded-[32px] shadow-sm border border-outline-variant/5 group hover:border-primary/20 transition-all relative overflow-hidden">
-                  <div className="flex justify-between items-start mb-6">
+                <div key={i} className="bg-surface-container-lowest p-6 md:p-8 rounded-[32px] shadow-sm border border-outline-variant/5 group hover:border-primary/20 transition-all relative overflow-hidden">
+                  <div className="flex justify-between items-start mb-4 md:mb-6">
                     <div className={cn(
-                      "p-3 rounded-2xl transition-colors",
+                      "p-3 rounded-2xl transition-colors shrink-0",
                       m.color === 'primary' ? "bg-primary/5 text-primary" :
                       m.color === 'amber' ? "bg-amber-50 text-amber-600" :
                       "bg-emerald-50 text-emerald-600"
                     )}>
-                      <m.icon className="w-6 h-6" />
+                      <m.icon className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
                     <span className={cn(
-                      "text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest",
+                      "text-[8px] md:text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest truncate max-w-[100px]",
                       m.color === 'primary' ? "bg-primary/10 text-primary" :
                       m.color === 'amber' ? "bg-amber-100 text-amber-700" :
                       "bg-emerald-100 text-emerald-700"
@@ -1001,15 +1001,15 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                       {m.trend}
                     </span>
                   </div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-secondary/60 mb-1.5">{m.label}</p>
-                  <h3 className="text-2xl font-black font-headline text-on-surface tracking-tight">{m.value}</h3>
-                  <p className="text-[10px] font-bold text-secondary/40 mt-3 uppercase tracking-tighter">{m.sub}</p>
+                  <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-secondary/60 mb-1.5 truncate">{m.label}</p>
+                  <h3 className="text-xl md:text-2xl font-black font-headline text-on-surface tracking-tight truncate">{m.value}</h3>
+                  <p className="text-[9px] md:text-[10px] font-bold text-secondary/40 mt-3 uppercase tracking-tighter truncate">{m.sub}</p>
                   
                   {m.label === 'Total em Serviço' && (
                     <button 
                       onClick={handleRecalculateFinance}
                       disabled={recalculating}
-                      className="absolute bottom-8 right-8 p-2 rounded-xl bg-primary/5 text-primary opacity-0 group-hover:opacity-100 transition-all hover:bg-primary/10 disabled:opacity-50"
+                      className="absolute bottom-6 right-6 md:bottom-8 md:right-8 p-2 rounded-xl bg-primary/5 text-primary opacity-0 group-hover:opacity-100 transition-all hover:bg-primary/10 disabled:opacity-50"
                       title="Recalcular"
                     >
                       {recalculating ? <Loader2 className="w-4 h-4 animate-spin" /> : <TrendingUp className="w-4 h-4" />}

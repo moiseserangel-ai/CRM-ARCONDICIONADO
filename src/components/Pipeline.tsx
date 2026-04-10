@@ -729,14 +729,14 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
       </div>
 
       {/* Kanban Board */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
+      <div className="flex gap-6 items-start overflow-x-auto pb-6 snap-x custom-scrollbar">
         {stages.map((stage) => {
           const stageContacts = getContactsByStage(stage);
           const config = stageConfigs[stage];
           const StageIcon = config.icon;
           
           return (
-            <div key={stage} className="flex flex-col gap-5 min-w-[280px]">
+            <div key={stage} className="flex flex-col gap-5 min-w-[280px] w-[280px] shrink-0 snap-start">
               <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-2.5">
                   <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", config.color)}>

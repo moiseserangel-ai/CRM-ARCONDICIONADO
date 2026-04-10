@@ -451,7 +451,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+          className="grid grid-cols-1 xl:grid-cols-2 gap-8"
         >
           <div className="bg-surface-container-lowest p-8 rounded-[40px] border border-outline-variant/5 shadow-sm">
             <div className="flex items-center justify-between mb-8">
@@ -555,7 +555,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
 
       {/* Filters & Table */}
       <div className="bg-surface-container-lowest rounded-[40px] border border-outline-variant/5 shadow-sm overflow-hidden">
-        <div className="p-8 border-b border-outline-variant/10 flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-surface-container-low/20">
+        <div className="p-8 border-b border-outline-variant/10 flex flex-col xl:flex-row xl:items-center justify-between gap-6 bg-surface-container-low/20">
           <div className="flex flex-wrap items-center gap-4">
             <div className="bg-surface-container-low p-1 rounded-2xl flex border border-outline-variant/10">
               {(['Todos', 'Entrada', 'Saída'] as const).map((type) => (
@@ -606,7 +606,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="bg-surface-container-low/30">
                 <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Data</th>

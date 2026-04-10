@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, History, Check, Trash2, Clock, User as UserIcon, FileText, UserPlus, AlertCircle } from 'lucide-react';
+import { Search, Bell, History, Check, Trash2, Clock, User as UserIcon, FileText, UserPlus, AlertCircle, Menu } from 'lucide-react';
 import { Notification, User } from '../types';
-import { supabase } from '../lib/supabase';
+import { supabase, checkAndGenerateNotifications } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 
@@ -9,9 +9,10 @@ interface TopBarProps {
   user: User | null;
   searchTerm: string;
   onSearchChange: (term: string) => void;
+  onMenuToggle: () => void;
 }
 
-export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps) {
+export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle }: TopBarProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -19,7 +20,11 @@ export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps
   useEffect(() => {
     if (!user) return;
 
-    const fetchNotifications = async () => {
+    const initAndFetchNotifications = async () => {
+      // First generate any pending system notifications (birthdays, maintenance)
+      await checkAndGenerateNotifications(user.id);
+      
+      // Then fetch all notifications
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
@@ -33,7 +38,7 @@ export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps
       }
     };
 
-    fetchNotifications();
+    initAndFetchNotifications();
 
     const channel = supabase
       .channel('notifications-changes')
@@ -45,7 +50,17 @@ export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps
           table: 'notifications',
         },
         () => {
-          fetchNotifications();
+          // Re-fetch when there are changes
+          supabase
+            .from('notifications')
+            .select('*')
+            .order('createdAt', { ascending: false })
+            .limit(20)
+            .then(({ data, error }) => {
+              if (!error && data) {
+                setNotifications(data as Notification[]);
+              }
+            });
         }
       )
       .subscribe();
@@ -103,9 +118,15 @@ export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps
   };
 
   return (
-    <header className="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-40 bg-surface/70 dark:bg-slate-950/70 backdrop-blur-xl flex items-center justify-between px-8">
-      <div className="flex items-center flex-1 max-w-xl">
-        <div className="relative w-full">
+    <header className="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-16 z-40 bg-surface/70 dark:bg-slate-950/70 backdrop-blur-xl flex items-center justify-between px-4 md:px-8">
+      <div className="flex items-center flex-1 max-w-xl gap-2">
+        <button 
+          onClick={onMenuToggle}
+          className="lg:hidden p-2 text-secondary hover:text-primary transition-colors rounded-lg hover:bg-surface-container-low"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <div className="relative w-full hidden lg:block">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary w-4 h-4" />
           <input
             className="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-surface-tint/40 transition-all placeholder:text-secondary/50"
@@ -115,6 +136,9 @@ export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps
             onChange={(e) => onSearchChange(e.target.value)}
           />
         </div>
+        <button className="lg:hidden p-2 text-secondary hover:text-primary transition-colors rounded-lg hover:bg-surface-container-low">
+          <Search className="w-5 h-5" />
+        </button>
       </div>
 
       <div className="flex items-center space-x-6">
@@ -141,7 +165,7 @@ export default function TopBar({ user, searchTerm, onSearchChange }: TopBarProps
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-2 w-80 bg-surface-container-lowest rounded-[24px] shadow-2xl border border-outline-variant/10 overflow-hidden z-50"
+                  className="absolute -right-[110px] md:right-0 mt-2 w-[320px] sm:w-80 max-w-[calc(100vw-2rem)] bg-surface-container-lowest rounded-[24px] shadow-2xl border border-outline-variant/10 overflow-hidden z-50"
                 >
                   <div className="p-4 border-bottom border-outline-variant/10 flex items-center justify-between bg-surface-container-low/30">
                     <h3 className="text-sm font-bold text-on-surface">Notificações</h3>

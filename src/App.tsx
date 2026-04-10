@@ -40,6 +40,7 @@ export default function App() {
   });
   const [toast, setToast] = useState<{ message: string; subtext: string; type: 'success' | 'error' } | null>(null);
   const [globalSearchTerm, setGlobalSearchTerm] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Login Form State
   const [email, setEmail] = useState('');
@@ -511,12 +512,19 @@ export default function App() {
         onLogout={() => supabase.auth.signOut()} 
         companyLogo={companyLogo}
         companyName={settings.companyName}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
       
-      <div className="ml-64">
-        <TopBar user={user} searchTerm={globalSearchTerm} onSearchChange={setGlobalSearchTerm} />
+      <div className="lg:ml-64 transition-all duration-300">
+        <TopBar 
+          user={user} 
+          searchTerm={globalSearchTerm} 
+          onSearchChange={setGlobalSearchTerm} 
+          onMenuToggle={() => setIsMobileMenuOpen(true)}
+        />
         
-        <main className="pt-24 px-10 pb-12 min-h-screen">
+        <main className="pt-24 px-4 md:px-10 pb-12 min-h-screen w-full overflow-x-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentView + (selectedContact?.id || '')}

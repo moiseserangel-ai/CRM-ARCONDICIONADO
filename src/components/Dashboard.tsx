@@ -307,7 +307,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
       </div>
 
       {/* Bento Grid: Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {/* Total Clients */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -452,12 +452,12 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
       </div>
 
       {/* Pipeline Distribution & Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="lg:col-span-2 bg-surface-container-low p-8 rounded-[32px] border border-outline-variant/10"
+          className="xl:col-span-2 bg-surface-container-low p-8 rounded-[32px] border border-outline-variant/10"
         >
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -469,7 +469,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
             </div>
           </div>
           
-          <div className="flex items-end gap-4 h-48 px-4">
+          <div className="flex items-end gap-2 md:gap-4 h-48 px-2 md:px-4">
             {stages.map((stage, i) => {
               const count = getContactsByStage(stage).length;
               const height = filteredContacts.length > 0 ? (count / filteredContacts.length) * 100 : 0;
@@ -482,7 +482,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
               ];
               
               return (
-                <div key={stage} className="flex-1 flex flex-col items-center gap-4 group">
+                <div key={stage} className="flex-1 flex flex-col items-center gap-2 md:gap-4 group">
                   <div className="w-full relative flex flex-col justify-end h-full">
                     <motion.div 
                       initial={{ height: 0 }}
@@ -490,12 +490,12 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                       transition={{ duration: 1, delay: 0.7 + (i * 0.1) }}
                       className={cn("w-full rounded-2xl transition-all duration-500 relative", colors[i])}
                     >
-                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-3 py-1.5 rounded-xl text-[10px] font-black opacity-0 group-hover:opacity-100 transition-all shadow-xl z-20">
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-3 py-1.5 rounded-xl text-[10px] font-black opacity-0 group-hover:opacity-100 transition-all shadow-xl z-20 pointer-events-none">
                         {count} Leads
                       </div>
                     </motion.div>
                   </div>
-                  <span className="text-[9px] font-black text-secondary uppercase tracking-tighter text-center leading-tight h-8 flex items-center">
+                  <span className="text-[8px] md:text-[9px] font-black text-secondary uppercase tracking-tighter text-center leading-tight h-8 flex items-center justify-center whitespace-pre-line break-words w-full">
                     {stage.replace(' ', '\n')}
                   </span>
                 </div>
@@ -565,7 +565,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           
           <div className="bg-surface-container-lowest rounded-[32px] overflow-hidden shadow-sm border border-outline-variant/5">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                   <tr className="bg-surface-container-low/30">
                     <th className="px-8 py-5 text-[10px] font-black text-secondary uppercase tracking-[0.15em]">Cliente</th>

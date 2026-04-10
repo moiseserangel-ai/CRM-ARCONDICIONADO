@@ -364,10 +364,10 @@ const handleSubmit = async (e: React.FormEvent) => {
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-12 lg:col-span-5 space-y-1">
                       <label className="text-[9px] font-bold uppercase tracking-widest text-secondary ml-1">Descrição / Produto</label>
-                      <div className="flex gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <select
                           onChange={(e) => handleProductSelect(index, e.target.value)}
-                          className="bg-surface-container-high border border-outline-variant/20 rounded-xl px-3 py-2 text-xs font-bold w-32 focus:ring-2 focus:ring-primary/20 outline-none"
+                          className="bg-surface-container-high border border-outline-variant/20 rounded-xl px-3 py-2 text-xs font-bold w-full sm:w-32 focus:ring-2 focus:ring-primary/20 outline-none shrink-0"
                         >
                           <option value="">Produtos</option>
                           {products.map(p => (
@@ -380,7 +380,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                           value={item.description || ''}
                           onChange={(e) => handleItemChange(index, 'description', e.target.value)}
                           placeholder="Descrição do item"
-                          className="flex-1 bg-surface-container-high border border-outline-variant/20 rounded-xl px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none"
+                          className="flex-1 min-w-0 bg-surface-container-high border border-outline-variant/20 rounded-xl px-4 py-2 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none"
                         />
                       </div>
                     </div>

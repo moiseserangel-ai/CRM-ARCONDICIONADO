@@ -368,17 +368,18 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
           </div>
         ) : (
           <div className="bg-surface-container-lowest rounded-[32px] shadow-sm border border-outline-variant/5 overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-surface-container-low/50">
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Produto</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Categoria</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Estoque</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary text-right">Preço Unitário</th>
-                  <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary text-center">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-outline-variant/10">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                  <tr className="bg-surface-container-low/50">
+                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Produto</th>
+                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Categoria</th>
+                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Estoque</th>
+                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary text-right">Preço Unitário</th>
+                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary text-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/10">
                 {filteredProducts.map((product) => (
                   <tr key={product.id} className="hover:bg-surface-bright transition-colors group cursor-pointer" onClick={() => onEditProduct(product)}>
                     <td className="px-8 py-6">
@@ -435,6 +436,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         )}
       </div>
