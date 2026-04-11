@@ -747,12 +747,45 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
         {/* Relationship Score */}
         <div className="col-span-12 xl:col-span-4 milled-gradient text-white rounded-[40px] p-8 md:p-10 flex flex-col items-center justify-center relative overflow-hidden shadow-xl">
-          <div className="relative z-10 text-center">
+          <div className="relative z-10 text-center w-full">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-80">Relationship Score</p>
             <h3 className="text-6xl md:text-8xl font-black font-headline leading-none mb-4">94</h3>
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 mb-6">
               <TrendingUp className="w-4 h-4" />
               <span className="text-[10px] font-black uppercase tracking-widest">+12% este mês</span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 w-full border-t border-white/20 pt-6 mt-2">
+              <div className="text-center">
+                <p className="text-[9px] font-black uppercase tracking-widest text-white/70 mb-1">Tempo de Cadastro</p>
+                <p className="text-sm font-bold">
+                  {contact.createdAt ? (
+                    (() => {
+                      const createdDate = new Date(contact.createdAt);
+                      const now = new Date();
+                      const diffTime = Math.abs(now.getTime() - createdDate.getTime());
+                      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                      const diffMonths = Math.floor(diffDays / 30);
+                      const diffYears = Math.floor(diffDays / 365);
+                      
+                      if (diffYears > 0) return `${diffYears} ano${diffYears > 1 ? 's' : ''}`;
+                      if (diffMonths > 0) return `${diffMonths} mês${diffMonths > 1 ? 'es' : ''}`;
+                      if (diffDays > 0) return `${diffDays} dia${diffDays > 1 ? 's' : ''}`;
+                      return 'Hoje';
+                    })()
+                  ) : (
+                    'Não informado'
+                  )}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="text-[9px] font-black uppercase tracking-widest text-white/70 mb-1">Contrato</p>
+                <p className="text-sm font-bold truncate px-2" title={contact.status}>
+                  {contact.status === 'Contrato Ativo' ? 'Ativo' : 
+                   contact.status === 'Serviço Concluído' ? 'Concluído' : 
+                   contact.status}
+                </p>
+              </div>
             </div>
           </div>
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
@@ -837,43 +870,48 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                 <div className="relative pl-10">
                   <div className="absolute left-[19px] top-2 bottom-2 w-[2px] bg-outline-variant/20"></div>
                   
-                  <div className="relative mb-12 group">
-                    <div className="absolute -left-[41px] top-0 w-12 h-12 rounded-2xl bg-white border border-outline-variant/10 shadow-sm flex items-center justify-center z-10 group-hover:scale-110 group-hover:border-primary/30 transition-all">
-                      <Videocam className="w-6 h-6 text-primary" />
-                    </div>
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                      <div>
-                        <p className="text-base font-black text-on-surface mb-1">Visita Técnica: Avaliação de Sistema VRF</p>
-                        <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-4">Hoje às 11:30 • Técnico Moises</p>
-                        <div className="bg-surface-container-low/60 p-5 rounded-2xl border border-outline-variant/10 text-sm leading-relaxed text-on-surface-variant max-w-2xl">
-                          Realizada avaliação completa do condensador. Identificada necessidade de limpeza química e troca de filtros. Cliente aprovou o orçamento verbalmente.
+                  {serviceOrders.filter(os => os.status === 'Finalizada' || os.status === 'Orçamento Aceito').length > 0 ? (
+                    serviceOrders
+                      .filter(os => os.status === 'Finalizada' || os.status === 'Orçamento Aceito')
+                      .map((os) => (
+                        <div key={os.id} className="relative mb-12 group">
+                          <div className="absolute -left-[41px] top-0 w-12 h-12 rounded-2xl bg-white border border-outline-variant/10 shadow-sm flex items-center justify-center z-10 group-hover:scale-110 group-hover:border-primary/30 transition-all">
+                            <FileText className="w-6 h-6 text-primary" />
+                          </div>
+                          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <p className="text-base font-black text-on-surface mb-1">{os.subject}</p>
+                              <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-4">
+                                {new Date(os.createdAt).toLocaleDateString('pt-BR')} • {os.status}
+                              </p>
+                              <div className="bg-surface-container-low/60 p-5 rounded-2xl border border-outline-variant/10 text-sm leading-relaxed text-on-surface-variant max-w-2xl">
+                                <p><strong>Descrição:</strong> {os.description}</p>
+                                {os.finalizationNotes && (
+                                  <p className="mt-2"><strong>Notas de Finalização:</strong> {os.finalizationNotes}</p>
+                                )}
+                                {os.usedProducts && os.usedProducts.length > 0 && (
+                                  <div className="mt-4 pt-4 border-t border-outline-variant/10">
+                                    <p className="text-xs font-bold text-on-surface mb-2">Produtos Usados:</p>
+                                    <ul className="list-disc pl-5 space-y-1">
+                                      {os.usedProducts.map((prod, i) => (
+                                        <li key={i} className="text-xs text-on-surface-variant">
+                                          {prod.quantity}x {prod.name}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <span className="px-3 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-full shrink-0">{os.value}</span>
+                          </div>
                         </div>
-                      </div>
-                      <span className="px-3 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-full">Prioridade Alta</span>
+                      ))
+                  ) : (
+                    <div className="text-center py-10 text-secondary font-bold text-sm">
+                      Nenhuma ordem de serviço finalizada encontrada.
                     </div>
-                  </div>
-
-                  <div className="relative mb-12 group">
-                    <div className="absolute -left-[41px] top-0 w-12 h-12 rounded-2xl bg-white border border-outline-variant/10 shadow-sm flex items-center justify-center z-10">
-                      <Mail className="w-6 h-6 text-secondary/60" />
-                    </div>
-                    <div>
-                      <p className="text-base font-black text-on-surface mb-1">Envio de Orçamento: Manutenção Preventiva</p>
-                      <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-3">24 Out, 2023 • Sistema Automático</p>
-                      <p className="text-sm text-on-surface-variant">Orçamento #8821 enviado para o e-mail do cliente. Aguardando confirmação para agendamento.</p>
-                    </div>
-                  </div>
-
-                  <div className="relative group">
-                    <div className="absolute -left-[41px] top-0 w-12 h-12 rounded-2xl bg-white border border-outline-variant/10 shadow-sm flex items-center justify-center z-10">
-                      <Handshake className="w-6 h-6 text-primary/60" />
-                    </div>
-                    <div>
-                      <p className="text-base font-black text-on-surface mb-1">Fechamento de Contrato Anual</p>
-                      <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-3">12 Out, 2023 • Gestão Comercial</p>
-                      <p className="text-sm text-on-surface-variant">Contrato de manutenção preventiva anual assinado. Cobertura para 5 unidades evaporadoras.</p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </section>
 
