@@ -102,6 +102,7 @@ export interface ServiceOrder {
   materials: string;
   finalizationNotes?: string;
   usedProducts?: UsedProduct[];
+  signature?: string;
   value: string;
   userId?: string;
   createdAt: string;

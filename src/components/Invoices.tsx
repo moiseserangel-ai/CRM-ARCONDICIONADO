@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, FileText, Download, Trash2, MoreVertical, ExternalLink, AlertCircle, Printer } from 'lucide-react';
+import { Plus, Search, Filter, FileText, Download, Trash2, MoreVertical, ExternalLink, AlertCircle, Printer, Loader2 } from 'lucide-react';
 import { Invoice, User } from '../types';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';

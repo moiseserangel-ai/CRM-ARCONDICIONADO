@@ -283,16 +283,6 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             <div className="flex items-baseline gap-2">
               <h3 className="text-3xl font-headline font-black text-on-surface tracking-tight">{m.value}</h3>
             </div>
-            {m.progress && (
-              <div className="w-full h-1.5 bg-surface-container rounded-full mt-4 overflow-hidden">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${m.progress}%` }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                  className="h-full bg-primary rounded-full"
-                />
-              </div>
-            )}
           </motion.div>
         ))}
       </div>
@@ -407,7 +397,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                             )}></div>
                           </div>
                           <div>
-                            <p className="font-headline font-black text-on-surface text-base group-hover:text-primary transition-colors">{contact.name}</p>
+                            <p className="font-headline font-black text-on-surface text-base group-hover:text-primary transition-colors line-clamp-2 break-words max-w-[150px] sm:max-w-[250px] md:max-w-[300px]">{contact.name}</p>
                             <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">{contact.address}</p>
                           </div>
                         </div>
@@ -499,7 +489,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                       <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-4 border-surface-container-lowest rounded-full shadow-sm"></div>
                     </div>
                     <div>
-                      <h4 className="text-xl font-headline font-black text-on-surface group-hover:text-primary transition-colors leading-tight">{contact.name}</h4>
+                      <h4 className="text-xl font-headline font-black text-on-surface group-hover:text-primary transition-colors leading-tight line-clamp-2 break-words">{contact.name}</h4>
                       <div className="flex items-center gap-1.5 mt-1">
                         <TrendingUp className="w-3 h-3 text-secondary/40" />
                         <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">{contact.address}</p>

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Filter, MoreHorizontal, MessageSquare as ChatBubble, Calendar as Schedule, Eye as Visibility, Handshake, CheckCircle, TrendingUp, Lightbulb as Insights, PlusCircle, X, Loader2, CheckCircle2, DollarSign, Briefcase, User, ArrowRight, Clock, Package, FileText } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Filter, MoreHorizontal, MessageSquare as ChatBubble, Calendar as Schedule, Eye as Visibility, Handshake, CheckCircle, TrendingUp, Lightbulb as Insights, PlusCircle, X, Loader2, CheckCircle2, DollarSign, Briefcase, User, ArrowRight, Clock, Package, FileText, Edit as EditNote } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import SignaturePad, { SignaturePadRef } from './SignaturePad';
 import { cn } from '../lib/utils';
 import { supabase } from '../lib/supabase';
 import { Contact, View, ServiceOrder, Product, UsedProduct, User as UserType } from '../types';
@@ -21,6 +22,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
   const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
   const [showQuickOSModal, setShowQuickOSModal] = useState(false);
   const [showFinalizeModal, setShowFinalizeModal] = useState(false);
+  const sigCanvas = useRef<SignaturePadRef>(null);
   const [selectedContactForFinalize, setSelectedContactForFinalize] = useState<Contact | null>(null);
   const [selectedContactForOS, setSelectedContactForOS] = useState<Contact | null>(null);
   const [selectedOS, setSelectedOS] = useState<ServiceOrder | null>(null);
@@ -311,6 +313,10 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
       return;
     }
 
+    const signatureData = sigCanvas.current && !sigCanvas.current.isEmpty() 
+      ? sigCanvas.current.toDataURL('image/png') 
+      : null;
+
     setFinalizingOS(true);
     try {
       const { data: updatedOS, error: osError } = await supabase
@@ -319,6 +325,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
           materials: finalizeData.materials,
           finalizationNotes: finalizeData.finalizationNotes,
           usedProducts: finalizeData.usedProducts,
+          signature: signatureData,
           status: finalStatus
         })
         .eq('id', selectedOS.id)
@@ -642,6 +649,29 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                         rows={4}
                         className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm resize-none placeholder:text-secondary/40"
                       />
+                    </div>
+
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between ml-1">
+                        <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary flex items-center gap-2">
+                          <EditNote className="w-3 h-3" /> Assinatura do Cliente
+                        </label>
+                        <button 
+                          onClick={() => sigCanvas.current?.clear()}
+                          className="text-[10px] font-bold text-primary hover:underline"
+                        >
+                          Limpar
+                        </button>
+                      </div>
+                      <div className="bg-white border-2 border-dashed border-outline-variant/30 rounded-2xl overflow-hidden touch-none h-40 relative">
+                        <SignaturePad 
+                          ref={sigCanvas}
+                          penColor="black"
+                          canvasProps={{
+                            className: 'w-full h-full cursor-crosshair'
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
 

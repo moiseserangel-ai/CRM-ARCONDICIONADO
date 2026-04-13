@@ -118,7 +118,7 @@ export const generateInvoicePDF = async (invoice: Invoice, companyLogo?: string 
   }
 };
 
-export const generateOSPDF = async (os: ServiceOrder, contact: Contact, companyLogo?: string | null, companyName: string = 'Cardoso Ar Condicionado') => {
+export const generateOSPDF = async (os: ServiceOrder, contact: Contact, companyLogo?: string | null, companyName: string = 'Cardoso Ar Condicionado', settings?: any) => {
   const logoHtml = companyLogo ? `<img src="${companyLogo}" alt="Logo" style="max-height: 60px; max-width: 150px; object-fit: contain;" />` : '';
 
   const container = document.createElement('div');
@@ -135,21 +135,24 @@ export const generateOSPDF = async (os: ServiceOrder, contact: Contact, companyL
           ${logoHtml}
           <div>
             <h1 style="margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px;">Ordem de Serviço</h1>
-            <p style="margin: 5px 0 0; font-weight: bold; color: #666;">${companyName}</p>
+            <p style="margin: 5px 0 0; font-weight: bold; color: #666; font-size: 16px;">${companyName}</p>
+            ${settings?.cnpj ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">CNPJ: ${settings.cnpj}</p>` : ''}
+            ${settings?.phone ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">Tel: ${settings.phone}</p>` : ''}
+            ${settings?.email ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">E-mail: ${settings.email}</p>` : ''}
           </div>
         </div>
-        <div style="display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; border: 1px solid #000;">${os.status}</div>
+        <div style="display: inline-block; padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: bold; text-transform: uppercase; border: 2px solid #000; letter-spacing: 1px;">${os.status}</div>
       </div>
       
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;">
-        <div style="flex: 1;">
-          <h3 style="font-size: 12px; text-transform: uppercase; color: #888; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Dados do Cliente</h3>
+        <div style="flex: 1; background: #fcfcfc; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+          <h3 style="font-size: 12px; text-transform: uppercase; color: #888; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Dados do Cliente</h3>
           <p style="margin: 5px 0; font-size: 14px;"><strong>Nome:</strong> ${contact.name}</p>
-          <p style="margin: 5px 0; font-size: 14px;"><strong>Endereço:</strong> ${contact.address}</p>
+          <p style="margin: 5px 0; font-size: 14px;"><strong>Endereço:</strong> ${contact.address || contact.location || 'Não informado'}</p>
           <p style="margin: 5px 0; font-size: 14px;"><strong>Telefone:</strong> ${contact.phone}</p>
         </div>
-        <div style="flex: 1;">
-          <h3 style="font-size: 12px; text-transform: uppercase; color: #888; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Detalhes da OS</h3>
+        <div style="flex: 1; background: #fcfcfc; padding: 15px; border-radius: 8px; border: 1px solid #eee;">
+          <h3 style="font-size: 12px; text-transform: uppercase; color: #888; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Detalhes da OS</h3>
           <p style="margin: 5px 0; font-size: 14px;"><strong>ID:</strong> ${os.id.substring(0, 8).toUpperCase()}</p>
           <p style="margin: 5px 0; font-size: 14px;"><strong>Data:</strong> ${new Date(os.createdAt).toLocaleDateString('pt-BR')}</p>
           <p style="margin: 5px 0; font-size: 14px;"><strong>Assunto:</strong> ${os.subject}</p>
@@ -175,9 +178,17 @@ export const generateOSPDF = async (os: ServiceOrder, contact: Contact, companyL
       </div>
 
       <div style="margin-top: 80px;">
-        <div style="display: flex; justify-content: space-between; gap: 50px; margin-top: 60px;">
-          <div style="flex: 1; border-top: 1px solid #000; padding-top: 10px; text-align: center; font-size: 12px; text-transform: uppercase;">Assinatura do Técnico</div>
-          <div style="flex: 1; border-top: 1px solid #000; padding-top: 10px; text-align: center; font-size: 12px; text-transform: uppercase;">Assinatura do Cliente</div>
+        <div style="display: flex; justify-content: space-between; gap: 50px; margin-top: 80px;">
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div style="height: 80px;"></div>
+            <div style="border-top: 1px solid #000; padding-top: 10px; text-align: center; font-size: 12px; text-transform: uppercase;">Assinatura do Técnico</div>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div style="height: 80px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 5px;">
+              ${os.signature ? `<img src="${os.signature}" style="max-width: 100%; max-height: 80px;" />` : ''}
+            </div>
+            <div style="border-top: 1px solid #000; padding-top: 10px; text-align: center; font-size: 12px; text-transform: uppercase;">Assinatura do Cliente</div>
+          </div>
         </div>
         <p style="text-align: center; font-size: 10px; color: #999; margin-top: 40px;">Documento gerado em ${new Date().toLocaleString('pt-BR')}</p>
       </div>

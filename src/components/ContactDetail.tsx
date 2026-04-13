@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import SignaturePad, { SignaturePadRef } from './SignaturePad';
 import { ChevronRight, Mail, Call, LocationOn, TrendingUp, Videocam, Handshake, Psychology, CheckCircle, Warning, Lightbulb, Add, SmartToy, EditNote, Filter, Calendar, Trash2, Loader2, FileText, Printer, Download, X as CloseIcon, Clock, ShieldCheck, Package, PlusCircle, Briefcase, DollarSign, ArrowRight, CheckCircle2 } from './Icons';
 import { generateOSPDF } from '../lib/pdf-utils';
-import { Contact, View, ServiceOrder, Product, UsedProduct, User } from '../types';
+import { Contact, View, ServiceOrder, Product, UsedProduct, User, Settings } from '../types';
 import { cn } from '../lib/utils';
 import { supabase, createNotification } from '../lib/supabase';
 
@@ -14,9 +15,10 @@ interface ContactDetailProps {
   onViewChange: (view: View) => void;
   companyLogo?: string | null;
   companyName?: string;
+  settings?: Settings;
 }
 
-export default function ContactDetail({ user, contact, onBack, onEdit, onViewChange, companyLogo, companyName = 'Cardoso Ar Condicionado' }: ContactDetailProps) {
+export default function ContactDetail({ user, contact, onBack, onEdit, onViewChange, companyLogo, companyName = 'Cardoso Ar Condicionado', settings }: ContactDetailProps) {
   const [deleting, setDeleting] = useState(false);
   const [savingOS, setSavingOS] = useState(false);
   const [finalizingOS, setFinalizingOS] = useState(false);
@@ -24,6 +26,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
   const [showConfirm, setShowConfirm] = useState(false);
   const [showOSModal, setShowOSModal] = useState(false);
   const [showFinalizeModal, setShowFinalizeModal] = useState(false);
+  const sigCanvas = useRef<SignaturePadRef>(null);
   const [selectedOS, setSelectedOS] = useState<ServiceOrder | null>(null);
   const [expandedOSId, setExpandedOSId] = useState<string | null>(null);
   const [serviceOrders, setServiceOrders] = useState<ServiceOrder[]>([]);
@@ -257,6 +260,10 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
       return;
     }
 
+    const signatureData = sigCanvas.current && !sigCanvas.current.isEmpty() 
+      ? sigCanvas.current.toDataURL('image/png') 
+      : null;
+
     setFinalizingOS(true);
     try {
       const { data: updatedOS, error: osError } = await supabase
@@ -265,6 +272,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           materials: finalizeData.materials,
           finalizationNotes: finalizeData.finalizationNotes,
           usedProducts: finalizeData.usedProducts,
+          signature: signatureData,
           status: finalStatus
         })
         .eq('id', selectedOS.id)
@@ -471,7 +479,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
   const handleDownloadPDF = async (os: ServiceOrder) => {
     try {
-      await generateOSPDF(os, contact, companyLogo, companyName);
+      await generateOSPDF(os, contact, companyLogo, companyName, settings);
     } catch (err) {
       alert('Erro ao gerar PDF. Tente novamente.');
     }
@@ -487,21 +495,26 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           <title>Ordem de Serviço - ${contact.name || 'Cliente'}</title>
           <style>
             @page { size: auto; margin: 0mm; }
-            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 40px; color: #333; line-height: 1.5; }
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 40px; color: #333; line-height: 1.5; max-width: 800px; margin: 0 auto; }
             .header { border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
             .header-left { display: flex; align-items: center; gap: 20px; }
             .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
-            .header p { margin: 5px 0 0; font-weight: bold; color: #666; }
+            .header p { margin: 5px 0 0; font-weight: bold; color: #666; font-size: 16px; }
+            .header-details { margin: 2px 0 0; font-size: 12px; color: #888; }
             .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-            .info-box h3 { font-size: 12px; text-transform: uppercase; color: #888; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+            .info-box { background: #fcfcfc; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
+            .info-box h3 { font-size: 12px; text-transform: uppercase; color: #888; margin-top: 0; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
             .info-box p { margin: 5px 0; font-size: 14px; }
             .section { margin-bottom: 35px; }
             .section h3 { font-size: 14px; text-transform: uppercase; background: #f9f9f9; padding: 8px 12px; margin-bottom: 15px; border-left: 4px solid #000; }
             .content { font-size: 15px; white-space: pre-wrap; padding: 0 12px; }
-            .status-badge { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; border: 1px solid #000; }
+            .status-badge { display: inline-block; padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: bold; text-transform: uppercase; border: 2px solid #000; letter-spacing: 1px; }
             .footer { margin-top: 80px; }
-            .signatures { display: flex; justify-content: space-between; gap: 50px; margin-top: 60px; }
-            .sig-box { flex: 1; border-top: 1px solid #000; padding-top: 10px; text-align: center; font-size: 12px; text-transform: uppercase; }
+            .signatures { display: flex; justify-content: space-between; gap: 50px; margin-top: 80px; }
+            .sig-col { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+            .sig-img-container { height: 80px; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 5px; }
+            .sig-img-container img { max-width: 100%; max-height: 80px; }
+            .sig-line { border-top: 1px solid #000; padding-top: 10px; text-align: center; font-size: 12px; text-transform: uppercase; width: 100%; }
             @media print {
               body { padding: 20px; }
               .no-print { display: none; }
@@ -515,6 +528,9 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               <div>
                 <h1>Ordem de Serviço</h1>
                 <p>${companyName}</p>
+                ${settings?.cnpj ? `<div class="header-details">CNPJ: ${settings.cnpj}</div>` : ''}
+                ${settings?.phone ? `<div class="header-details">Tel: ${settings.phone}</div>` : ''}
+                ${settings?.email ? `<div class="header-details">E-mail: ${settings.email}</div>` : ''}
               </div>
             </div>
             <div class="status-badge">${os.status}</div>
@@ -524,7 +540,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
             <div class="info-box">
               <h3>Dados do Cliente</h3>
               <p><strong>Nome:</strong> ${contact.name || 'Cliente'}</p>
-              <p><strong>Endereço:</strong> ${contact.address}</p>
+              <p><strong>Endereço:</strong> ${contact.address || contact.location || 'Não informado'}</p>
               <p><strong>Telefone:</strong> ${contact.phone}</p>
             </div>
             <div class="info-box">
@@ -555,8 +571,16 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
           <div class="footer">
             <div class="signatures">
-              <div class="sig-box">Assinatura do Técnico</div>
-              <div class="sig-box">Assinatura do Cliente</div>
+              <div class="sig-col">
+                <div class="sig-img-container"></div>
+                <div class="sig-line">Assinatura do Técnico</div>
+              </div>
+              <div class="sig-col">
+                <div class="sig-img-container">
+                  ${os.signature ? `<img src="${os.signature}" />` : ''}
+                </div>
+                <div class="sig-line">Assinatura do Cliente</div>
+              </div>
             </div>
             <p style="text-align: center; font-size: 10px; color: #999; margin-top: 40px;">Documento gerado em ${new Date().toLocaleString('pt-BR')}</p>
           </div>
@@ -1489,6 +1513,29 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   placeholder="Descreva o que foi feito para concluir o serviço..."
                   className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between ml-1">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-secondary flex items-center gap-2">
+                    <EditNote className="w-3 h-3" /> Assinatura do Cliente
+                  </label>
+                  <button 
+                    onClick={() => sigCanvas.current?.clear()}
+                    className="text-[10px] font-bold text-primary hover:underline"
+                  >
+                    Limpar
+                  </button>
+                </div>
+                <div className="bg-white border-2 border-dashed border-outline-variant/30 rounded-2xl overflow-hidden touch-none h-40 relative">
+                  <SignaturePad 
+                    ref={sigCanvas}
+                    penColor="black"
+                    canvasProps={{
+                      className: 'w-full h-full cursor-crosshair'
+                    }}
+                  />
+                </div>
               </div>
             </div>
 

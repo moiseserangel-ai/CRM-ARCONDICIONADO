@@ -17,8 +17,8 @@ import Reports from './components/Reports';
 import ErrorBoundary from './components/ErrorBoundary';
 import { View, Contact, Product, Transaction, Settings as SettingsType, Invoice } from './types';
 import { motion, AnimatePresence } from 'motion/react';
-import { supabase } from './lib/supabase';
-import { SmartToy, Loader2, Mail, Lock, User as UserIcon, Wind, Snowflake } from './components/Icons';
+import { supabase, isSupabaseConfigured } from './lib/supabase';
+import { SmartToy, Loader2, Mail, Lock, User as UserIcon, Wind, Snowflake, AlertTriangle } from './components/Icons';
 import { cn } from './lib/utils';
 
 export default function App() {
@@ -311,8 +311,9 @@ export default function App() {
             onViewChange={setCurrentView}
             companyLogo={companyLogo}
             companyName={settings.companyName}
+            settings={settings}
           />
-        ) : <Contacts user={user} onSelectContact={handleSelectContact} onAddContact={handleAddContact} onEditContact={handleEditContact} />;
+        ) : <Contacts user={user} onSelectContact={handleSelectContact} onAddContact={handleAddContact} onEditContact={handleEditContact} searchTerm={globalSearchTerm} />;
       case 'contact-form':
         return (
           <ContactForm 
@@ -454,6 +455,18 @@ export default function App() {
             <p className="text-secondary text-sm font-medium">Gestão de Vendas e Manutenção</p>
           </div>
 
+          {!isSupabaseConfigured && (
+            <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-2xl flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-error shrink-0 mt-0.5" />
+              <div>
+                <h3 className="text-sm font-bold text-error mb-1">Configuração Ausente</h3>
+                <p className="text-xs text-error/80">
+                  As credenciais do Supabase não foram encontradas. Por favor, configure as variáveis de ambiente <code className="bg-error/10 px-1 rounded">VITE_SUPABASE_URL</code> e <code className="bg-error/10 px-1 rounded">VITE_SUPABASE_ANON_KEY</code> no menu de configurações (Secrets).
+                </p>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">E-mail</label>
@@ -491,7 +504,7 @@ export default function App() {
 
             <button 
               type="submit"
-              disabled={loginLoading}
+              disabled={loginLoading || !isSupabaseConfigured}
               className="w-full py-4 milled-gradient text-white rounded-2xl font-bold shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
             >
               {loginLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isRegistering ? 'Criar Conta' : 'Entrar no Sistema')}
