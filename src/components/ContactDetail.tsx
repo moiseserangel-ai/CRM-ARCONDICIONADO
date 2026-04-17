@@ -28,6 +28,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
   const [showFinalizeModal, setShowFinalizeModal] = useState(false);
   const sigCanvas = useRef<SignaturePadRef>(null);
   const [selectedOS, setSelectedOS] = useState<ServiceOrder | null>(null);
+  const [editingOS, setEditingOS] = useState<ServiceOrder | null>(null);
   const [expandedOSId, setExpandedOSId] = useState<string | null>(null);
   const [serviceOrders, setServiceOrders] = useState<ServiceOrder[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -189,62 +190,84 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
     setSavingOS(true);
     try {
-      const payload = {
-        contactId: contact.id,
-        contactName: contact.name,
-        subject: osData.subject,
-        description: osData.description,
-        materials: '', // Materials will be added on finalization
-        value: osData.value,
-        status: 'Aberta',
-        userId: user.id
-      };
-      
-      const { data: newOS, error: osError } = await supabase.from('serviceOrders').insert(payload).select().single();
+      if (editingOS) {
+        const { data: updatedOS, error: osError } = await supabase
+          .from('serviceOrders')
+          .update({
+            subject: osData.subject,
+            description: osData.description,
+            value: osData.value,
+            updatedAt: new Date().toISOString()
+          })
+          .eq('id', editingOS.id)
+          .select()
+          .single();
 
-      if (osError) throw osError;
-      
-      if (newOS) {
-        setServiceOrders(prev => [newOS as ServiceOrder, ...prev]);
-      }
+        if (osError) throw osError;
 
-      // Update Contact Status based on subject to move it in the Pipeline
-      let newStatus = contact.status;
-      const subjectLower = (osData.subject || '').toLowerCase();
-      
-      if (subjectLower.includes('visita técnica')) {
-        newStatus = 'Visita Técnica Agendada';
-      } else if (subjectLower.includes('orçamento')) {
-        newStatus = 'Orçamento Enviado';
-      } else if (subjectLower.includes('instalação')) {
-        newStatus = 'Instalação Pendente';
-      } else {
-        // Default to Visita Técnica if it's an open OS but doesn't match other categories
-        // to ensure it appears in the Pipeline
-        if (contact.status === 'Serviço Concluído' || contact.status === 'Contrato Ativo') {
-          newStatus = 'Visita Técnica Agendada';
+        if (updatedOS) {
+          setServiceOrders(prev => prev.map(so => so.id === updatedOS.id ? (updatedOS as ServiceOrder) : so));
         }
-      }
-
-      if (newStatus !== contact.status) {
-        const { error: contactError } = await supabase
-          .from('contacts')
-          .update({ status: newStatus })
-          .eq('id', contact.id);
+        alert('Ordem de Serviço atualizada com sucesso!');
+      } else {
+        const payload = {
+          contactId: contact.id,
+          contactName: contact.name,
+          subject: osData.subject,
+          description: osData.description,
+          materials: '', // Materials will be added on finalization
+          value: osData.value,
+          status: 'Aberta',
+          userId: user.id
+        };
         
-        if (contactError) throw contactError;
-      }
+        const { data: newOS, error: osError } = await supabase.from('serviceOrders').insert(payload).select().single();
 
-      await createNotification(
-        user.id,
-        'Nova OS Aberta',
-        `Uma nova Ordem de Serviço foi aberta para ${contact.name}: "${osData.subject}".`,
-        'os'
-      );
+        if (osError) throw osError;
+        
+        if (newOS) {
+          setServiceOrders(prev => [newOS as ServiceOrder, ...prev]);
+        }
+
+        // Update Contact Status based on subject to move it in the Pipeline
+        let newStatus = contact.status;
+        const subjectLower = (osData.subject || '').toLowerCase();
+        
+        if (subjectLower.includes('visita técnica')) {
+          newStatus = 'Visita Técnica Agendada';
+        } else if (subjectLower.includes('orçamento')) {
+          newStatus = 'Orçamento Enviado';
+        } else if (subjectLower.includes('instalação')) {
+          newStatus = 'Instalação Pendente';
+        } else {
+          // Default to Visita Técnica if it's an open OS but doesn't match other categories
+          // to ensure it appears in the Pipeline
+          if (contact.status === 'Serviço Concluído' || contact.status === 'Contrato Ativo') {
+            newStatus = 'Visita Técnica Agendada';
+          }
+        }
+
+        if (newStatus !== contact.status) {
+          const { error: contactError } = await supabase
+            .from('contacts')
+            .update({ status: newStatus })
+            .eq('id', contact.id);
+          
+          if (contactError) throw contactError;
+        }
+
+        await createNotification(
+          user.id,
+          'Nova OS Aberta',
+          `Uma nova Ordem de Serviço foi aberta para ${contact.name}: "${osData.subject}".`,
+          'os'
+        );
+        alert('Ordem de Serviço aberta com sucesso!');
+      }
 
       setShowOSModal(false);
+      setEditingOS(null);
       setOsData({ subject: '', description: '', materials: '', value: 'R$ 0,00' });
-      alert('Ordem de Serviço aberta com sucesso!');
     } catch (err: any) {
       console.error('Error saving OS:', err);
       alert('Erro ao salvar OS: ' + (err.message || 'Erro desconhecido.'));
@@ -273,7 +296,8 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           finalizationNotes: finalizeData.finalizationNotes,
           usedProducts: finalizeData.usedProducts,
           signature: signatureData,
-          status: finalStatus
+          status: finalStatus,
+          updatedAt: new Date().toISOString()
         })
         .eq('id', selectedOS.id)
         .select()
@@ -1200,16 +1224,34 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                               </td>
                               <td className="p-4 text-right space-x-2 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                                 {os.status === 'Aberta' && (
-                                  <button 
-                                    onClick={() => {
-                                      setSelectedOS(os);
-                                      setShowFinalizeModal(true);
-                                    }}
-                                    className="p-2 hover:bg-green-100 rounded-xl text-green-600 transition-all inline-flex items-center justify-center"
-                                    title="Finalizar OS"
-                                  >
-                                    <CheckCircle className="w-4 h-4" />
-                                  </button>
+                                  <>
+                                    <button 
+                                      onClick={() => {
+                                        setEditingOS(os);
+                                        setOsData({
+                                          subject: os.subject,
+                                          description: os.description,
+                                          materials: os.materials || '',
+                                          value: os.value || 'R$ 0,00'
+                                        });
+                                        setShowOSModal(true);
+                                      }}
+                                      className="p-2 hover:bg-surface-container rounded-xl text-secondary transition-all inline-flex items-center justify-center"
+                                      title="Editar OS"
+                                    >
+                                      <EditNote className="w-4 h-4" />
+                                    </button>
+                                    <button 
+                                      onClick={() => {
+                                        setSelectedOS(os);
+                                        setShowFinalizeModal(true);
+                                      }}
+                                      className="p-2 hover:bg-green-100 rounded-xl text-green-600 transition-all inline-flex items-center justify-center"
+                                      title="Finalizar OS"
+                                    >
+                                      <CheckCircle className="w-4 h-4" />
+                                    </button>
+                                  </>
                                 )}
                                 <button 
                                   onClick={() => handlePrintExistingOS(os)}
@@ -1310,11 +1352,20 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   <FileText className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold font-headline text-on-surface">Nova Ordem de Serviço</h3>
+                  <h3 className="text-2xl font-bold font-headline text-on-surface">
+                    {editingOS ? 'Editar Ordem de Serviço' : 'Nova Ordem de Serviço'}
+                  </h3>
                   <p className="text-xs text-secondary uppercase tracking-widest font-bold">{contact.name}</p>
                 </div>
               </div>
-              <button onClick={() => setShowOSModal(false)} className="p-2 hover:bg-surface-container rounded-full transition-colors">
+              <button 
+                onClick={() => {
+                  setShowOSModal(false);
+                  setEditingOS(null);
+                  setOsData({ subject: '', description: '', materials: '', value: 'R$ 0,00' });
+                }} 
+                className="p-2 hover:bg-surface-container rounded-full transition-colors"
+              >
                 <CloseIcon className="w-6 h-6 text-secondary" />
               </button>
             </div>
@@ -1368,7 +1419,11 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
             <div className="flex gap-4 mt-8">
               <button 
-                onClick={() => setShowOSModal(false)}
+                onClick={() => {
+                  setShowOSModal(false);
+                  setEditingOS(null);
+                  setOsData({ subject: '', description: '', materials: '', value: 'R$ 0,00' });
+                }}
                 className="flex-1 py-4 bg-surface-container-low text-secondary rounded-2xl font-bold hover:bg-surface-container-high transition-all"
               >
                 Cancelar
@@ -1379,7 +1434,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                 className="flex-1 py-4 milled-gradient text-white rounded-2xl font-bold shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
               >
                 {savingOS ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
-                Abrir OS
+                {editingOS ? 'Salvar Alterações' : 'Abrir OS'}
               </button>
             </div>
           </div>

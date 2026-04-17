@@ -106,6 +106,7 @@ export interface ServiceOrder {
   value: string;
   userId?: string;
   createdAt: string;
+  updatedAt?: string;
   status: 'Aberta' | 'Finalizada' | 'Orçamento Aceito' | 'Orçamento Rejeitado';
 }
 
