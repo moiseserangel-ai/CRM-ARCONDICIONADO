@@ -55,12 +55,25 @@ export default function App() {
       if (error) {
         console.error('Error getting session:', error.message);
         // If there's an error getting the session (e.g., invalid refresh token), sign out
-        supabase.auth.signOut();
+        supabase.auth.signOut().catch(console.error);
+        // Force clear any stale refresh tokens from local storage
+        if (error.message.includes('Refresh Token') || error.message.includes('refresh_token')) {
+          Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('sb-')) {
+              localStorage.removeItem(key);
+            }
+          });
+        }
       }
       setUser(session?.user ?? null);
       setAuthReady(true);
     }).catch(err => {
       console.error('Unexpected error getting session:', err);
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-')) {
+          localStorage.removeItem(key);
+        }
+      });
       setAuthReady(true);
     });
 
@@ -70,6 +83,11 @@ export default function App() {
       }
       if (event === 'SIGNED_OUT') {
         setUser(null);
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('sb-')) {
+            localStorage.removeItem(key);
+          }
+        });
       } else {
         setUser(session?.user ?? null);
       }

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, History, Check, Trash2, Clock, User as UserIcon, FileText, UserPlus, AlertCircle, Menu } from 'lucide-react';
+import { Search, Bell, History, Check, Trash2, Clock, User as UserIcon, FileText, UserPlus, AlertCircle, Menu, Moon, Sun } from 'lucide-react';
 import { Notification, User } from '../types';
 import { supabase, checkAndGenerateNotifications } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
+import { useDarkMode } from '../hooks/useDarkMode';
 
 interface TopBarProps {
   user: User | null;
@@ -16,6 +17,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { isDark, toggleDarkMode } = useDarkMode();
 
   useEffect(() => {
     if (!user) return;
@@ -249,12 +251,21 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
               )}
             </AnimatePresence>
           </div>
-          <button className="text-secondary hover:text-primary transition-all p-2 rounded-full hover:bg-surface-container-low">
+          
+          <button 
+            onClick={toggleDarkMode}
+            className="text-secondary hover:text-primary transition-all p-2 rounded-full hover:bg-surface-container-low"
+            title={isDark ? "Mudar para tema claro" : "Mudar para tema escuro"}
+          >
+            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+          
+          <button className="text-secondary hover:text-primary transition-all p-2 rounded-full hover:bg-surface-container-low hidden sm:block">
             <History className="w-5 h-5" />
           </button>
         </div>
         
-        <div className="h-8 w-[1px] bg-outline-variant/30"></div>
+        <div className="h-8 w-[1px] bg-outline-variant/30 hidden sm:block"></div>
         
         <div className="flex items-center space-x-3">
           <div className="text-right hidden sm:block">
