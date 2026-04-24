@@ -464,7 +464,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
               <h5 className="font-black font-headline text-lg text-on-surface uppercase tracking-widest">Distribuição do Pipeline</h5>
               <p className="text-xs text-secondary font-medium">Volume de clientes em cada estágio do funil</p>
             </div>
-            <div className="p-3 bg-white/50 rounded-2xl shadow-sm">
+            <div className="p-3 bg-surface-container-lowest/50 rounded-2xl shadow-sm">
               <Insights className="text-primary w-5 h-5" />
             </div>
           </div>

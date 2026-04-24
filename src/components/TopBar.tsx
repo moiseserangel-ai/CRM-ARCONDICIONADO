@@ -120,7 +120,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
   };
 
   return (
-    <header className="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-16 z-40 bg-surface/70 dark:bg-slate-950/70 backdrop-blur-xl flex items-center justify-between px-4 md:px-8">
+    <header className="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-16 z-40 bg-surface/70 backdrop-blur-xl flex items-center justify-between px-4 md:px-8">
       <div className="flex items-center flex-1 max-w-xl gap-2">
         <button 
           onClick={onMenuToggle}
@@ -188,7 +188,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
                             <div className="flex gap-3">
                               <div className={cn(
                                 "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
-                                !notification.read ? "bg-white shadow-sm" : "bg-surface-container-low"
+                                !notification.read ? "bg-surface-container-lowest shadow-sm" : "bg-surface-container-low"
                               )}>
                                 {getIcon(notification.type)}
                               </div>

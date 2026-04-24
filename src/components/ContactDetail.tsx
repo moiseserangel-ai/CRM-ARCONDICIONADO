@@ -798,7 +798,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           <div className="relative z-10 text-center w-full">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-80">Relationship Score</p>
             <h3 className="text-6xl md:text-8xl font-black font-headline leading-none mb-4">94</h3>
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 mb-6">
+            <div className="inline-flex items-center gap-2 bg-surface-container-lowest/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 mb-6">
               <TrendingUp className="w-4 h-4" />
               <span className="text-[10px] font-black uppercase tracking-widest">+12% este mês</span>
             </div>

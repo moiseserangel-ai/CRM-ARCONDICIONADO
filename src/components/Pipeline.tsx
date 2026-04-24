@@ -533,7 +533,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                       </div>
                       <button 
                         onClick={() => setSelectedOS(null)}
-                        className="p-2 hover:bg-white/50 rounded-lg text-secondary hover:text-primary transition-all"
+                        className="p-2 hover:bg-surface-container-lowest/50 rounded-lg text-secondary hover:text-primary transition-all"
                         title="Trocar OS"
                       >
                         <X className="w-4 h-4" />

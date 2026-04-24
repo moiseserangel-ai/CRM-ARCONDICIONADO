@@ -335,7 +335,7 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
                         }}
                         className="w-full flex items-center p-4.5 rounded-2xl hover:bg-primary/5 transition-all border border-transparent hover:border-primary/20 group text-left"
                       >
-                        <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary font-black text-xs mr-4 group-hover:scale-110 group-hover:bg-white transition-all shadow-sm border border-outline-variant/10">
+                        <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary font-black text-xs mr-4 group-hover:scale-110 group-hover:bg-surface-container-lowest transition-all shadow-sm border border-outline-variant/10">
                           {contact.initials}
                         </div>
                         <div className="flex-1">

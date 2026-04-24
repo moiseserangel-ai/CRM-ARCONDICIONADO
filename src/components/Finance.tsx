@@ -511,7 +511,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
           </div>
 
           <div className="bg-primary p-10 rounded-[40px] shadow-2xl text-white flex flex-col justify-between relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full -mr-40 -mt-40 blur-3xl group-hover:bg-white/15 transition-all duration-700" />
+            <div className="absolute top-0 right-0 w-80 h-80 bg-surface-container-lowest/10 rounded-full -mr-40 -mt-40 blur-3xl group-hover:bg-white/15 transition-all duration-700" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full -ml-32 -mb-32 blur-3xl" />
             
             <div className="relative z-10">

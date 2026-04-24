@@ -216,7 +216,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
               onClick={() => setViewMode('grid')}
               className={cn(
                 "p-2 rounded-lg transition-all",
-                viewMode === 'grid' ? "bg-white text-primary shadow-sm" : "text-secondary/60 hover:text-secondary"
+                viewMode === 'grid' ? "bg-surface-container-lowest text-primary shadow-sm" : "text-secondary/60 hover:text-secondary"
               )}
             >
               <LayoutGrid className="w-4 h-4" />

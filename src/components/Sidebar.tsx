@@ -51,7 +51,7 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
       />
 
       <aside className={cn(
-        "h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-slate-900 flex flex-col py-8 z-50 transition-transform duration-300 lg:translate-x-0",
+        "h-screen w-64 fixed left-0 top-0 bg-surface-container-low flex flex-col py-8 z-50 transition-transform duration-300 lg:translate-x-0",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex items-center justify-between px-8 mb-10">
@@ -69,7 +69,7 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h1 className="text-lg font-bold tracking-tighter text-on-background dark:text-white font-headline leading-none truncate">
+              <h1 className="text-lg font-bold tracking-tighter text-on-background font-headline leading-none truncate">
                 {companyName.split(' ')[0]}
               </h1>
               <p className="text-[8px] uppercase tracking-widest text-secondary font-bold truncate">
@@ -102,8 +102,8 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
                 className={cn(
                   "w-full flex items-center px-8 py-3 font-headline text-sm font-semibold tracking-tight transition-all duration-200",
                   isActive 
-                    ? "bg-surface-container-lowest dark:bg-slate-800 text-primary dark:text-blue-300 rounded-l-full ml-4 shadow-sm" 
-                    : "text-secondary dark:text-slate-400 hover:text-on-background hover:bg-surface-container dark:hover:bg-slate-800"
+                    ? "bg-surface-container-lowest text-primary rounded-l-full ml-4 shadow-sm" 
+                    : "text-secondary hover:text-on-background hover:bg-surface-container"
                 )}
               >
                 <item.icon className={cn("w-5 h-5 mr-4 shrink-0", isActive ? "text-primary" : "text-secondary")} />

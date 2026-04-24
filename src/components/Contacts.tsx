@@ -234,7 +234,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
               onClick={() => setViewMode('table')}
               className={cn(
                 "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
-                viewMode === 'table' ? "bg-white text-primary shadow-sm" : "text-secondary hover:text-on-surface"
+                viewMode === 'table' ? "bg-surface-container-lowest text-primary shadow-sm" : "text-secondary hover:text-on-surface"
               )}
             >
               Tabela
