@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { X, Search, UserPlus, PlusCircle, Loader2, Printer, Download, CheckCircle, FileText, ArrowRight, User as UserIcon, DollarSign, AlignLeft, Briefcase } from 'lucide-react';
+import { X, Search, UserPlus, PlusCircle, Loader2, Printer, Download, CheckCircle, FileText, ArrowRight, User as UserIcon, DollarSign, AlignLeft, Briefcase, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { generateOSPDF } from '../lib/pdf-utils';
 import { Contact, View, ServiceOrder, User } from '../types';
@@ -20,6 +20,7 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
   const [selectedContact, setSelectedContact] = useState<Contact | null>(initialContact);
   const [search, setSearch] = useState('');
   const [saving, setSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
   const [osData, setOsData] = useState({
     subject: defaultSubject,
@@ -208,10 +209,17 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
   const handleSave = async () => {
     if (!user || !selectedContact) return;
     if (!osData.subject || !osData.description) {
-      alert('Por favor, preencha o assunto e a descrição.');
+      setErrorMsg('Por favor, preencha o assunto e a descrição.');
       return;
     }
 
+    const valueNumeric = parseInt((osData.value || '').replace(/\D/g, ''), 10) || 0;
+    if (valueNumeric === 0) {
+      setErrorMsg('Por favor, informe o Valor do Serviço.');
+      return;
+    }
+
+    setErrorMsg(null);
     setSaving(true);
     try {
       // Create OS
@@ -376,6 +384,12 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
                 className="space-y-8"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {errorMsg && (
+                    <div className="col-span-full bg-error-container/20 text-error p-4 rounded-xl text-sm font-bold flex items-center gap-2 border border-error/20">
+                      <AlertCircle className="w-5 h-5 shrink-0" />
+                      {errorMsg}
+                    </div>
+                  )}
                   <div className="space-y-2.5">
                     <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                       <Briefcase className="w-3 h-3" /> Assunto do Serviço

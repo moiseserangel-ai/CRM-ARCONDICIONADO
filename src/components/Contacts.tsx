@@ -65,7 +65,8 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
     const fetchServiceOrders = async () => {
       const { data, error } = await supabase
         .from('serviceOrders')
-        .select('*');
+        .select('*')
+        .eq('userId', user.id);
 
       if (error) {
         console.error('Error fetching service orders:', error);

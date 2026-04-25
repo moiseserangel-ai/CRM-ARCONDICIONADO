@@ -57,6 +57,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
       const { data, error } = await supabase
         .from('serviceOrders')
         .select('*')
+        .eq('userId', user.id)
         .order('createdAt', { ascending: false });
 
       if (error) {

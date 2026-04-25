@@ -167,7 +167,7 @@ export interface Notification {
   type: 'lead' | 'os' | 'contact' | 'system';
   createdAt: string;
   read: boolean;
-  userId: string;
+  ownerUid: string;
 }
 
 export interface InvoiceItem {

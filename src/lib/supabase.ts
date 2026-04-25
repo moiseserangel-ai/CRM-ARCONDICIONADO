@@ -24,7 +24,7 @@ export const supabase = createClient(
 export const createNotification = async (userId: string, title: string, description: string, type: 'lead' | 'os' | 'contact' | 'system') => {
   try {
     const payload = {
-      userId,
+      ownerUid: userId,
       title,
       description,
       type,
@@ -61,7 +61,7 @@ export const checkAndGenerateNotifications = async (userId: string) => {
     const { data: todayNotifs, error: notifsError } = await supabase
       .from('notifications')
       .select('title')
-      .eq('userId', userId)
+      .eq('ownerUid', userId)
       .gte('createdAt', startOfToday);
 
     if (notifsError) return;
@@ -75,7 +75,7 @@ export const checkAndGenerateNotifications = async (userId: string) => {
         const title = `Aniversário: ${contact.name}`;
         if (!existingTitles.has(title)) {
           newNotifications.push({
-            userId,
+            ownerUid: userId,
             title,
             description: `Deseje um feliz aniversário para ${contact.name} hoje!`,
             type: 'contact',
@@ -90,7 +90,7 @@ export const checkAndGenerateNotifications = async (userId: string) => {
         const title = `Revisão próxima: ${contact.name}`;
         if (!existingTitles.has(title)) {
           newNotifications.push({
-            userId,
+            ownerUid: userId,
             title,
             description: `A próxima revisão de ${contact.name} está agendada para daqui a 3 dias (${contact.nextMaintenanceDate.split('-').reverse().join('/')}).`,
             type: 'os',

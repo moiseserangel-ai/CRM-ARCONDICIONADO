@@ -42,7 +42,7 @@ export default function Reports({ user }: { user: User }) {
     const fetchData = async () => {
       const [contactsRes, soRes] = await Promise.all([
         supabase.from('contacts').select('*').eq('userId', user.id),
-        supabase.from('serviceOrders').select('*').order('createdAt', { ascending: false })
+        supabase.from('serviceOrders').select('*').eq('userId', user.id).order('createdAt', { ascending: false })
       ]);
 
       if (contactsRes.data) setContacts(contactsRes.data as Contact[]);

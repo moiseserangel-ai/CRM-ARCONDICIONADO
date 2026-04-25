@@ -30,6 +30,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
+        .eq('ownerUid', user.id)
         .order('createdAt', { ascending: false })
         .limit(20);
 
@@ -56,6 +57,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
           supabase
             .from('notifications')
             .select('*')
+            .eq('ownerUid', user.id)
             .order('createdAt', { ascending: false })
             .limit(20)
             .then(({ data, error }) => {

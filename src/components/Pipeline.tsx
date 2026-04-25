@@ -87,7 +87,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
     const fetchData = async () => {
       const [contactsRes, soRes, productsRes] = await Promise.all([
         supabase.from('contacts').select('*').eq('userId', user.id).order('createdAt', { ascending: false }),
-        supabase.from('serviceOrders').select('*'),
+        supabase.from('serviceOrders').select('*').eq('userId', user.id),
         supabase.from('products').select('*').eq('userId', user.id)
       ]);
 
@@ -329,6 +329,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
           status: finalStatus
         })
         .eq('id', selectedOS.id)
+        .eq('userId', user.id)
         .select()
         .single();
 

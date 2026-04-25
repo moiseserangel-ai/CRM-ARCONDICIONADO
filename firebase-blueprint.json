@@ -23,7 +23,7 @@
         "lastInteractionTime": { "type": "string", "description": "Time of last interaction" },
         "avatar": { "type": "string", "description": "URL to the avatar image" },
         "initials": { "type": "string", "description": "Initials for the contact" },
-        "ownerUid": { "type": "string", "description": "UID of the user who owns this contact" },
+        "userId": { "type": "string", "description": "UID of the user who owns this contact" },
         "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
         "equipmentType": { "type": "string", "description": "Type of HVAC equipment" },
         "equipmentBrand": { "type": "string", "description": "Brand of HVAC equipment" },
@@ -35,7 +35,7 @@
         "financialStatus": { "type": "string", "enum": ["Adimplente", "Inadimplente", "Pendente"], "description": "Financial status of the client" },
         "paymentMethod": { "type": "string", "enum": ["Pix", "Cartão de Crédito", "Dinheiro"], "description": "Preferred payment method" }
       },
-      "required": ["name", "address", "email", "cnpjCpf", "ownerUid"]
+      "required": ["name", "address", "email", "cnpjCpf", "userId"]
     },
     "Settings": {
       "title": "Settings",
@@ -68,9 +68,9 @@
         },
         "value": { "type": "string" },
         "createdAt": { "type": "string", "format": "date-time" },
-        "ownerUid": { "type": "string" }
+        "userId": { "type": "string" }
       },
-      "required": ["contactId", "subject", "description", "ownerUid", "createdAt"]
+      "required": ["contactId", "subject", "description", "userId", "createdAt"]
     },
     "Product": {
       "title": "Product",
@@ -84,10 +84,10 @@
         "category": { "type": "string", "description": "Product category" },
         "stock": { "type": "integer", "description": "Current stock level" },
         "unit": { "type": "string", "description": "Unit of measure (un, kg, m, etc.)" },
-        "ownerUid": { "type": "string", "description": "UID of the user who owns this product" },
+        "userId": { "type": "string", "description": "UID of the user who owns this product" },
         "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
       },
-      "required": ["name", "price", "category", "stock", "unit", "ownerUid", "createdAt"]
+      "required": ["name", "price", "category", "stock", "unit", "userId", "createdAt"]
     },
     "SystemUser": {
       "title": "SystemUser",
@@ -110,10 +110,10 @@
           "enum": ["Ativo", "Inativo"],
           "description": "User status (Active or Inactive)" 
         },
-        "ownerUid": { "type": "string", "description": "UID of the user who owns this user entry" },
+        "userId": { "type": "string", "description": "UID of the user who owns this user entry" },
         "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
       },
-      "required": ["name", "email", "role", "privilege", "status", "ownerUid", "createdAt"]
+      "required": ["name", "email", "role", "privilege", "status", "userId", "createdAt"]
     },
     "Notification": {
       "title": "Notification",
@@ -158,13 +158,13 @@
         },
         "totalAmount": { "type": "number" },
         "status": { "type": "string", "enum": ["Emitida", "Cancelada", "Rascunho"] },
-        "ownerUid": { "type": "string" },
+        "userId": { "type": "string" },
         "createdAt": { "type": "string", "format": "date-time" },
         "xmlUrl": { "type": "string" },
         "pdfUrl": { "type": "string" },
         "observations": { "type": "string" }
       },
-      "required": ["number", "type", "contactId", "contactName", "issueDate", "items", "totalAmount", "status", "ownerUid", "createdAt"]
+      "required": ["number", "type", "contactId", "contactName", "issueDate", "items", "totalAmount", "status", "userId", "createdAt"]
     }
   },
   "firestore": {

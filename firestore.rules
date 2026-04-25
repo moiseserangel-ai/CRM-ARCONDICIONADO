@@ -107,17 +107,35 @@ service cloud.firestore {
     }
 
     function isDocOwner() {
-      return isAuthenticated() && request.auth.uid == resource.data.ownerUid;
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
     }
 
     function uidUnchanged() {
-      return !('ownerUid' in request.resource.data) ||
-        request.resource.data.ownerUid == request.auth.uid;
+      return !('userId' in request.resource.data) ||
+        request.resource.data.userId == request.auth.uid;
     }
 
     function uidNotModified() {
+      return !('userId' in request.resource.data) ||
+        request.resource.data.userId == resource.data.userId;
+    }
+
+    function isNotificationOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.ownerUid;
+    }
+
+    function notificationUidNotModified() {
       return !('ownerUid' in request.resource.data) ||
         request.resource.data.ownerUid == resource.data.ownerUid;
+    }
+
+    function isServiceDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    function serviceUidNotModified() {
+      return !('userId' in request.resource.data) ||
+        request.resource.data.userId == resource.data.userId;
     }
 
     function hasRequiredFields(fields) {
@@ -151,7 +169,7 @@ service cloud.firestore {
              (!('installationDate' in data) || (data.installationDate is string && data.installationDate.size() < 50)) &&
              (!('financialStatus' in data) || (data.financialStatus in ['Adimplente', 'Inadimplente', 'Pendente'])) &&
              (!('paymentMethod' in data) || (data.paymentMethod in ['Pix', 'Cartão de Crédito', 'Dinheiro'])) &&
-             data.ownerUid is string &&
+             data.userId is string &&
              data.createdAt is string;
     }
 
@@ -173,7 +191,7 @@ service cloud.firestore {
              (!('materials' in data) || (data.materials is string && data.materials.size() < 1000)) &&
              (!('finalizationNotes' in data) || (data.finalizationNotes is string && data.finalizationNotes.size() < 2000)) &&
              (!('value' in data) || (data.value is string && data.value.size() < 50)) &&
-             data.ownerUid is string &&
+             data.userId is string &&
              data.createdAt is string &&
              (!('status' in data) || (data.status in ['Aberta', 'Finalizada', 'Orçamento Aceito', 'Orçamento Rejeitado']));
     }
@@ -185,7 +203,7 @@ service cloud.firestore {
              data.category is string && data.category.size() > 0 && data.category.size() < 100 &&
              data.stock is int && data.stock >= 0 &&
              data.unit is string && data.unit.size() > 0 && data.unit.size() < 20 &&
-             data.ownerUid is string &&
+             data.userId is string &&
              data.createdAt is string;
     }
 
@@ -196,7 +214,7 @@ service cloud.firestore {
              data.category is string && data.category.size() > 0 && data.category.size() < 100 &&
              data.date is string &&
              (!('contactId' in data) || (data.contactId is string && data.contactId.size() < 100)) &&
-             data.ownerUid is string &&
+             data.userId is string &&
              data.createdAt is string;
     }
 
@@ -208,7 +226,7 @@ service cloud.firestore {
              data.role is string && data.role.size() > 0 && data.role.size() < 200 &&
              data.privilege in ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] &&
              data.status in ['Ativo', 'Inativo'] &&
-             data.ownerUid is string &&
+             data.userId is string &&
              data.createdAt is string;
     }
 
@@ -230,7 +248,7 @@ service cloud.firestore {
              data.items is list && data.items.size() > 0 && data.items.size() < 100 &&
              data.totalAmount is number && data.totalAmount >= 0 &&
              data.status in ['Emitida', 'Cancelada', 'Rascunho'] &&
-             data.ownerUid is string &&
+             data.userId is string &&
              data.createdAt is string &&
              (!('series' in data) || (data.series is string && data.series.size() < 20)) &&
              (!('contactCnpjCpf' in data) || (data.contactCnpjCpf is string && data.contactCnpjCpf.size() < 30)) &&
@@ -243,7 +261,7 @@ service cloud.firestore {
       allow read: if isDocOwner();
       allow create: if isAuthenticated() && 
                       isValidContact(request.resource.data) && 
-                      request.resource.data.ownerUid == request.auth.uid;
+                      request.resource.data.userId == request.auth.uid;
       allow update: if isDocOwner() && 
                       isValidContact(request.resource.data) && 
                       uidNotModified() &&
@@ -252,22 +270,22 @@ service cloud.firestore {
     }
 
     match /service_orders/{osId} {
-      allow read: if isDocOwner();
+      allow read: if isServiceDocOwner();
       allow create: if isAuthenticated() && 
                       isValidServiceOrder(request.resource.data) && 
-                      request.resource.data.ownerUid == request.auth.uid;
-      allow update: if isDocOwner() && 
+                      request.resource.data.userId == request.auth.uid;
+      allow update: if isServiceDocOwner() && 
                       isValidServiceOrder(request.resource.data) && 
-                      uidNotModified() &&
+                      serviceUidNotModified() &&
                       request.resource.data.createdAt == resource.data.createdAt;
-      allow delete: if isDocOwner();
+      allow delete: if isServiceDocOwner();
     }
 
     match /products/{productId} {
       allow read: if isDocOwner();
       allow create: if isAuthenticated() && 
                       isValidProduct(request.resource.data) && 
-                      request.resource.data.ownerUid == request.auth.uid;
+                      request.resource.data.userId == request.auth.uid;
       allow update: if isDocOwner() && 
                       isValidProduct(request.resource.data) && 
                       uidNotModified() &&
@@ -279,7 +297,7 @@ service cloud.firestore {
       allow read: if isDocOwner();
       allow create: if isAuthenticated() && 
                       isValidTransaction(request.resource.data) && 
-                      request.resource.data.ownerUid == request.auth.uid;
+                      request.resource.data.userId == request.auth.uid;
       allow update: if isDocOwner() && 
                       isValidTransaction(request.resource.data) && 
                       uidNotModified() &&
@@ -291,7 +309,7 @@ service cloud.firestore {
       allow read: if isDocOwner();
       allow create: if isAuthenticated() && 
                       isValidSystemUser(request.resource.data) && 
-                      request.resource.data.ownerUid == request.auth.uid;
+                      request.resource.data.userId == request.auth.uid;
       allow update: if isDocOwner() && 
                       isValidSystemUser(request.resource.data) && 
                       uidNotModified() &&
@@ -300,22 +318,22 @@ service cloud.firestore {
     }
 
     match /notifications/{notificationId} {
-      allow read: if isDocOwner();
+      allow read: if isNotificationOwner();
       allow create: if isAuthenticated() && 
                       isValidNotification(request.resource.data) && 
                       request.resource.data.ownerUid == request.auth.uid;
-      allow update: if isDocOwner() && 
+      allow update: if isNotificationOwner() && 
                       isValidNotification(request.resource.data) && 
-                      uidNotModified() &&
+                      notificationUidNotModified() &&
                       request.resource.data.createdAt == resource.data.createdAt;
-      allow delete: if isDocOwner();
+      allow delete: if isNotificationOwner();
     }
 
     match /invoices/{invoiceId} {
       allow read: if isDocOwner();
       allow create: if isAuthenticated() && 
                       isValidInvoice(request.resource.data) && 
-                      request.resource.data.ownerUid == request.auth.uid;
+                      request.resource.data.userId == request.auth.uid;
       allow update: if isDocOwner() && 
                       isValidInvoice(request.resource.data) && 
                       uidNotModified() &&

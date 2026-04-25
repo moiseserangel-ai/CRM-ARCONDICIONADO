@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import SignaturePad, { SignaturePadRef } from './SignaturePad';
-import { ChevronRight, Mail, Call, LocationOn, TrendingUp, Videocam, Handshake, Psychology, CheckCircle, Warning, Lightbulb, Add, SmartToy, EditNote, Filter, Calendar, Trash2, Loader2, FileText, Printer, Download, X as CloseIcon, Clock, ShieldCheck, Package, PlusCircle, Briefcase, DollarSign, ArrowRight, CheckCircle2 } from './Icons';
+import { ChevronRight, Mail, Call, LocationOn, TrendingUp, Videocam, Handshake, Psychology, CheckCircle, Warning, Lightbulb, Add, SmartToy, EditNote, Filter, Calendar, Trash2, Loader2, FileText, Printer, Download, X as CloseIcon, Clock, ShieldCheck, Package, PlusCircle, Briefcase, DollarSign, ArrowRight, CheckCircle2, AlertCircle } from './Icons';
 import { generateOSPDF } from '../lib/pdf-utils';
 import { Contact, View, ServiceOrder, Product, UsedProduct, User, Settings } from '../types';
 import { cn } from '../lib/utils';
@@ -21,6 +21,7 @@ interface ContactDetailProps {
 export default function ContactDetail({ user, contact, onBack, onEdit, onViewChange, companyLogo, companyName = 'Cardoso Ar Condicionado', settings }: ContactDetailProps) {
   const [deleting, setDeleting] = useState(false);
   const [savingOS, setSavingOS] = useState(false);
+  const [osErrorMsg, setOsErrorMsg] = useState<string | null>(null);
   const [finalizingOS, setFinalizingOS] = useState(false);
   const [recalculating, setRecalculating] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -184,10 +185,17 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
   const handleSaveOS = async () => {
     if (!user) return;
     if (!osData.subject || !osData.description) {
-      alert('Por favor, preencha o assunto e a descrição do serviço.');
+      setOsErrorMsg('Por favor, preencha o assunto e a descrição do serviço.');
       return;
     }
 
+    const valueNumeric = parseInt((osData.value || '').replace(/\D/g, ''), 10) || 0;
+    if (valueNumeric === 0) {
+      setOsErrorMsg('Por favor, informe o Valor do Serviço.');
+      return;
+    }
+
+    setOsErrorMsg(null);
     setSavingOS(true);
     try {
       if (editingOS) {
@@ -200,6 +208,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
             updatedAt: new Date().toISOString()
           })
           .eq('id', editingOS.id)
+          .eq('userId', user.id)
           .select()
           .single();
 
@@ -300,6 +309,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           updatedAt: new Date().toISOString()
         })
         .eq('id', selectedOS.id)
+        .eq('userId', user.id)
         .select()
         .single();
       
@@ -408,6 +418,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         .from('serviceOrders')
         .select('*')
         .eq('contactId', contact.id)
+        .eq('userId', user.id)
         .order('createdAt', { ascending: false });
 
       if (error) {
@@ -1371,6 +1382,12 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
             </div>
 
             <div className="space-y-6">
+              {osErrorMsg && (
+                <div className="bg-error-container/20 text-error p-4 rounded-xl text-sm font-bold flex items-center gap-2 border border-error/20">
+                  <AlertCircle className="w-5 h-5 shrink-0" />
+                  {osErrorMsg}
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Assunto da OS</label>

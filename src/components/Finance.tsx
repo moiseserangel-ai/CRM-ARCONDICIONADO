@@ -77,6 +77,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
       const { data, error } = await supabase
         .from('serviceOrders')
         .select('*')
+        .eq('userId', user.id)
         .in('status', ['Finalizada', 'Orçamento Aceito']);
 
       if (error) {
