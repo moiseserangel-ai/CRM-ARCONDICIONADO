@@ -13,9 +13,10 @@ interface InvoicesProps {
   searchTerm: string;
   companyLogo?: string | null;
   companyName?: string;
+  settings?: any;
 }
 
-export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm, companyLogo, companyName = 'Cardoso Ar Condicionado' }: InvoicesProps) {
+export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm, companyLogo, companyName = 'Cardoso Ar Condicionado', settings }: InvoicesProps) {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState<'Todos' | 'Produto' | 'Serviço'>('Todos');
@@ -95,7 +96,7 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
 
   const handleDownloadInvoice = async (invoice: Invoice) => {
     try {
-      await generateInvoicePDF(invoice, companyLogo, companyName);
+      await generateInvoicePDF(invoice, companyLogo, companyName, settings);
     } catch (err) {
       alert('Erro ao gerar PDF. Tente novamente.');
     }

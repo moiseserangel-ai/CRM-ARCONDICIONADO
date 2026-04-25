@@ -23,10 +23,13 @@ import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, parseISO
 import { ptBR } from 'date-fns/locale';
 import { domToJpeg } from 'modern-screenshot';
 import { jsPDF } from 'jspdf';
+import { generateReportPDF } from '../lib/pdf-utils';
+
+import { Settings } from '../types';
 
 const COLORS = ['#0061A4', '#006E2E', '#914D00', '#6750A4', '#B3261E', '#006A6A'];
 
-export default function Reports({ user }: { user: User }) {
+export default function Reports({ user, companyLogo, companyName, settings }: { user: User, companyLogo?: string | null, companyName?: string, settings?: Settings }) {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [serviceOrders, setServiceOrders] = useState<ServiceOrder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -237,6 +240,61 @@ export default function Reports({ user }: { user: User }) {
       .slice(0, 5);
   }, [contacts]);
 
+  const handleExportCSV = () => {
+    const escapeCSV = (val: any) => {
+      if (val == null) return '""';
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    };
+
+    const headerRows = [
+      ['RELATÓRIO DE DESEMPENHO INSTITUCIONAL'].map(escapeCSV),
+      ['Gerado em', new Date().toLocaleDateString('pt-BR')].map(escapeCSV),
+      ['Período selecionado', timeRange === 'all' ? 'Todo o Período' : timeRange === 'year' ? `Ano - ${selectedYear}` : timeRange === '12m' ? 'Últimos 12 meses' : 'Últimos 6 meses'].map(escapeCSV),
+      [],
+      ['DADOS DA EMPRESA'].map(escapeCSV),
+      ['Nome', companyName || 'Cardoso Ar Condicionado'].map(escapeCSV),
+      ...(settings?.cnpj ? [['CNPJ', settings.cnpj].map(escapeCSV)] : []),
+      ...(settings?.phone ? [['Telefone', settings.phone].map(escapeCSV)] : []),
+      ...(settings?.address ? [['Endereço', settings.address].map(escapeCSV)] : []),
+      [],
+      ['INDICADORES'].map(escapeCSV),
+      ['Faturamento Total', new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(metrics.totalRevenue)].map(escapeCSV),
+      ['Ordens Abertas', String(metrics.totalOS - metrics.finalizedOS)].map(escapeCSV),
+      ['Total de Clientes', String(metrics.totalContacts)].map(escapeCSV),
+      [],
+      ['DETALHAMENTO'].map(escapeCSV),
+    ];
+
+    const csvContent = [
+      ...headerRows,
+      ['ID', 'Data', 'Assunto', 'Status', 'Cliente', 'Valor'].map(escapeCSV),
+      ...serviceOrders.map(os => [
+        os.id,
+        new Date(os.createdAt).toLocaleDateString('pt-BR'),
+        os.subject,
+        os.status,
+        os.contactName,
+        os.value
+      ].map(escapeCSV))
+    ]
+    .map(e => e.join(','))
+    .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Relatorio_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExportPDF = async () => {
+    await generateReportPDF(reportRef, metrics, companyLogo, companyName, settings);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -290,6 +348,23 @@ export default function Reports({ user }: { user: User }) {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="flex items-center gap-2 border-l border-outline-variant/20 pl-3 ml-1">
+            <button
+              onClick={handleExportPDF}
+              className="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:bg-primary/90 transition-colors shadow-sm"
+            >
+              <Download className="w-3.5 h-3.5" />
+              PDF
+            </button>
+            <button
+              onClick={handleExportCSV}
+              className="flex items-center gap-2 bg-surface-container-high text-on-surface px-4 py-2 rounded-xl text-xs font-bold hover:bg-surface-container-highest transition-colors shadow-sm"
+            >
+              <Download className="w-3.5 h-3.5" />
+              CSV
+            </button>
           </div>
         </div>
       </div>

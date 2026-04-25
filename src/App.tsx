@@ -306,9 +306,9 @@ export default function App() {
       case 'finance':
         return <Finance user={user} onAddTransaction={handleAddTransaction} onEditTransaction={handleEditTransaction} searchTerm={globalSearchTerm} />;
       case 'invoices':
-        return <Invoices user={user} onAddInvoice={handleAddInvoice} onEditInvoice={handleEditInvoice} searchTerm={globalSearchTerm} companyLogo={companyLogo} companyName={settings.companyName} />;
+        return <Invoices user={user} onAddInvoice={handleAddInvoice} onEditInvoice={handleEditInvoice} searchTerm={globalSearchTerm} companyLogo={companyLogo} companyName={settings.companyName} settings={settings} />;
       case 'reports':
-        return <Reports user={user} />;
+        return <Reports user={user} companyLogo={companyLogo} companyName={settings.companyName} settings={settings} />;
       case 'settings':
         return (
           <Settings 

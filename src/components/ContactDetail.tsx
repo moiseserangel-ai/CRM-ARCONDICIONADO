@@ -153,7 +153,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
     };
 
     try {
-      await generateOSPDF(tempOS, contact, companyLogo, companyName);
+      await generateOSPDF(tempOS, contact, companyLogo, companyName, settings);
     } catch (err) {
       alert('Erro ao gerar PDF. Tente novamente.');
     }
@@ -1272,7 +1272,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                                   <Printer className="w-4 h-4" />
                                 </button>
                                 <button 
-                                  onClick={() => generateOSPDF(os, contact, companyLogo, companyName)}
+                                  onClick={() => generateOSPDF(os, contact, companyLogo, companyName, settings)}
                                   className="p-2 hover:bg-surface-container rounded-xl text-secondary transition-all inline-flex items-center justify-center"
                                   title="Baixar PDF"
                                 >

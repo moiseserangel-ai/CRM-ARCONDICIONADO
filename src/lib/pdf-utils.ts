@@ -1,8 +1,8 @@
 import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { domToJpeg } from 'modern-screenshot';
 import { Contact, ServiceOrder, Invoice } from '../types';
 
-export const generateInvoicePDF = async (invoice: Invoice, companyLogo?: string | null, companyName: string = 'Cardoso Ar Condicionado') => {
+export const generateInvoicePDF = async (invoice: Invoice, companyLogo?: string | null, companyName: string = 'Cardoso Ar Condicionado', settings?: any) => {
   const logoHtml = companyLogo ? `<img src="${companyLogo}" alt="Logo" style="max-height: 60px; max-width: 150px; object-fit: contain;" />` : '';
 
   const container = document.createElement('div');
@@ -23,15 +23,19 @@ export const generateInvoicePDF = async (invoice: Invoice, companyLogo?: string 
 
   container.innerHTML = `
     <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; line-height: 1.5;">
-      <div style="border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center; gap: 20px;">
+      <div style="border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="display: flex; align-items: flex-start; gap: 20px;">
           ${logoHtml}
           <div>
             <h1 style="margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px;">Nota Fiscal de ${invoice.type}</h1>
             <p style="margin: 5px 0 0; font-weight: bold; color: #666;">${companyName}</p>
+            ${settings?.cnpj ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">CNPJ: ${settings.cnpj}</p>` : ''}
+            ${settings?.phone ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">Tel: ${settings.phone}</p>` : ''}
+            ${settings?.email ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">E-mail: ${settings.email}</p>` : ''}
+            ${settings?.address ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">Endereço: ${settings.address}</p>` : ''}
           </div>
         </div>
-        <div style="text-align: right;">
+        <div style="text-align: right; padding-top: 5px;">
           <div style="font-size: 18px; font-weight: bold;">Nº ${invoice.number}</div>
           <div style="font-size: 12px; color: #666;">Série: ${invoice.series}</div>
           <div style="display: inline-block; margin-top: 5px; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; text-transform: uppercase; border: 1px solid #000;">${invoice.status}</div>
@@ -90,14 +94,11 @@ export const generateInvoicePDF = async (invoice: Invoice, companyLogo?: string 
   document.body.appendChild(container);
 
   try {
-    const canvas = await html2canvas(container, {
+    const imgData = await domToJpeg(container, {
       scale: 2,
-      useCORS: true,
-      logging: false,
       backgroundColor: '#ffffff'
     });
     
-    const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -108,7 +109,7 @@ export const generateInvoicePDF = async (invoice: Invoice, companyLogo?: string 
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`NF-${invoice.number}-${(invoice.contactName || 'Cliente').replace(/\s+/g, '_')}.pdf`);
   } catch (error) {
     console.error('Error generating PDF:', error);
@@ -198,14 +199,11 @@ export const generateOSPDF = async (os: ServiceOrder, contact: Contact, companyL
   document.body.appendChild(container);
 
   try {
-    const canvas = await html2canvas(container, {
+    const imgData = await domToJpeg(container, {
       scale: 2,
-      useCORS: true,
-      logging: false,
       backgroundColor: '#ffffff'
     });
     
-    const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -216,7 +214,7 @@ export const generateOSPDF = async (os: ServiceOrder, contact: Contact, companyL
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(`OS-${os.id?.substring(0, 8).toUpperCase() || 'OS'}-${(contact.name || 'Cliente').replace(/\s+/g, '_')}.pdf`);
   } catch (error) {
     console.error('Error generating PDF:', error);
@@ -225,3 +223,97 @@ export const generateOSPDF = async (os: ServiceOrder, contact: Contact, companyL
     document.body.removeChild(container);
   }
 };
+
+export const generateReportPDF = async (reportRef: React.RefObject<HTMLDivElement>, metrics: any, companyLogo?: string | null, companyName: string = 'Cardoso Ar Condicionado', settings?: any) => {
+  if (!reportRef.current) return;
+  
+  // hide buttons during screenshot
+  const buttons = reportRef.current.querySelectorAll('button');
+  const selects = reportRef.current.querySelectorAll('select');
+  
+  const originalButtonDisplays = Array.from(buttons).map(b => b.style.display);
+  const originalSelectDisplays = Array.from(selects).map(s => s.style.display);
+  
+  buttons.forEach(b => b.style.display = 'none');
+  selects.forEach(s => s.style.display = 'none');
+
+  const cnpjHtml = settings?.cnpj ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">CNPJ: ${settings.cnpj}</p>` : '';
+  const phoneHtml = settings?.phone ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">Tel: ${settings.phone}</p>` : '';
+  const addressHtml = settings?.address ? `<p style="margin: 2px 0 0; font-size: 12px; color: #888;">Endereço: ${settings.address}</p>` : '';
+
+  // Insert header
+  const headerDiv = document.createElement('div');
+  headerDiv.innerHTML = `
+    <div style="font-family: Arial, sans-serif; background: #fff; padding-top: 20px;">
+      <div style="border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="display: flex; align-items: flex-start; gap: 20px;">
+          ${companyLogo ? `<img src="${companyLogo}" style="max-height: 80px; max-width: 180px; object-fit: contain;" />` : ''}
+          <div>
+            <h1 style="margin: 0 0 5px 0; font-size: 24px; text-transform: uppercase;">Relatório de Desempenho</h1>
+            <p style="margin: 0; font-weight: bold; color: #444; font-size: 16px;">${companyName}</p>
+            ${cnpjHtml}
+            ${phoneHtml}
+            ${addressHtml}
+          </div>
+        </div>
+        <div style="text-align: right; padding-top: 5px;">
+          <div style="font-size: 14px; color: #666; margin-bottom: 5px;">Gerado em: ${new Date().toLocaleDateString('pt-BR')}</div>
+          <div style="font-size: 14px; font-weight: bold; color: #333;">Faturamento: ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(metrics.totalRevenue)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  reportRef.current.insertBefore(headerDiv, reportRef.current.firstChild);
+
+  try {
+    await new Promise(r => setTimeout(r, 100)); // wait for layout/images
+
+    const imgData = await domToJpeg(reportRef.current, {
+      scale: 2,
+      backgroundColor: '#ffffff'
+    });
+    
+    // remove header and restore buttons
+    reportRef.current.removeChild(headerDiv);
+    buttons.forEach((b, i) => b.style.display = originalButtonDisplays[i]);
+    selects.forEach((s, i) => s.style.display = originalSelectDisplays[i]);
+
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const imgProps = pdf.getImageProperties(imgData);
+    const margin = 15;
+    const pdfPageWidth = pdf.internal.pageSize.getWidth();
+    const pdfPageHeight = pdf.internal.pageSize.getHeight();
+    const pdfWidth = pdfPageWidth - (margin * 2);
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    const playableHeight = pdfPageHeight - (margin * 2);
+    let heightLeft = pdfHeight;
+    let position = margin;
+
+    pdf.addImage(imgData, 'JPEG', margin, position, pdfWidth, pdfHeight);
+    heightLeft -= playableHeight;
+
+    while (heightLeft > 0) {
+      position -= playableHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'JPEG', margin, position, pdfWidth, pdfHeight);
+      heightLeft -= playableHeight;
+    }
+
+    pdf.save(`Relatorio_${new Date().toISOString().split('T')[0]}.pdf`);
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    // restore just in case
+    if (headerDiv.parentNode) reportRef.current.removeChild(headerDiv);
+    buttons.forEach((b, i) => b.style.display = originalButtonDisplays[i]);
+    selects.forEach((s, i) => s.style.display = originalSelectDisplays[i]);
+    throw error;
+  }
+};
+
