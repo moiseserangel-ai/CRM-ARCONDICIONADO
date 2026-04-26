@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Users, GitBranch, BarChart3, Settings, Plus, HelpCircle, LogOut, Package, Wallet, FileText, X } from 'lucide-react';
+import { LayoutDashboard, Users, GitBranch, BarChart3, Settings, Plus, HelpCircle, LogOut, Package, Wallet, FileText, X, TrendingDown } from 'lucide-react';
 import { View } from '../types';
 import { cn } from '../lib/utils';
 
@@ -33,6 +33,7 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
     { id: 'contacts', label: 'Cadastro de Cliente', icon: Users },
     { id: 'products', label: 'Produtos', icon: Package },
     { id: 'finance', label: 'Finanças', icon: Wallet },
+    { id: 'expenses', label: 'Despesas', icon: TrendingDown },
     { id: 'invoices', label: 'Notas Fiscais', icon: FileText },
     { id: 'pipeline', label: 'Pipeline', icon: GitBranch },
     { id: 'reports', label: 'Relatórios', icon: BarChart3 },
@@ -91,6 +92,7 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
                             (item.id === 'contacts' && (currentView === 'contact-detail' || currentView === 'contact-form')) ||
                             (item.id === 'products' && currentView === 'product-form') ||
                             (item.id === 'finance' && currentView === 'finance-form') ||
+                            (item.id === 'expenses' && currentView === 'expenses-form') ||
                             (item.id === 'invoices' && currentView === 'invoice-form');
             return (
               <button

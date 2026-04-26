@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, Calendar, Download, MoreHorizontal, ChevronRight, PlusCircle, CheckCircle, Lightbulb as Insights, Users, DollarSign, Briefcase, Clock, ArrowUpRight, ArrowDownRight, Filter, Search, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { format, subMonths, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { cn } from '../lib/utils';
 import { supabase } from '../lib/supabase';
 import { Contact, ServiceOrder, View, User } from '../types';
@@ -263,6 +266,35 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
     ? (getContactsByStage('FECHADO').length / filteredContacts.length) * 100 
     : 0;
 
+  const monthlyRevenueData = React.useMemo(() => {
+    const data = [];
+    for (let i = 11; i >= 0; i--) {
+      const date = subMonths(new Date(), i);
+      const monthStart = startOfMonth(date);
+      const monthEnd = endOfMonth(date);
+      const monthLabel = format(date, 'MMM/yy', { locale: ptBR });
+
+      const monthlyRevenue = serviceOrders
+        .filter(os => {
+          if (os.status !== 'Finalizada') return false;
+          // check if there's an updatedAt, otherwise use createdAt
+          const dateToUse = parseISO(os.updatedAt || os.createdAt);
+          return isWithinInterval(dateToUse, { start: monthStart, end: monthEnd });
+        })
+        .reduce((acc, os) => {
+          const digits = (os.value || '').replace(/[^0-9]/g, '');
+          const value = (parseInt(digits) || 0) / 100;
+          return acc + value;
+        }, 0);
+
+      data.push({
+        name: monthLabel,
+        receita: monthlyRevenue
+      });
+    }
+    return data;
+  }, [serviceOrders]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -448,6 +480,62 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
             <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">Soma de todas as OS abertas</p>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Revenue Bar Chart */}
+      <div className="grid grid-cols-1 gap-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+          className="col-span-1 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm"
+        >
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h3 className="text-xl font-bold font-headline text-on-surface">Evolução do Faturamento Mensal</h3>
+              <p className="text-xs text-secondary font-medium mt-1">Receita baseada em Ordens de Serviço finalizadas nos últimos 12 meses</p>
+            </div>
+            <div className="flex items-center gap-2 text-[10px] font-bold text-secondary uppercase tracking-widest bg-surface-container-low px-3 py-1.5 rounded-xl">
+              <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
+              Receita Realizada
+            </div>
+          </div>
+          <div className="h-[350px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={monthlyRevenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fontSize: 10, fontWeight: 600, fill: '#8E9299' }}
+                  dy={10}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fontSize: 10, fontWeight: 600, fill: '#8E9299' }}
+                  tickFormatter={(value) => `R$ ${value >= 1000 ? (value/1000).toFixed(1) + 'k' : value}`}
+                />
+                <Tooltip 
+                  cursor={{ fill: '#f8f9fa' }}
+                  contentStyle={{ 
+                    borderRadius: '16px', 
+                    border: 'none', 
+                    boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
+                    fontSize: '12px',
+                    fontWeight: 'bold'
+                  }}
+                  formatter={(value: number) => [
+                    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value), 
+                    'Receita'
+                  ]}
+                />
+                <Bar dataKey="receita" fill="#0061A4" radius={[6, 6, 0, 0]} barSize={40} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </motion.div>
       </div>

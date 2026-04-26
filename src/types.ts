@@ -1,4 +1,4 @@
-export type View = 'dashboard' | 'contacts' | 'pipeline' | 'reports' | 'settings' | 'contact-detail' | 'contact-form' | 'products' | 'product-form' | 'finance' | 'finance-form' | 'invoices' | 'invoice-form';
+export type View = 'dashboard' | 'contacts' | 'pipeline' | 'reports' | 'settings' | 'contact-detail' | 'contact-form' | 'products' | 'product-form' | 'finance' | 'finance-form' | 'expenses' | 'expenses-form' | 'invoices' | 'invoice-form';
 
 export interface Metric {
   label: string;
@@ -131,6 +131,7 @@ export interface Transaction {
   category: string;
   date: string;
   contactId?: string;
+  status?: 'pending' | 'completed' | 'cancelled';
   userId: string;
   createdAt: string;
   isOS?: boolean;

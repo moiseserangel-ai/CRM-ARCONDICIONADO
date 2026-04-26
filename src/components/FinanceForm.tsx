@@ -20,6 +20,7 @@ interface FinanceFormProps {
   transaction: Transaction | null;
   onBack: () => void;
   onSuccess: () => void;
+  isExpensesOnly?: boolean;
 }
 
 const CATEGORIES = [
@@ -34,17 +35,18 @@ const CATEGORIES = [
   'Outros'
 ];
 
-export default function FinanceForm({ user, transaction, onBack, onSuccess }: FinanceFormProps) {
+export default function FinanceForm({ user, transaction, onBack, onSuccess, isExpensesOnly }: FinanceFormProps) {
   const [loading, setLoading] = useState(false);
   const [contacts, setContacts] = useState<Contact[]>([]);
   
   const [formData, setFormData] = useState({
     description: transaction?.description || '',
     amount: transaction?.amount || '',
-    type: transaction?.type || 'Saída' as 'Entrada' | 'Saída',
+    type: transaction?.type || (isExpensesOnly ? 'Saída' : 'Saída') as 'Entrada' | 'Saída',
     category: transaction?.category || 'Outros',
     date: transaction?.date ? new Date(transaction.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-    contactId: transaction?.contactId || ''
+    contactId: transaction?.contactId || '',
+    status: transaction?.status || 'completed' as 'pending' | 'completed' | 'cancelled'
   });
 
   useEffect(() => {
@@ -229,19 +231,21 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess }: Fi
             <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Tipo de Transação</label>
               <div className="grid grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, type: 'Entrada' })}
-                  className={cn(
-                    "flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 transition-all font-bold",
-                    formData.type === 'Entrada' 
-                      ? "bg-green-500/10 border-green-500 text-green-500" 
-                      : "bg-surface-container-low border-transparent text-secondary hover:bg-surface-container-high"
-                  )}
-                >
-                  <TrendingUp className="w-4 h-4" />
-                  Entrada
-                </button>
+                {!isExpensesOnly && (
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, type: 'Entrada' })}
+                    className={cn(
+                      "flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 transition-all font-bold",
+                      formData.type === 'Entrada' 
+                        ? "bg-green-500/10 border-green-500 text-green-500" 
+                        : "bg-surface-container-low border-transparent text-secondary hover:bg-surface-container-high"
+                    )}
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    Entrada
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, type: 'Saída' })}
@@ -249,7 +253,8 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess }: Fi
                     "flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 transition-all font-bold",
                     formData.type === 'Saída' 
                       ? "bg-red-500/10 border-red-500 text-red-500" 
-                      : "bg-surface-container-low border-transparent text-secondary hover:bg-surface-container-high"
+                      : "bg-surface-container-low border-transparent text-secondary hover:bg-surface-container-high",
+                    isExpensesOnly ? "col-span-2" : ""
                   )}
                 >
                   <TrendingDown className="w-4 h-4" />
@@ -272,6 +277,38 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess }: Fi
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Status de Pagamento</label>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, status: 'completed' })}
+                  className={cn(
+                    "flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 transition-all font-bold",
+                    formData.status === 'completed' 
+                      ? "bg-primary/10 border-primary text-primary" 
+                      : "bg-surface-container-low border-transparent text-secondary hover:bg-surface-container-high"
+                  )}
+                >
+                  <TrendingUp className="w-4 h-4" />
+                  Realizado
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, status: 'pending' })}
+                  className={cn(
+                    "flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 transition-all font-bold",
+                    formData.status === 'pending' 
+                      ? "bg-amber-500/10 border-amber-500 text-amber-500" 
+                      : "bg-surface-container-low border-transparent text-secondary hover:bg-surface-container-high"
+                  )}
+                >
+                  <Calendar className="w-4 h-4" />
+                  Agendado (Pendente)
+                </button>
               </div>
             </div>
           </div>

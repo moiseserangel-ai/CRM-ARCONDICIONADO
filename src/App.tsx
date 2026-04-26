@@ -305,6 +305,8 @@ export default function App() {
         return <Products user={user} onAddProduct={handleAddProduct} onEditProduct={handleEditProduct} searchTerm={globalSearchTerm} />;
       case 'finance':
         return <Finance user={user} onAddTransaction={handleAddTransaction} onEditTransaction={handleEditTransaction} searchTerm={globalSearchTerm} />;
+      case 'expenses':
+        return <Finance user={user} onAddTransaction={() => { setSelectedTransaction(null); setCurrentView('expenses-form'); }} onEditTransaction={(t) => { setSelectedTransaction(t); setCurrentView('expenses-form'); }} searchTerm={globalSearchTerm} isExpensesOnly />;
       case 'invoices':
         return <Invoices user={user} onAddInvoice={handleAddInvoice} onEditInvoice={handleEditInvoice} searchTerm={globalSearchTerm} companyLogo={companyLogo} companyName={settings.companyName} settings={settings} />;
       case 'reports':
@@ -375,6 +377,22 @@ export default function App() {
               );
               setCurrentView('finance');
             }}
+          />
+        );
+      case 'expenses-form':
+        return (
+          <FinanceForm 
+            user={user}
+            transaction={selectedTransaction} 
+            onBack={() => setCurrentView('expenses')} 
+            onSuccess={() => {
+              showToast(
+                selectedTransaction ? 'Despesa Atualizada' : 'Despesa Registrada',
+                `A despesa foi ${selectedTransaction ? 'atualizada' : 'adicionada'} com sucesso.`
+              );
+              setCurrentView('expenses');
+            }}
+            isExpensesOnly
           />
         );
       case 'invoice-form':

@@ -101,6 +101,40 @@ export const checkAndGenerateNotifications = async (userId: string) => {
       }
     }
 
+    // Fetch transactions
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+    const { data: transactions, error: transError } = await supabase
+      .from('transactions')
+      .select('id, description, amount, date')
+      .eq('userId', userId)
+      .eq('type', 'Saída')
+      .eq('status', 'pending')
+      .in('date', [todayStr, tomorrowStr]);
+
+    if (!transError && transactions) {
+      for (const trans of transactions) {
+        const isToday = trans.date === todayStr;
+        const title = `Vencimento: ${trans.description}`;
+        const amountStr = typeof trans.amount === 'number' 
+          ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(trans.amount)
+          : String(trans.amount);
+          
+        if (!existingTitles.has(title)) {
+          newNotifications.push({
+            ownerUid: userId,
+            title,
+            description: `Despesa de ${amountStr} com vencimento ${isToday ? 'hoje' : 'amanhã'} (${trans.date.split('-').reverse().join('/')}).`,
+            type: 'alert',
+            read: false,
+          });
+          existingTitles.add(title);
+        }
+      }
+    }
+
     if (newNotifications.length > 0) {
       await supabase.from('notifications').insert(newNotifications);
     }

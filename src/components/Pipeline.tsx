@@ -787,7 +787,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                 </button>
               </div>
               
-              <div className="space-y-4 min-h-[200px]">
+              <div className="space-y-4 min-h-[200px] max-h-[calc(100vh-320px)] overflow-y-auto pr-2 pb-6 custom-scrollbar">
                 <AnimatePresence mode="popLayout">
                   {stageContacts.map((contact) => (
                     <motion.div 
