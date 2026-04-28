@@ -717,7 +717,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
       {/* Breadcrumbs & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
-          <button onClick={onBack} className="text-secondary hover:text-primary transition-colors">Cadastro de Cliente</button>
+          <button onClick={onBack} className="text-secondary hover:text-primary transition-colors">Cadastro</button>
           <ChevronRight className="w-4 h-4 text-outline-variant" />
           <span className="text-on-surface">{contact.name}</span>
         </div>

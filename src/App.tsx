@@ -13,6 +13,7 @@ import FinanceForm from './components/FinanceForm';
 import Invoices from './components/Invoices';
 import InvoiceForm from './components/InvoiceForm';
 import Settings from './components/Settings';
+import Integrations from './components/Integrations';
 import Reports from './components/Reports';
 import ErrorBoundary from './components/ErrorBoundary';
 import { View, Contact, Product, Transaction, Settings as SettingsType, Invoice } from './types';
@@ -311,6 +312,8 @@ export default function App() {
         return <Invoices user={user} onAddInvoice={handleAddInvoice} onEditInvoice={handleEditInvoice} searchTerm={globalSearchTerm} companyLogo={companyLogo} companyName={settings.companyName} settings={settings} />;
       case 'reports':
         return <Reports user={user} companyLogo={companyLogo} companyName={settings.companyName} settings={settings} />;
+      case 'integrations':
+        return <Integrations user={user} />;
       case 'settings':
         return (
           <Settings 

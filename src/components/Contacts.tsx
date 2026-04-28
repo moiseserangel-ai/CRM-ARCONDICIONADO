@@ -225,7 +225,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             <Users className="w-5 h-5" />
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Diretório de Relacionamentos</span>
           </div>
-          <h2 className="text-4xl font-headline font-black tracking-tight text-on-surface">Cadastro de Clientes</h2>
+          <h2 className="text-4xl font-headline font-black tracking-tight text-on-surface">Cadastro</h2>
           <p className="text-secondary font-body text-sm max-w-md">Gerencie sua base de clientes, contratos e histórico de manutenções em um só lugar.</p>
         </div>
         

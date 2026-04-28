@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Users, GitBranch, BarChart3, Settings, Plus, HelpCircle, LogOut, Package, Wallet, FileText, X, TrendingDown } from 'lucide-react';
+import { LayoutDashboard, Users, GitBranch, BarChart3, Settings, Plus, HelpCircle, LogOut, Package, Wallet, FileText, X, TrendingDown, Plug } from 'lucide-react';
 import { View } from '../types';
 import { cn } from '../lib/utils';
 
@@ -30,13 +30,14 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
   };
   const navItems = [
     { id: 'dashboard', label: 'Painel', icon: LayoutDashboard },
-    { id: 'contacts', label: 'Cadastro de Cliente', icon: Users },
+    { id: 'contacts', label: 'Cadastro', icon: Users },
     { id: 'products', label: 'Produtos', icon: Package },
     { id: 'finance', label: 'Finanças', icon: Wallet },
     { id: 'expenses', label: 'Despesas', icon: TrendingDown },
     { id: 'invoices', label: 'Notas Fiscais', icon: FileText },
     { id: 'pipeline', label: 'Pipeline', icon: GitBranch },
     { id: 'reports', label: 'Relatórios', icon: BarChart3 },
+    { id: 'integrations', label: 'Integrações', icon: Plug },
     { id: 'settings', label: 'Configurações', icon: Settings },
   ] as const;
 
