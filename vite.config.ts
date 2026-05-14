@@ -12,7 +12,9 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        manifestFilename: 'manifest.json',
+        useCredentials: true,
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icons/pwa-192x192.png', 'icons/pwa-512x512.png'],
         manifest: {
           name: 'Cardoso Ar Condicionado',
           short_name: 'Cardoso Ar',
@@ -22,17 +24,36 @@ export default defineConfig(({mode}) => {
           display: 'standalone',
           icons: [
             {
-              src: 'pwa-192x192.png',
+              src: '/icons/pwa-192x192.png',
               sizes: '192x192',
               type: 'image/png'
             },
             {
-              src: 'pwa-512x512.png',
+              src: '/icons/pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any maskable'
             }
+          ],
+          screenshots: [
+            {
+              src: '/screenshot-desktop.svg',
+              sizes: '1280x720',
+              type: 'image/svg+xml',
+              form_factor: 'wide',
+              label: 'Desktop View'
+            },
+            {
+              src: '/screenshot-mobile.svg',
+              sizes: '750x1334',
+              type: 'image/svg+xml',
+              form_factor: 'narrow',
+              label: 'Mobile View'
+            }
           ]
+        },
+        devOptions: {
+          enabled: true
         }
       })
     ],

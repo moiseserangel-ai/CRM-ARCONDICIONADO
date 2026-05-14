@@ -122,8 +122,12 @@ export default function App() {
           address: data.address || 'São Paulo, SP',
           website: data.website || 'www.cardosoar.com.br'
         });
+        if (data.companyName) {
+          localStorage.setItem('companyName', data.companyName);
+        }
         if (data.logo) {
           setCompanyLogo(data.logo);
+          localStorage.setItem('companyLogo', data.logo);
         }
       }
     };
@@ -150,6 +154,10 @@ export default function App() {
           });
           if (data.logo) {
             setCompanyLogo(data.logo);
+            localStorage.setItem('companyLogo', data.logo);
+          }
+          if (data.companyName) {
+            localStorage.setItem('companyName', data.companyName);
           }
         }
       })
@@ -245,6 +253,20 @@ export default function App() {
 
   const handleLogoChange = async (logo: string | null) => {
     setCompanyLogo(logo);
+    if (logo) {
+      localStorage.setItem('companyLogo', logo);
+      const favicon = document.getElementById('favicon-link') as HTMLLinkElement;
+      if (favicon) favicon.href = logo;
+      const appleIcon = document.getElementById('apple-touch-icon-link') as HTMLLinkElement;
+      if (appleIcon) appleIcon.href = logo;
+    } else {
+      localStorage.removeItem('companyLogo');
+      const favicon = document.getElementById('favicon-link') as HTMLLinkElement;
+      if (favicon) favicon.href = '/icons/pwa-192x192.png';
+      const appleIcon = document.getElementById('apple-touch-icon-link') as HTMLLinkElement;
+      if (appleIcon) appleIcon.href = '/icons/pwa-192x192.png';
+    }
+    
     if (user) {
       try {
         const { error } = await supabase
@@ -253,18 +275,13 @@ export default function App() {
           .eq('userId', user.id);
         
         if (error) throw error;
-        showToast('Logo Atualizada', 'A identidade visual da empresa foi atualizada.');
+        showToast('Logo Atualizada', 'A identidade visual da empresa foi atualizada. Atualize a página para recarregar o ícone do aplicativo na web.');
       } catch (error) {
         console.error(error);
         showToast('Erro ao Salvar', 'Não foi possível atualizar a logo.', 'error');
       }
     } else {
-      if (logo) {
-        localStorage.setItem('companyLogo', logo);
-      } else {
-        localStorage.removeItem('companyLogo');
-      }
-      showToast('Logo Atualizada', 'A identidade visual da empresa foi atualizada.');
+      showToast('Logo Atualizada', 'A identidade visual da empresa foi atualizada. Atualize a página para recarregar o ícone do aplicativo na web.');
     }
   };
 
@@ -285,6 +302,7 @@ export default function App() {
         }, { onConflict: 'userId' });
 
       if (error) throw error;
+      localStorage.setItem('companyName', newSettings.companyName);
       showToast('Configurações Salvas', 'As informações da empresa foram atualizadas com sucesso.');
     } catch (error: any) {
       console.error('Error saving settings:', error);
