@@ -14,7 +14,7 @@ export default defineConfig(({mode}) => {
         registerType: 'autoUpdate',
         manifestFilename: 'manifest.json',
         useCredentials: true,
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icons/pwa-192x192.svg', 'icons/pwa-512x512.svg'],
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icons/logo.png'],
         manifest: {
           name: 'Cardoso Ar Condicionado',
           short_name: 'Cardoso Ar',
@@ -24,14 +24,14 @@ export default defineConfig(({mode}) => {
           display: 'standalone',
           icons: [
             {
-              src: '/icons/pwa-192x192.svg',
+              src: '/icons/logo.png',
               sizes: '192x192',
-              type: 'image/svg+xml'
+              type: 'image/png'
             },
             {
-              src: '/icons/pwa-512x512.svg',
+              src: '/icons/logo.png',
               sizes: '512x512',
-              type: 'image/svg+xml',
+              type: 'image/png',
               purpose: 'any maskable'
             }
           ],
