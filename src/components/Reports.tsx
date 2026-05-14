@@ -407,8 +407,8 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
               Receita Realizada
             </div>
           </div>
-          <div className="h-[350px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-[350px] w-full min-w-0" style={{ minWidth: 0, minHeight: 0 }}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <BarChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis 
@@ -444,8 +444,8 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
         {/* OS Status Distribution */}
         <div className="col-span-12 xl:col-span-4 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm">
           <h3 className="text-xl font-bold font-headline text-on-surface mb-8">Status das Ordens</h3>
-          <div className="h-[250px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-[250px] w-full min-w-0" style={{ minWidth: 0, minHeight: 0 }}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <PieChart>
                 <Pie
                   data={osStatusData}
@@ -485,8 +485,8 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
         {/* Service Type Distribution */}
         <div className="col-span-12 xl:col-span-5 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm">
           <h3 className="text-xl font-bold font-headline text-on-surface mb-8">Tipos de Serviço</h3>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-[300px] w-full min-w-0" style={{ minWidth: 0, minHeight: 0 }}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <PieChart>
                 <Pie
                   data={serviceTypeData}

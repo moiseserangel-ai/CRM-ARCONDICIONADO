@@ -261,10 +261,11 @@ export default function App() {
       if (appleIcon) appleIcon.href = logo;
     } else {
       localStorage.removeItem('companyLogo');
+      const fallbackIcon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%2310b981'/%3E%3Ctext x='96' y='104' font-family='sans-serif' font-weight='bold' font-size='105' fill='white' text-anchor='middle' dominant-baseline='middle'%3ECA%3C/text%3E%3C/svg%3E";
       const favicon = document.getElementById('favicon-link') as HTMLLinkElement;
-      if (favicon) favicon.href = '/icons/pwa-192x192.png';
+      if (favicon) favicon.href = fallbackIcon;
       const appleIcon = document.getElementById('apple-touch-icon-link') as HTMLLinkElement;
-      if (appleIcon) appleIcon.href = '/icons/pwa-192x192.png';
+      if (appleIcon) appleIcon.href = fallbackIcon;
     }
     
     if (user) {
