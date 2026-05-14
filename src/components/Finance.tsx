@@ -323,7 +323,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
         <Loader2 className="w-10 h-10 text-primary animate-spin" />
-        <p className="text-secondary font-black text-[10px] uppercase tracking-widest">Sincronizando Finanças...</p>
+        <p className="text-secondary font-bold text-xs uppercase tracking-widest">Sincronizando Finanças...</p>
       </div>
     );
   }
@@ -340,9 +340,9 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary">
             {isExpensesOnly ? <TrendingDown className="w-5 h-5 text-rose-500" /> : <TrendingUp className="w-5 h-5" />}
-            <span className={cn("text-[10px] font-bold uppercase tracking-[0.2em]", isExpensesOnly ? "text-rose-500" : "")}>{isExpensesOnly ? 'Gestão de Custos' : 'Financial Intelligence'}</span>
+            <span className={cn("text-xs font-bold uppercase tracking-[0.2em]", isExpensesOnly ? "text-rose-500" : "")}>{isExpensesOnly ? 'Gestão de Custos' : 'Financial Intelligence'}</span>
           </div>
-          <h2 className="text-4xl font-headline font-black tracking-tight text-on-surface">{isExpensesOnly ? 'Despesas' : 'Gestão Financeira'}</h2>
+          <h2 className="text-4xl font-headline font-bold tracking-tight text-on-surface">{isExpensesOnly ? 'Despesas' : 'Gestão Financeira'}</h2>
           <p className="text-secondary font-body text-sm max-w-md">{isExpensesOnly ? 'Controle o fluxo de saídas e gerencie despesas operacionais.' : 'Controle o fluxo de caixa, acompanhe lucros e gerencie despesas operacionais.'}</p>
         </div>
         
@@ -353,7 +353,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                 key={period}
                 onClick={() => setSelectedPeriod(period)}
                 className={cn(
-                  "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                  "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all",
                   selectedPeriod === period 
                     ? "bg-surface-container-lowest text-primary shadow-sm" 
                     : "text-secondary hover:text-on-surface"
@@ -366,7 +366,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
           
           <button 
             onClick={onAddTransaction}
-            className="flex items-center gap-2 px-6 py-3.5 milled-gradient text-white font-headline font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
+            className="flex items-center gap-2 px-6 py-3.5 milled-gradient text-white font-headline font-bold uppercase tracking-widest text-xs rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
           >
             <Plus className="w-4 h-4" />
             {isExpensesOnly ? 'Nova Despesa' : 'Nova Transação'}
@@ -383,7 +383,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
         >
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-black text-on-surface uppercase tracking-widest">Selecionar Período:</span>
+            <span className="text-xs font-bold text-on-surface uppercase tracking-widest">Selecionar Período:</span>
           </div>
           
           {selectedPeriod === 'Mensal' && (
@@ -416,23 +416,23 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/5 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
+            className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-emerald-500/10 transition-all" />
             <div className="flex items-center justify-between mb-6 relative z-10">
               <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center shadow-sm">
                 <TrendingUp className="w-7 h-7 text-emerald-600" />
               </div>
-              <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-widest">Entradas</span>
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-widest">Entradas</span>
             </div>
-            <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1 relative z-10">
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1 relative z-10">
               {selectedPeriod === 'Geral' ? 'Total histórico' : 
                selectedPeriod === 'Mensal' ? `Total em ${months[currentMonth]}` : `Total em ${currentYear}`}
             </p>
-            <h3 className="text-3xl font-headline font-black text-on-surface relative z-10">{formatCurrency(stats.income)}</h3>
+            <h3 className="text-3xl font-headline font-bold text-on-surface relative z-10">{formatCurrency(stats.income)}</h3>
             <div className="mt-6 flex items-center gap-2 text-emerald-600 relative z-10">
               <ArrowUp className="w-3.5 h-3.5" />
-              <span className="text-[10px] font-black uppercase tracking-tighter">Fluxo Positivo</span>
+              <span className="text-xs font-bold uppercase tracking-wide">Fluxo Positivo</span>
             </div>
           </motion.div>
         )}
@@ -443,23 +443,23 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/5 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
+              className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-rose-500/10 transition-all" />
               <div className="flex items-center justify-between mb-6 relative z-10">
                 <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center shadow-sm">
                   <TrendingDown className="w-7 h-7 text-rose-600" />
                 </div>
-                <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-3 py-1 rounded-full uppercase tracking-widest">Liquidadas</span>
+                <span className="text-xs font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full uppercase tracking-widest">Liquidadas</span>
               </div>
-              <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1 relative z-10">
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1 relative z-10">
                 {selectedPeriod === 'Geral' ? 'Total histórico' : 
                  selectedPeriod === 'Mensal' ? `Pago em ${months[currentMonth]}` : `Pago em ${currentYear}`}
               </p>
-              <h3 className="text-3xl font-headline font-black text-on-surface relative z-10">{formatCurrency(stats.completedExpenses)}</h3>
+              <h3 className="text-3xl font-headline font-bold text-on-surface relative z-10">{formatCurrency(stats.completedExpenses)}</h3>
               <div className="mt-6 flex items-center gap-2 text-rose-600 relative z-10">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-black uppercase tracking-tighter">Despesas Pagas</span>
+                <span className="text-xs font-bold uppercase tracking-wide">Despesas Pagas</span>
               </div>
             </motion.div>
 
@@ -467,23 +467,23 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/5 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
+              className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-amber-500/10 transition-all" />
               <div className="flex items-center justify-between mb-6 relative z-10">
                 <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center shadow-sm">
                   <Clock className="w-7 h-7 text-amber-600" />
                 </div>
-                <span className="text-[10px] font-black text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-widest">Pendentes</span>
+                <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full uppercase tracking-widest">Pendentes</span>
               </div>
-              <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1 relative z-10">
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1 relative z-10">
                 {selectedPeriod === 'Geral' ? 'Total pendente' : 
                  selectedPeriod === 'Mensal' ? `A pagar em ${months[currentMonth]}` : `A pagar em ${currentYear}`}
               </p>
-              <h3 className="text-3xl font-headline font-black text-on-surface relative z-10">{formatCurrency(stats.pendingExpenses)}</h3>
+              <h3 className="text-3xl font-headline font-bold text-on-surface relative z-10">{formatCurrency(stats.pendingExpenses)}</h3>
               <div className="mt-6 flex items-center gap-2 text-amber-600 relative z-10">
                 <Calendar className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-black uppercase tracking-tighter">Despesas a Pagar</span>
+                <span className="text-xs font-bold uppercase tracking-wide">Despesas a Pagar</span>
               </div>
             </motion.div>
           </>
@@ -492,23 +492,23 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/5 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
+            className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-rose-500/10 transition-all" />
             <div className="flex items-center justify-between mb-6 relative z-10">
               <div className="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center shadow-sm">
                 <TrendingDown className="w-7 h-7 text-rose-600" />
               </div>
-              <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-3 py-1 rounded-full uppercase tracking-widest">Saídas</span>
+              <span className="text-xs font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-full uppercase tracking-widest">Saídas</span>
             </div>
-            <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1 relative z-10">
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1 relative z-10">
               {selectedPeriod === 'Geral' ? 'Total histórico' : 
                selectedPeriod === 'Mensal' ? `Gasto em ${months[currentMonth]}` : `Gasto em ${currentYear}`}
             </p>
-            <h3 className="text-3xl font-headline font-black text-on-surface relative z-10">{formatCurrency(stats.expenses)}</h3>
+            <h3 className="text-3xl font-headline font-bold text-on-surface relative z-10">{formatCurrency(stats.expenses)}</h3>
             <div className="mt-6 flex items-center gap-2 text-rose-600 relative z-10">
               <ArrowDown className="w-3.5 h-3.5" />
-              <span className="text-[10px] font-black uppercase tracking-tighter">Despesas Operacionais</span>
+              <span className="text-xs font-bold uppercase tracking-wide">Despesas Operacionais</span>
             </div>
           </motion.div>
         )}
@@ -518,7 +518,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/5 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
+            className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/20 shadow-sm group hover:shadow-xl transition-all relative overflow-hidden"
           >
             <div className={cn(
               "absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 blur-2xl transition-all",
@@ -532,15 +532,15 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                 <Wallet className={cn("w-7 h-7", stats.balance >= 0 ? "text-primary" : "text-rose-600")} />
               </div>
               <span className={cn(
-                "text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full",
+                "text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full",
                 stats.balance >= 0 ? "text-primary bg-primary/5" : "text-rose-600 bg-rose-50"
               )}>Saldo Período</span>
             </div>
-            <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1 relative z-10">Balanço Consolidado</p>
-            <h3 className="text-3xl font-headline font-black text-on-surface relative z-10">{formatCurrency(stats.balance)}</h3>
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1 relative z-10">Balanço Consolidado</p>
+            <h3 className="text-3xl font-headline font-bold text-on-surface relative z-10">{formatCurrency(stats.balance)}</h3>
             <div className="mt-6 flex items-center gap-2 relative z-10">
               <div className={cn("w-2 h-2 rounded-full", stats.balance >= 0 ? "bg-primary" : "bg-rose-500")} />
-              <span className={cn("text-[10px] font-black uppercase tracking-tighter", stats.balance >= 0 ? "text-primary" : "text-rose-600")}>
+              <span className={cn("text-xs font-bold uppercase tracking-wide", stats.balance >= 0 ? "text-primary" : "text-rose-600")}>
                 {stats.balance >= 0 ? 'Resultado Positivo' : 'Resultado Negativo'}
               </span>
             </div>
@@ -555,15 +555,15 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
           animate={{ opacity: 1, scale: 1 }}
           className="grid grid-cols-1 xl:grid-cols-2 gap-8"
         >
-          <div className="bg-surface-container-lowest p-8 rounded-[40px] border border-outline-variant/5 shadow-sm">
+          <div className="bg-surface-container-lowest p-8 rounded-3xl border border-outline-variant/20 shadow-sm">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center">
                   <BarChart3 className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="text-lg font-headline font-black text-on-surface">Desempenho Mensal</h4>
-                  <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">{currentYear}</p>
+                  <h4 className="text-lg font-headline font-bold text-on-surface">Desempenho Mensal</h4>
+                  <p className="text-xs text-secondary font-semibold uppercase tracking-wider">{currentYear}</p>
                 </div>
               </div>
             </div>
@@ -593,8 +593,8 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                 return (
                   <div key={month} className="group">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] font-black text-secondary uppercase tracking-tighter">{month}</span>
-                      <span className={cn("text-[11px] font-black", monthBalance >= 0 ? "text-emerald-600" : "text-rose-600")}>
+                      <span className="text-xs font-bold text-secondary uppercase tracking-tighter">{month}</span>
+                      <span className={cn("text-xs font-bold", monthBalance >= 0 ? "text-emerald-600" : "text-rose-600")}>
                         {formatCurrency(monthBalance)}
                       </span>
                     </div>
@@ -612,30 +612,30 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
             </div>
           </div>
 
-          <div className="bg-primary p-10 rounded-[40px] shadow-2xl text-white flex flex-col justify-between relative overflow-hidden group">
+          <div className="bg-primary p-10 rounded-3xl shadow-2xl text-white flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-80 h-80 bg-surface-container-lowest/10 rounded-full -mr-40 -mt-40 blur-3xl group-hover:bg-white/15 transition-all duration-700" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full -ml-32 -mb-32 blur-3xl" />
             
             <div className="relative z-10">
               <div className="flex items-center gap-2 mb-4 opacity-70">
                 <PiggyBank className="w-5 h-5" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Resumo Anual Consolidado</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Resumo Anual Consolidado</span>
               </div>
               <h4 className="text-xl font-headline font-bold mb-1 opacity-80">Balanço de {currentYear}</h4>
-              <h2 className="text-6xl font-headline font-black mb-10 tracking-tighter">{formatCurrency(annualStats.balance)}</h2>
+              <h2 className="text-6xl font-headline font-bold mb-10 tracking-tighter">{formatCurrency(annualStats.balance)}</h2>
               
               <div className="grid grid-cols-2 gap-10">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest opacity-60 flex items-center gap-2">
+                  <p className="text-xs font-bold uppercase tracking-wider opacity-60 flex items-center gap-2">
                     <ArrowUpRight className="w-3 h-3" /> Total Entradas
                   </p>
-                  <p className="text-2xl font-headline font-black text-emerald-300">{formatCurrency(annualStats.income)}</p>
+                  <p className="text-2xl font-headline font-bold text-emerald-300">{formatCurrency(annualStats.income)}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest opacity-60 flex items-center gap-2">
+                  <p className="text-xs font-bold uppercase tracking-wider opacity-60 flex items-center gap-2">
                     <ArrowDownRight className="w-3 h-3" /> Total Saídas
                   </p>
-                  <p className="text-2xl font-headline font-black text-rose-300">{formatCurrency(annualStats.expenses)}</p>
+                  <p className="text-2xl font-headline font-bold text-rose-300">{formatCurrency(annualStats.expenses)}</p>
                 </div>
               </div>
             </div>
@@ -643,7 +643,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
             <div className="relative z-10 mt-12 pt-8 border-t border-white/10 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold opacity-60 uppercase tracking-widest mb-1">Margem Bruta</p>
-                <p className="text-lg font-black">
+                <p className="text-lg font-bold">
                   {((annualStats.income / (annualStats.income + annualStats.expenses || 1)) * 100).toFixed(1)}%
                 </p>
               </div>
@@ -656,7 +656,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
       )}
 
       {/* Filters & Table */}
-      <div className="bg-surface-container-lowest rounded-[40px] border border-outline-variant/5 shadow-sm overflow-hidden">
+      <div className="bg-surface-container-lowest rounded-3xl border border-outline-variant/20 shadow-sm overflow-hidden">
         <div className="p-8 border-b border-outline-variant/10 flex flex-col xl:flex-row xl:items-center justify-between gap-6 bg-surface-container-low/20">
           <div className="flex flex-wrap items-center gap-4">
             {!isExpensesOnly && (
@@ -666,7 +666,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                     key={type}
                     onClick={() => setFilterType(type)}
                     className={cn(
-                      "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                      "px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all",
                       filterType === type 
                         ? "bg-surface-container-lowest text-primary shadow-sm" 
                         : "text-secondary hover:text-on-surface"
@@ -682,7 +682,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
               <select 
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="appearance-none bg-surface-container-low border border-outline-variant/10 rounded-2xl pl-5 pr-10 py-2.5 text-[10px] font-black text-secondary uppercase tracking-widest focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
+                className="appearance-none bg-surface-container-low border border-outline-variant/10 rounded-2xl pl-5 pr-10 py-2.5 text-xs font-bold text-secondary uppercase tracking-wider focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer"
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -713,11 +713,11 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
           <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="bg-surface-container-low/30">
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Data</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Descrição</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Categoria</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Valor</th>
-                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary text-right">Ações</th>
+                <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary">Data</th>
+                <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary">Descrição</th>
+                <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary">Categoria</th>
+                <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary">Valor</th>
+                <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/10">
@@ -745,10 +745,10 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                             )}
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-black text-on-surface">
+                            <span className="text-sm font-bold text-on-surface">
                               {new Date(t.date).toLocaleDateString('pt-BR')}
                             </span>
-                            <span className="text-[9px] font-bold text-secondary uppercase tracking-tighter">
+                            <span className="text-xs font-bold text-secondary uppercase tracking-tighter">
                               {new Date(t.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                             </span>
                           </div>
@@ -756,7 +756,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex flex-col gap-1">
-                          <span className="text-sm font-black text-on-surface group-hover:text-primary transition-colors">{t.description}</span>
+                          <span className="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{t.description}</span>
                           {t.isOS && t.osStatus && (
                             <div className="flex items-center gap-1.5">
                               <div className={cn(
@@ -764,7 +764,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                                 t.osStatus === 'Orçamento Aceito' || t.osStatus === 'Finalizada' ? "bg-emerald-500" : "bg-secondary/40"
                               )} />
                               <span className={cn(
-                                "text-[9px] font-black uppercase tracking-widest",
+                                "text-xs font-bold uppercase tracking-wider",
                                 t.osStatus === 'Orçamento Aceito' || t.osStatus === 'Finalizada' 
                                   ? "text-emerald-600" 
                                   : "text-secondary"
@@ -776,20 +776,20 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                         </div>
                       </td>
                       <td className="px-8 py-6">
-                        <span className="px-3 py-1.5 bg-surface-container-low text-secondary text-[9px] font-black uppercase tracking-widest rounded-full border border-outline-variant/10">
+                        <span className="px-3 py-1.5 bg-surface-container-low text-secondary text-xs font-bold uppercase tracking-wider rounded-full border border-outline-variant/10">
                           {t.category}
                         </span>
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex flex-col">
                           <span className={cn(
-                            "text-base font-black font-headline",
+                            "text-base font-bold font-headline",
                             t.type === 'Entrada' ? "text-emerald-600" : "text-rose-600"
                           )}>
                             {t.type === 'Entrada' ? '+' : '-'} {typeof t.amount === 'number' ? formatCurrency(t.amount) : t.amount}
                           </span>
                           <span className={cn(
-                            "text-[9px] font-bold uppercase tracking-tighter",
+                            "text-xs font-bold uppercase tracking-tighter",
                             t.status === 'pending' ? "text-amber-500" : "text-secondary"
                           )}>
                             {t.status === 'pending' ? 'Pendente' : 'Liquidado'}
@@ -849,7 +849,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                           ) : (
                             <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-xl border border-outline-variant/10">
                               <Clock className="w-3.5 h-3.5 text-secondary/60" />
-                              <span className="text-[9px] font-black text-secondary/60 uppercase tracking-widest">
+                              <span className="text-xs font-bold text-secondary/60 uppercase tracking-widest">
                                 Automático (OS)
                               </span>
                             </div>
@@ -869,12 +869,12 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
                           <AlertCircle className="w-10 h-10 text-secondary/20" />
                         </div>
                         <div>
-                          <p className="text-lg font-headline font-black text-on-surface">Nenhuma transação encontrada</p>
+                          <p className="text-lg font-headline font-bold text-on-surface">Nenhuma transação encontrada</p>
                           <p className="text-sm text-secondary font-medium">Tente ajustar seus filtros ou adicione uma nova transação.</p>
                         </div>
                         <button 
                           onClick={onAddTransaction}
-                          className="px-8 py-3 bg-primary/10 text-primary font-black uppercase tracking-widest text-[11px] rounded-2xl hover:bg-primary/20 transition-all"
+                          className="px-8 py-3 bg-primary/10 text-primary font-bold uppercase tracking-widest text-xs rounded-2xl hover:bg-primary/20 transition-all"
                         >
                           Lançar Primeira Transação
                         </button>
@@ -896,55 +896,55 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
               <PiggyBank className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <h3 className="text-xl font-headline font-black text-on-surface">Resumo de Ativos</h3>
+              <h3 className="text-xl font-headline font-bold text-on-surface">Resumo de Ativos</h3>
               <p className="text-xs text-secondary font-medium">Projeção financeira baseada no fluxo atual</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-surface-container-lowest p-6 rounded-[32px] shadow-sm border border-outline-variant/5">
+            <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-blue-50 rounded-lg">
                   <Receipt className="w-4 h-4 text-blue-500" />
                 </div>
-                <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+4.2%</span>
+                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+4.2%</span>
               </div>
-              <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1">Ticket Médio</p>
-              <h4 className="text-2xl font-headline font-black text-on-surface">
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Ticket Médio</p>
+              <h4 className="text-2xl font-headline font-bold text-on-surface">
                 {formatCurrency(stats.income / (periodMovements.filter(t => t.type === 'Entrada').length || 1))}
               </h4>
             </div>
 
-            <div className="bg-surface-container-lowest p-6 rounded-[32px] shadow-sm border border-outline-variant/5">
+            <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-purple-50 rounded-lg">
                   <CreditCard className="w-4 h-4 text-purple-500" />
                 </div>
-                <span className="text-[10px] font-black text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">-2.1%</span>
+                <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full">-2.1%</span>
               </div>
-              <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1">Custo Operacional</p>
-              <h4 className="text-2xl font-headline font-black text-on-surface">
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Custo Operacional</p>
+              <h4 className="text-2xl font-headline font-bold text-on-surface">
                 {formatCurrency(stats.expenses / (periodMovements.filter(t => t.type === 'Saída' && t.status !== 'pending').length || 1))}
               </h4>
             </div>
 
-            <div className="bg-surface-container-low p-6 rounded-[32px] border border-outline-variant/10 flex flex-col justify-center">
+            <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/10 flex flex-col justify-center">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-black text-secondary uppercase tracking-widest">Saúde Financeira</span>
-                <span className="text-[10px] font-black text-primary">Excelente</span>
+                <span className="text-xs font-bold text-secondary uppercase tracking-wider">Saúde Financeira</span>
+                <span className="text-xs font-bold text-primary">Excelente</span>
               </div>
               <div className="h-2 bg-surface-container-high rounded-full overflow-hidden">
                 <div className="h-full bg-primary w-[85%]" />
               </div>
             </div>
 
-            <div className="bg-surface-container-highest p-6 rounded-[32px] flex flex-col justify-between">
+            <div className="bg-surface-container-highest p-6 rounded-2xl flex flex-col justify-between">
               <div className="flex items-center justify-between mb-2">
-                <h5 className="text-[11px] font-black text-on-surface uppercase tracking-widest">Próxima Meta</h5>
+                <h5 className="text-xs font-bold text-on-surface uppercase tracking-wider">Próxima Meta</h5>
                 <TrendingUp className="w-3.5 h-3.5 text-primary" />
               </div>
               <p className="text-xs text-secondary font-medium leading-tight mb-4">Atingir R$ 50k em faturamento mensal.</p>
-              <button className="w-full py-2.5 bg-white/50 backdrop-blur-sm text-primary text-[10px] font-black uppercase tracking-widest rounded-xl border border-primary/10 hover:bg-primary/5 transition-all">Ver Metas</button>
+              <button className="w-full py-2.5 bg-white/50 backdrop-blur-sm text-primary text-xs font-bold uppercase tracking-wider rounded-xl border border-primary/10 hover:bg-primary/5 transition-all">Ver Metas</button>
             </div>
           </div>
         </section>
@@ -953,7 +953,7 @@ export default function Finance({ user, onAddTransaction, onEditTransaction, sea
       {/* Confirmation Modal */}
       {transactionToDelete && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-2xl p-8 shadow-2xl border border-outline-variant/10">
             <div className="w-16 h-16 bg-rose-500/20 rounded-2xl flex items-center justify-center mb-6">
               <Trash2 className="w-8 h-8 text-rose-500" />
             </div>

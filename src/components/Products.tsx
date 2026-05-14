@@ -152,21 +152,21 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary">
             <Package className="w-5 h-5" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Inventory Management</span>
+            <span className="text-xs font-bold uppercase tracking-[0.2em]">Inventory Management</span>
           </div>
-          <h2 className="text-4xl font-headline font-black tracking-tight text-on-surface">Catálogo de Produtos</h2>
+          <h2 className="text-4xl font-headline font-bold tracking-tight text-on-surface">Catálogo de Produtos</h2>
           <p className="text-secondary font-body text-sm max-w-md">Gerencie suas peças, equipamentos e insumos para ordens de serviço.</p>
         </div>
         
         <div className="flex flex-wrap items-center gap-4">
           <div className="bg-surface-container-low/50 backdrop-blur-sm border border-outline-variant/10 rounded-2xl p-4 flex items-center gap-4">
             <div className="text-right pr-4 border-r border-outline-variant/10">
-              <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-0.5">Total de Itens</p>
-              <p className="text-xl font-black text-primary">{products.length}</p>
+              <p className="text-xs font-semibold text-secondary uppercase tracking-wider mb-0.5">Total de Itens</p>
+              <p className="text-xl font-bold text-primary">{products.length}</p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-0.5">Valor em Estoque</p>
-              <p className="text-xl font-black text-on-surface">
+              <p className="text-xs font-semibold text-secondary uppercase tracking-wider mb-0.5">Valor em Estoque</p>
+              <p className="text-xl font-bold text-on-surface">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                   products.reduce((acc, p) => {
                     let price = 0;
@@ -185,7 +185,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
           
           <button 
             onClick={onAddProduct}
-            className="flex items-center gap-2 px-6 py-3.5 milled-gradient text-white font-headline font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
+            className="flex items-center gap-2 px-6 py-3.5 milled-gradient text-white font-headline font-bold uppercase tracking-widest text-xs rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all"
           >
             <Plus className="w-4 h-4" />
             Novo Produto
@@ -232,7 +232,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
             </button>
           </div>
           <div className="h-8 w-px bg-outline-variant/20 mx-1"></div>
-          <span className="text-[10px] font-black text-secondary uppercase tracking-widest">
+          <span className="text-xs font-bold text-secondary uppercase tracking-wider">
             {filteredProducts.length} {filteredProducts.length === 1 ? 'Item' : 'Itens'}
           </span>
         </div>
@@ -243,14 +243,14 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
         {loading ? (
           <div className="flex flex-col items-center justify-center gap-4 py-20">
             <Loader2 className="w-10 h-10 text-primary animate-spin" />
-            <p className="text-secondary font-black text-[10px] uppercase tracking-widest">Sincronizando Catálogo...</p>
+            <p className="text-secondary font-bold text-xs uppercase tracking-widest">Sincronizando Catálogo...</p>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center gap-4 py-20 text-center px-6 bg-surface-container-lowest rounded-3xl border border-outline-variant/10">
             <div className="w-16 h-16 bg-error-container/10 rounded-full flex items-center justify-center mb-2">
               <Package className="w-8 h-8 text-error" />
             </div>
-            <h3 className="text-xl font-black font-headline text-on-surface">Erro ao carregar</h3>
+            <h3 className="text-xl font-bold font-headline text-on-surface">Erro ao carregar</h3>
             <p className="text-secondary max-w-md text-sm">{error}</p>
           </div>
         ) : filteredProducts.length === 0 ? (
@@ -258,13 +258,13 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
             <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mb-4">
               <Package className="w-10 h-10 text-primary/40" />
             </div>
-            <h3 className="text-2xl font-black font-headline text-on-surface">Nenhum Produto Encontrado</h3>
+            <h3 className="text-2xl font-bold font-headline text-on-surface">Nenhum Produto Encontrado</h3>
             <p className="text-secondary max-w-md text-sm font-medium leading-relaxed">
               Sua busca não retornou resultados ou seu catálogo está vazio. Comece adicionando novos itens.
             </p>
             <button 
               onClick={onAddProduct}
-              className="mt-6 px-8 py-3 bg-primary/10 text-primary font-black uppercase tracking-widest text-[11px] rounded-2xl hover:bg-primary/20 transition-all"
+              className="mt-6 px-8 py-3 bg-primary/10 text-primary font-bold uppercase tracking-widest text-xs rounded-2xl hover:bg-primary/20 transition-all"
             >
               Adicionar Primeiro Produto
             </button>
@@ -279,12 +279,12 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   key={product.id}
-                  className="bg-surface-container-lowest p-6 rounded-[32px] shadow-sm border border-outline-variant/5 group hover:shadow-xl hover:border-primary/20 transition-all cursor-pointer relative overflow-hidden flex flex-col"
+                  className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20 group hover:shadow-xl hover:border-primary/20 transition-all cursor-pointer relative overflow-hidden flex flex-col"
                   onClick={() => onEditProduct(product)}
                 >
                   {/* Category Badge */}
                   <div className="flex justify-between items-start mb-6">
-                    <span className="px-3 py-1.5 bg-surface-container-high/50 text-secondary rounded-full text-[9px] font-black uppercase tracking-widest">
+                    <span className="px-3 py-1.5 bg-surface-container-high/50 text-secondary rounded-full text-xs font-bold uppercase tracking-wider">
                       {product.category}
                     </span>
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
@@ -316,12 +316,12 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
                         <Package className="w-7 h-7" />
                       </div>
                       <div>
-                        <h4 className="font-headline text-lg font-black text-on-surface group-hover:text-primary transition-colors leading-tight">
+                        <h4 className="font-headline text-lg font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">
                           {product.name}
                         </h4>
                         <div className="flex items-center gap-1.5 text-secondary mt-1">
                           <Tag className="w-3 h-3" />
-                          <p className="text-[10px] font-bold uppercase tracking-widest">{product.category}</p>
+                          <p className="text-xs font-bold uppercase tracking-widest">{product.category}</p>
                         </div>
                       </div>
                     </div>
@@ -332,18 +332,18 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
 
                     <div className="grid grid-cols-2 gap-3 pt-4 border-t border-outline-variant/10">
                       <div className="space-y-1">
-                        <p className="text-[9px] font-black text-secondary uppercase tracking-widest flex items-center gap-1.5">
+                        <p className="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-1.5">
                           <Layers className="w-3 h-3" /> Estoque
                         </p>
-                        <p className="text-base font-black text-on-surface">
-                          {getProductStock(product)} <span className="text-[10px] text-secondary uppercase">{getProductUnit(product)}</span>
+                        <p className="text-base font-bold text-on-surface">
+                          {getProductStock(product)} <span className="text-xs text-secondary uppercase">{getProductUnit(product)}</span>
                         </p>
                       </div>
                       <div className="space-y-1 text-right">
-                        <p className="text-[9px] font-black text-secondary uppercase tracking-widest flex items-center gap-1.5 justify-end">
+                        <p className="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-1.5 justify-end">
                           <BarChart3 className="w-3 h-3" /> Preço
                         </p>
-                        <p className="text-base font-black text-primary">
+                        <p className="text-base font-bold text-primary">
                           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                             typeof product.price === 'number' ? product.price : parseFloat(String(product.price)) || 0
                           )}
@@ -356,7 +356,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
                   <div className="mt-6 pt-4 border-t border-outline-variant/10 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
-                      <span className="text-[10px] font-bold text-secondary uppercase tracking-tighter">Disponível</span>
+                      <span className="text-xs font-bold text-secondary uppercase tracking-tighter">Disponível</span>
                     </div>
                     <div className="w-8 h-8 rounded-xl bg-surface-container flex items-center justify-center text-secondary group-hover:bg-primary group-hover:text-white transition-all">
                       <ArrowRight className="w-4 h-4" />
@@ -367,16 +367,16 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
             </AnimatePresence>
           </div>
         ) : (
-          <div className="bg-surface-container-lowest rounded-[32px] shadow-sm border border-outline-variant/5 overflow-hidden">
+          <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                   <tr className="bg-surface-container-low/50">
-                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Produto</th>
-                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Categoria</th>
-                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary">Estoque</th>
-                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary text-right">Preço Unitário</th>
-                    <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-secondary text-center">Ações</th>
+                    <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary">Produto</th>
+                    <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary">Categoria</th>
+                    <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary">Estoque</th>
+                    <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary text-right">Preço Unitário</th>
+                    <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-secondary text-center">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/10">
@@ -388,23 +388,23 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
                           <Package className="w-6 h-6" />
                         </div>
                         <div>
-                          <p className="font-headline font-black text-on-surface group-hover:text-primary transition-colors">{product.name}</p>
+                          <p className="font-headline font-bold text-on-surface group-hover:text-primary transition-colors">{product.name}</p>
                           <p className="text-xs text-secondary truncate max-w-[250px]">{product.description}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <span className="px-3 py-1 rounded-full bg-surface-container-high text-[9px] font-black text-secondary uppercase tracking-widest">
+                      <span className="px-3 py-1 rounded-full bg-surface-container-high text-xs font-bold text-secondary uppercase tracking-widest">
                         {product.category}
                       </span>
                     </td>
                     <td className="px-8 py-6">
-                      <p className="text-sm font-black text-on-surface">
-                        {getProductStock(product)} <span className="text-[10px] text-secondary uppercase font-bold">{getProductUnit(product)}</span>
+                      <p className="text-sm font-bold text-on-surface">
+                        {getProductStock(product)} <span className="text-xs text-secondary uppercase font-bold">{getProductUnit(product)}</span>
                       </p>
                     </td>
                     <td className="px-8 py-6 text-right">
-                      <p className="font-headline font-black text-primary text-lg">
+                      <p className="font-headline font-bold text-primary text-lg">
                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                           typeof product.price === 'number' ? product.price : parseFloat(String(product.price)) || 0
                         )}
@@ -444,37 +444,37 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
       {/* Footer Metrics */}
       <section className="pt-12 pb-20 border-t border-outline-variant/10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-surface-container-low p-6 rounded-[32px] border border-outline-variant/10 flex items-center gap-5">
+          <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/10 flex items-center gap-5">
             <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500">
               <Layers className="w-7 h-7" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1">Itens em Estoque</p>
-              <h4 className="text-2xl font-headline font-black text-on-surface">
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Itens em Estoque</p>
+              <h4 className="text-2xl font-headline font-bold text-on-surface">
                 {products.reduce((acc, p) => acc + getProductStock(p), 0)}
               </h4>
             </div>
           </div>
 
-          <div className="bg-surface-container-low p-6 rounded-[32px] border border-outline-variant/10 flex items-center gap-5">
+          <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/10 flex items-center gap-5">
             <div className="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500">
               <Tag className="w-7 h-7" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1">Categorias Ativas</p>
-              <h4 className="text-2xl font-headline font-black text-on-surface">
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Categorias Ativas</p>
+              <h4 className="text-2xl font-headline font-bold text-on-surface">
                 {new Set(products.map(p => p.category)).size}
               </h4>
             </div>
           </div>
 
-          <div className="bg-surface-container-low p-6 rounded-[32px] border border-outline-variant/10 flex items-center gap-5">
+          <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/10 flex items-center gap-5">
             <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-500">
               <BarChart3 className="w-7 h-7" />
             </div>
             <div>
-              <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1">Valor Médio</p>
-              <h4 className="text-2xl font-headline font-black text-on-surface">
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Valor Médio</p>
+              <h4 className="text-2xl font-headline font-bold text-on-surface">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                   products.length > 0 
                     ? products.reduce((acc, p) => {
@@ -492,7 +492,7 @@ export default function Products({ user, onAddProduct, onEditProduct, searchTerm
       {/* Confirmation Modal */}
       {productToDelete && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-2xl p-8 shadow-2xl border border-outline-variant/10">
             <div className="w-16 h-16 bg-error-container/20 rounded-2xl flex items-center justify-center mb-6">
               <Trash2 className="w-8 h-8 text-error" />
             </div>

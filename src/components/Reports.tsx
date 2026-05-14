@@ -308,7 +308,7 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
       {/* Header */}
       <div className="flex items-end justify-between">
         <div>
-          <h2 className="text-3xl font-headline font-extrabold tracking-tight text-on-surface">Relatórios e Insights</h2>
+          <h2 className="text-3xl font-headline font-bold tracking-tight text-on-surface">Relatórios e Insights</h2>
           <p className="text-secondary mt-1 font-body">Análise de desempenho e saúde financeira do negócio</p>
         </div>
         <div className="flex items-center gap-3">
@@ -318,7 +318,7 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
                 key={range}
                 onClick={() => setTimeRange(range)}
                 className={cn(
-                  "px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all",
+                  "px-4 py-1.5 text-xs font-bold uppercase tracking-widest rounded-lg transition-all",
                   timeRange === range 
                     ? "bg-surface-container-lowest text-primary shadow-sm" 
                     : "text-secondary hover:text-on-surface"
@@ -339,7 +339,7 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
                   setTimeRange('year');
                 }
               }}
-              className="bg-transparent text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 text-secondary focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold uppercase tracking-widest px-3 py-1.5 text-secondary focus:outline-none cursor-pointer"
             >
               <option value="" disabled>Selecionar Ano</option>
               {Array.from({ length: 26 }, (_, i) => 2015 + i).map(year => (
@@ -399,10 +399,10 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
 
       <div className="grid grid-cols-12 gap-8">
         {/* Revenue Chart */}
-        <div className="col-span-12 xl:col-span-8 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
+        <div className="col-span-12 xl:col-span-8 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-bold font-headline text-on-surface">Evolução do Faturamento</h3>
-            <div className="flex items-center gap-2 text-[10px] font-bold text-secondary uppercase tracking-widest">
+            <div className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider">
               <div className="w-3 h-3 bg-primary rounded-full"></div>
               Receita Realizada
             </div>
@@ -442,7 +442,7 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
         </div>
 
         {/* OS Status Distribution */}
-        <div className="col-span-12 xl:col-span-4 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
+        <div className="col-span-12 xl:col-span-4 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm">
           <h3 className="text-xl font-bold font-headline text-on-surface mb-8">Status das Ordens</h3>
           <div className="h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -470,20 +470,20 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
               <div className="flex items-center gap-3">
                 <div className="w-2 h-8 bg-primary rounded-full"></div>
                 <div>
-                  <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">Total de OS</p>
-                  <p className="text-lg font-black text-on-surface">{metrics.totalOS}</p>
+                  <p className="text-xs font-semibold text-secondary uppercase tracking-wider">Total de OS</p>
+                  <p className="text-lg font-bold text-on-surface">{metrics.totalOS}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">Finalizadas</p>
-                <p className="text-lg font-black text-primary">{metrics.finalizedOS}</p>
+                <p className="text-xs font-semibold text-secondary uppercase tracking-wider">Finalizadas</p>
+                <p className="text-lg font-bold text-primary">{metrics.finalizedOS}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Service Type Distribution */}
-        <div className="col-span-12 xl:col-span-5 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
+        <div className="col-span-12 xl:col-span-5 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm">
           <h3 className="text-xl font-bold font-headline text-on-surface mb-8">Tipos de Serviço</h3>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -507,7 +507,7 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
         </div>
 
         {/* Top Clients */}
-        <div className="col-span-12 xl:col-span-7 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm">
+        <div className="col-span-12 xl:col-span-7 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm">
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-xl font-bold font-headline text-on-surface">Top Clientes (Faturamento)</h3>
             <button className="text-primary text-xs font-bold hover:underline">Ver Todos</button>
@@ -521,12 +521,12 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
                   </div>
                   <div>
                     <p className="text-sm font-bold text-on-surface">{client.name}</p>
-                    <p className="text-[10px] text-secondary uppercase tracking-widest font-medium">{client.address}</p>
+                    <p className="text-xs text-secondary uppercase tracking-widest font-medium">{client.address}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-black text-on-surface">{client.portfolioValue}</p>
-                  <div className="flex items-center gap-1 justify-end text-[10px] font-bold text-green-600">
+                  <p className="text-sm font-bold text-on-surface">{client.portfolioValue}</p>
+                  <div className="flex items-center gap-1 justify-end text-xs font-bold text-green-600">
                     <ArrowUpRight className="w-3 h-3" />
                     {client.growth || '0%'}
                   </div>
@@ -542,14 +542,14 @@ export default function Reports({ user, companyLogo, companyName, settings }: { 
 
 function MetricCard({ title, value, icon, trend, trendType }: { title: string; value: string; icon: React.ReactNode; trend?: string; trendType?: 'up' | 'down' }) {
   return (
-    <div className="bg-surface-container-lowest p-6 rounded-[28px] border border-outline-variant/10 shadow-sm">
+    <div className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm">
       <div className="flex items-center justify-between mb-4">
         <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
           {icon}
         </div>
         {trend && (
           <div className={cn(
-            "flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold",
+            "flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold",
             trendType === 'up' ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
           )}>
             {trendType === 'up' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
@@ -557,8 +557,8 @@ function MetricCard({ title, value, icon, trend, trendType }: { title: string; v
           </div>
         )}
       </div>
-      <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">{title}</p>
-      <h4 className="text-2xl font-black text-on-surface font-headline">{value}</h4>
+      <p className="text-xs font-semibold text-secondary uppercase tracking-wider mb-1">{title}</p>
+      <h4 className="text-2xl font-bold text-on-surface font-headline">{value}</h4>
     </div>
   );
 }

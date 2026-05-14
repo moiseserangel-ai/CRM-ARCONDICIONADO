@@ -470,7 +470,7 @@ export default function App() {
   if (!user) {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center p-6 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-surface to-surface">
-        <div className="max-w-md w-full bg-surface-container-lowest p-10 rounded-[48px] shadow-2xl border border-outline-variant/10">
+        <div className="max-w-md w-full bg-surface-container-lowest p-10 rounded-3xl shadow-2xl border border-outline-variant/10">
           <div className="text-center mb-10">
             <div className="w-24 h-24 bg-primary/5 rounded-3xl flex items-center justify-center mx-auto mb-8 overflow-hidden border border-outline-variant/10 relative">
               {companyLogo ? (
@@ -486,11 +486,11 @@ export default function App() {
                     <Snowflake className="w-4 h-4 text-primary/30 animate-pulse" />
                   </div>
                   <Wind className="w-12 h-12 text-primary" />
-                  <span className="text-[10px] font-bold text-primary/60 uppercase tracking-tighter mt-1">Cardoso AR</span>
+                  <span className="text-xs font-bold text-primary/60 uppercase tracking-tighter mt-1">Cardoso AR</span>
                 </div>
               )}
             </div>
-            <h1 className="text-3xl font-extrabold font-headline tracking-tight text-on-surface mb-2">{settings.companyName}</h1>
+            <h1 className="text-3xl font-bold font-headline tracking-tight text-on-surface mb-2">{settings.companyName}</h1>
             <p className="text-secondary text-sm font-medium">Gestão de Vendas e Manutenção</p>
           </div>
 
@@ -508,7 +508,7 @@ export default function App() {
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">E-mail</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">E-mail</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <input 
@@ -523,7 +523,7 @@ export default function App() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Senha</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Senha</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <input 
@@ -550,7 +550,7 @@ export default function App() {
             </button>
           </form>
 
-          <p className="mt-10 text-[10px] text-secondary/40 font-bold uppercase tracking-widest text-center">Segurança de Nível Empresarial Ativada</p>
+          <p className="mt-10 text-xs text-secondary/40 font-bold uppercase tracking-widest text-center">Segurança de Nível Empresarial Ativada</p>
         </div>
       </div>
     );

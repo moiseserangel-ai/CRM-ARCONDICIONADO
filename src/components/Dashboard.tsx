@@ -333,8 +333,8 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <p className="text-primary font-black text-[10px] uppercase tracking-[0.2em] mb-2">Visão Geral de Desempenho</p>
-          <h2 className="text-4xl font-black font-headline tracking-tight text-on-surface">Painel de Controle</h2>
+          <p className="text-primary font-bold text-xs uppercase tracking-[0.2em] mb-2">Visão Geral de Desempenho</p>
+          <h2 className="text-4xl font-bold font-headline tracking-tight text-on-surface">Painel de Controle</h2>
           <p className="text-secondary text-sm mt-1 font-medium">Acompanhe métricas, leads e ordens de serviço em tempo real.</p>
         </motion.div>
       </div>
@@ -346,28 +346,28 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-surface-container-lowest p-7 rounded-[32px] shadow-sm border border-outline-variant/5 flex flex-col justify-between group hover:shadow-xl transition-all"
+          className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col justify-between group hover:shadow-xl transition-all"
         >
           <div>
             <div className="flex justify-between items-start mb-6">
               <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                 <Users className="w-6 h-6" />
               </div>
-              <div className="flex items-center gap-1 text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter">
+              <div className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wide">
                 <ArrowUpRight className="w-3 h-3" /> 12%
               </div>
             </div>
-            <p className="text-secondary text-[10px] font-black mb-1 uppercase tracking-widest">TOTAL CLIENTES</p>
-            <h3 className="text-4xl font-black font-headline text-on-surface">
+            <p className="text-secondary text-xs font-bold mb-1 uppercase tracking-wider">TOTAL CLIENTES</p>
+            <h3 className="text-4xl font-bold font-headline text-on-surface">
               {filteredContacts.length}
             </h3>
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
             <div className="flex justify-between items-center">
-              <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">Leads Cadastrados</p>
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider">Leads Cadastrados</p>
               <div className="flex -space-x-2">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-[8px] font-black text-secondary">
+                  <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-[8px] font-bold text-secondary">
                     {i}
                   </div>
                 ))}
@@ -381,7 +381,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-surface-container-lowest p-7 rounded-[32px] shadow-sm border border-outline-variant/5 flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
+          className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col justify-between group hover:shadow-xl transition-all relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
           <div>
@@ -396,9 +396,9 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                 <PlusCircle className="w-5 h-5" />
               </button>
             </div>
-            <p className="text-secondary text-[10px] font-black mb-1 uppercase tracking-widest">OPORTUNIDADES ATIVAS</p>
+            <p className="text-secondary text-xs font-bold mb-1 uppercase tracking-wider">OPORTUNIDADES ATIVAS</p>
             <div className="flex items-end gap-4">
-              <h3 className="text-4xl font-black font-headline text-on-surface">{activeLeadsCount}</h3>
+              <h3 className="text-4xl font-bold font-headline text-on-surface">{activeLeadsCount}</h3>
               <div className="flex items-end gap-1 h-8 pb-1">
                 {[40, 70, 50, 90].map((h, i) => (
                   <div key={i} className="w-1.5 bg-primary/20 rounded-t-full" style={{ height: `${h}%` }}>
@@ -414,7 +414,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
-            <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">
+            <p className="text-xs text-secondary font-semibold uppercase tracking-wider">
               {searchTerm ? 'Resultados filtrados' : 'Em negociação ativa'}
             </p>
           </div>
@@ -425,26 +425,26 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-surface-container-lowest p-7 rounded-[32px] shadow-sm border border-outline-variant/5 flex flex-col justify-between group hover:shadow-xl transition-all"
+          className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col justify-between group hover:shadow-xl transition-all"
         >
           <div>
             <div className="flex justify-between items-start mb-6">
               <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                 <DollarSign className="w-6 h-6" />
               </div>
-              <div className="flex items-center gap-1 text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter">
+              <div className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wide">
                 Meta: 150k
               </div>
             </div>
-            <p className="text-secondary text-[10px] font-black mb-1 uppercase tracking-widest">VOLUME DE SERVIÇO</p>
-            <h3 className="text-2xl font-black font-headline text-on-surface">
+            <p className="text-secondary text-xs font-bold mb-1 uppercase tracking-wider">VOLUME DE SERVIÇO</p>
+            <h3 className="text-2xl font-bold font-headline text-on-surface">
               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalPipelineValue)}
             </h3>
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">Progresso da Meta</p>
-              <span className="text-[10px] font-black text-primary">{((totalPipelineValue / 150000) * 100).toFixed(1)}%</span>
+              <p className="text-xs text-secondary font-semibold uppercase tracking-wider">Progresso da Meta</p>
+              <span className="text-xs font-bold text-primary">{((totalPipelineValue / 150000) * 100).toFixed(1)}%</span>
             </div>
             <div className="h-1.5 bg-surface-container rounded-full overflow-hidden">
               <motion.div 
@@ -462,7 +462,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-surface-container-lowest p-7 rounded-[32px] shadow-sm border border-outline-variant/5 flex flex-col justify-between group hover:shadow-xl transition-all"
+          className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col justify-between group hover:shadow-xl transition-all"
         >
           <div>
             <div className="flex justify-between items-start mb-6">
@@ -473,13 +473,13 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                 <Clock className="w-4 h-4 text-secondary/40" />
               </div>
             </div>
-            <p className="text-secondary text-[10px] font-black mb-1 uppercase tracking-widest">VALOR EM ABERTO (OS)</p>
-            <h3 className="text-2xl font-black font-headline text-on-surface">
+            <p className="text-secondary text-xs font-bold mb-1 uppercase tracking-wider">VALOR EM ABERTO (OS)</p>
+            <h3 className="text-2xl font-bold font-headline text-on-surface">
               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalOpenValue)}
             </h3>
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
-            <p className="text-[10px] text-secondary font-bold uppercase tracking-widest">Soma de todas as OS abertas</p>
+            <p className="text-xs text-secondary font-semibold uppercase tracking-wider">Soma de todas as OS abertas</p>
           </div>
         </motion.div>
       </div>
@@ -490,14 +490,14 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45 }}
-          className="col-span-1 bg-surface-container-lowest p-8 rounded-[32px] border border-outline-variant/10 shadow-sm"
+          className="col-span-1 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm"
         >
           <div className="flex items-center justify-between mb-8">
             <div>
               <h3 className="text-xl font-bold font-headline text-on-surface">Evolução do Faturamento Mensal</h3>
               <p className="text-xs text-secondary font-medium mt-1">Receita baseada em Ordens de Serviço finalizadas nos últimos 12 meses</p>
             </div>
-            <div className="flex items-center gap-2 text-[10px] font-bold text-secondary uppercase tracking-widest bg-surface-container-low px-3 py-1.5 rounded-xl">
+            <div className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider bg-surface-container-low px-3 py-1.5 rounded-xl">
               <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
               Receita Realizada
             </div>
@@ -546,11 +546,11 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="xl:col-span-2 bg-surface-container-low p-8 rounded-[32px] border border-outline-variant/10"
+          className="xl:col-span-2 bg-surface-container-low p-6 rounded-2xl border border-outline-variant/10"
         >
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h5 className="font-black font-headline text-lg text-on-surface uppercase tracking-widest">Distribuição do Pipeline</h5>
+              <h5 className="font-bold font-headline text-lg text-on-surface uppercase tracking-widest">Distribuição do Pipeline</h5>
               <p className="text-xs text-secondary font-medium">Volume de clientes em cada estágio do funil</p>
             </div>
             <div className="p-3 bg-surface-container-lowest/50 rounded-2xl shadow-sm">
@@ -579,12 +579,12 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                       transition={{ duration: 1, delay: 0.7 + (i * 0.1) }}
                       className={cn("w-full rounded-2xl transition-all duration-500 relative", colors[i])}
                     >
-                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-3 py-1.5 rounded-xl text-[10px] font-black opacity-0 group-hover:opacity-100 transition-all shadow-xl z-20 pointer-events-none">
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-3 py-1.5 rounded-xl text-xs font-bold opacity-0 group-hover:opacity-100 transition-all shadow-xl z-20 pointer-events-none">
                         {count} Leads
                       </div>
                     </motion.div>
                   </div>
-                  <span className="text-[8px] md:text-[9px] font-black text-secondary uppercase tracking-tighter text-center leading-tight h-8 flex items-center justify-center whitespace-pre-line break-words w-full">
+                  <span className="text-[8px] md:text-xs font-bold text-secondary uppercase tracking-tighter text-center leading-tight h-8 flex items-center justify-center whitespace-pre-line break-words w-full">
                     {stage.replace(' ', '\n')}
                   </span>
                 </div>
@@ -597,12 +597,12 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-surface-container-highest p-8 rounded-[32px] flex flex-col justify-between relative overflow-hidden group"
+          className="bg-surface-container-highest p-6 rounded-2xl flex flex-col justify-between relative overflow-hidden group"
         >
           <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl group-hover:bg-white/10 transition-colors"></div>
           <div>
             <div className="flex items-center justify-between mb-8">
-              <h5 className="text-[11px] font-black text-on-surface uppercase tracking-widest">Atividade Recente</h5>
+              <h5 className="text-xs font-bold text-on-surface uppercase tracking-wider">Atividade Recente</h5>
               <Clock className="w-4 h-4 text-secondary/40" />
             </div>
             <div className="space-y-6">
@@ -615,7 +615,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                   <div className={cn("w-2 h-2 rounded-full mt-1.5 shrink-0 shadow-[0_0_8px_rgba(0,0,0,0.1)]", act.color)}></div>
                   <div>
                     <p className="text-[12px] text-on-surface font-bold leading-tight">{act.label}</p>
-                    <p className="text-[10px] text-secondary font-medium mt-0.5">{act.time}</p>
+                    <p className="text-xs text-secondary font-medium mt-0.5">{act.time}</p>
                   </div>
                 </div>
               ))}
@@ -623,7 +623,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
           </div>
           <button 
             onClick={() => onViewChange('pipeline')}
-            className="w-full py-4 mt-8 bg-white/50 backdrop-blur-sm text-primary text-[10px] font-black uppercase tracking-widest rounded-2xl border border-primary/10 hover:bg-primary/5 transition-all shadow-sm"
+            className="w-full py-4 mt-8 bg-white/50 backdrop-blur-sm text-primary text-xs font-bold uppercase tracking-wider rounded-2xl border border-primary/10 hover:bg-primary/5 transition-all shadow-sm"
           >
             Ver Pipeline Completo
           </button>
@@ -641,26 +641,26 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
         >
           <div className="flex justify-between items-center mb-6 px-2">
             <div>
-              <h4 className="text-2xl font-black font-headline text-on-surface">Clientes Recentes</h4>
+              <h4 className="text-2xl font-bold font-headline text-on-surface">Clientes Recentes</h4>
               <p className="text-xs text-secondary font-medium">Últimos contatos adicionados ao pipeline</p>
             </div>
             <button 
               onClick={() => onViewChange('contacts')}
-              className="text-primary text-[11px] font-black uppercase tracking-widest hover:bg-primary/5 px-4 py-2 rounded-xl transition-all"
+              className="text-primary text-xs font-bold uppercase tracking-wider hover:bg-primary/5 px-4 py-2 rounded-xl transition-all"
             >
               Ver Todos
             </button>
           </div>
           
-          <div className="bg-surface-container-lowest rounded-[32px] overflow-hidden shadow-sm border border-outline-variant/5">
+          <div className="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm border border-outline-variant/20">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                   <tr className="bg-surface-container-low/30">
-                    <th className="px-8 py-5 text-[10px] font-black text-secondary uppercase tracking-[0.15em]">Cliente</th>
-                    <th className="px-8 py-5 text-[10px] font-black text-secondary uppercase tracking-[0.15em]">Empresa</th>
-                    <th className="px-8 py-5 text-[10px] font-black text-secondary uppercase tracking-[0.15em]">Total Finalizado</th>
-                    <th className="px-8 py-5 text-[10px] font-black text-secondary uppercase tracking-[0.15em]">Status</th>
+                    <th className="px-8 py-5 text-xs font-bold text-secondary uppercase tracking-wider">Cliente</th>
+                    <th className="px-8 py-5 text-xs font-bold text-secondary uppercase tracking-wider">Empresa</th>
+                    <th className="px-8 py-5 text-xs font-bold text-secondary uppercase tracking-wider">Total Finalizado</th>
+                    <th className="px-8 py-5 text-xs font-bold text-secondary uppercase tracking-wider">Status</th>
                     <th className="px-8 py-5"></th>
                   </tr>
                 </thead>
@@ -677,7 +677,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                             {contact.avatar ? (
                               <img src={contact.avatar} className="w-11 h-11 rounded-xl object-cover mr-4 border border-outline-variant/10 shadow-sm" alt={contact.name} referrerPolicy="no-referrer" />
                             ) : (
-                              <div className="w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center font-black text-primary mr-4 border border-outline-variant/10 shadow-sm">
+                              <div className="w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center font-bold text-primary mr-4 border border-outline-variant/10 shadow-sm">
                                 {contact.initials}
                               </div>
                             )}
@@ -685,22 +685,22 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                           </div>
                           <div>
                             <p className="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{contact.name}</p>
-                            <p className="text-[10px] text-secondary font-medium uppercase tracking-tighter mt-0.5">{contact.cnpjCpf}</p>
+                            <p className="text-xs text-secondary font-medium uppercase tracking-wide mt-0.5">{contact.cnpjCpf}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-8 py-5">
                         <p className="text-sm text-on-surface-variant font-bold">{contact.address}</p>
                         <div className="flex items-center gap-1 text-secondary mt-0.5">
-                          <p className="text-[10px] font-medium">{contact.location}</p>
+                          <p className="text-xs font-medium">{contact.location}</p>
                         </div>
                       </td>
                       <td className="px-8 py-5">
-                        <p className="text-sm font-black text-on-surface">{getContactFinalizedTotal(contact)}</p>
+                        <p className="text-sm font-bold text-on-surface">{getContactFinalizedTotal(contact)}</p>
                       </td>
                       <td className="px-8 py-5">
                         <span className={cn(
-                          "px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest",
+                          "px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider",
                           contact.status === 'Serviço Concluído' || contact.status === 'Contrato Ativo' ? "bg-emerald-50 text-emerald-600" :
                           contact.status === 'Em Negociação' || contact.status === 'Orçamento Enviado' ? "bg-primary/5 text-primary" :
                           "bg-amber-50 text-amber-600"
@@ -735,7 +735,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
         >
           <div className="flex justify-between items-center mb-6 px-2">
             <div>
-              <h4 className="text-2xl font-black font-headline text-on-surface">Ordens de Serviço</h4>
+              <h4 className="text-2xl font-bold font-headline text-on-surface">Ordens de Serviço</h4>
               <p className="text-xs text-secondary font-medium">Atividades e serviços pendentes</p>
             </div>
             <button 
@@ -762,7 +762,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                     if (contact) onSelectContact(contact);
                   }}
                   className={cn(
-                    "p-6 rounded-[24px] border-l-[6px] transition-all cursor-pointer relative group overflow-hidden",
+                    "p-6 rounded-xl border-l-[6px] transition-all cursor-pointer relative group overflow-hidden",
                     os.status === 'Aberta' 
                       ? "bg-surface-container-low border-primary shadow-sm" 
                       : "bg-surface-container-lowest border-outline-variant/30 border shadow-sm"
@@ -770,7 +770,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                 >
                   <div className="flex justify-between items-start mb-3">
                     <span className={cn(
-                      "text-[9px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-md",
+                      "text-xs font-bold uppercase tracking-[0.2em] px-2 py-1 rounded-md",
                       os.status === 'Aberta' ? "bg-primary/10 text-primary" : 
                       os.status === 'Orçamento Aceito' ? "bg-green-500/10 text-green-500" :
                       os.status === 'Orçamento Rejeitado' ? "bg-error-container/20 text-error" :
@@ -780,7 +780,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                     </span>
                     <div className="flex items-center gap-1.5 text-secondary">
                       <Clock className="w-3 h-3" />
-                      <span className="text-[9px] font-black uppercase tracking-widest">
+                      <span className="text-xs font-bold uppercase tracking-wider">
                         {new Date(os.createdAt).toLocaleDateString('pt-BR')}
                       </span>
                     </div>
@@ -790,17 +790,17 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
                   
                   <div className="flex items-center justify-between pt-4 border-t border-outline-variant/10">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center text-[9px] font-black text-primary border border-outline-variant/10">
+                      <div className="w-7 h-7 rounded-lg bg-surface-container-high flex items-center justify-center text-xs font-bold text-primary border border-outline-variant/10">
                         {os.contactName?.substring(0, 2).toUpperCase()}
                       </div>
-                      <span className="text-[10px] font-black text-secondary uppercase tracking-widest">{os.contactName}</span>
+                      <span className="text-xs font-bold text-secondary uppercase tracking-wider">{os.contactName}</span>
                     </div>
-                    <span className="text-xs font-black text-on-surface">{os.value}</span>
+                    <span className="text-xs font-bold text-on-surface">{os.value}</span>
                   </div>
                 </motion.div>
               ))
             ) : (
-              <div className="p-16 text-center bg-surface-container-lowest rounded-[32px] border border-dashed border-outline-variant/30">
+              <div className="p-16 text-center bg-surface-container-lowest rounded-2xl border border-dashed border-outline-variant/30">
                 <div className="w-16 h-16 bg-surface-container-low rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Briefcase className="w-8 h-8 text-secondary/20" />
                 </div>
@@ -810,7 +810,7 @@ export default function Dashboard({ user, onSelectContact, onViewChange, searchT
             
             <button 
               onClick={() => onViewChange('contacts')}
-              className="w-full py-4 border-2 border-dashed border-outline-variant/20 rounded-[24px] text-secondary text-[10px] font-black uppercase tracking-widest hover:bg-surface-container-low hover:border-primary/30 hover:text-primary transition-all flex items-center justify-center gap-2"
+              className="w-full py-4 border-2 border-dashed border-outline-variant/20 rounded-xl text-secondary text-xs font-bold uppercase tracking-wider hover:bg-surface-container-low hover:border-primary/30 hover:text-primary transition-all flex items-center justify-center gap-2"
             >
               Ver Todas as Ordens
               <ArrowRight className="w-4 h-4" />

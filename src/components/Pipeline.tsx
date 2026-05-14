@@ -465,7 +465,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="bg-surface-container-lowest w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-outline-variant/10"
+            className="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-outline-variant/10"
           >
             <div className="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-low/30">
               <div className="flex items-center gap-4">
@@ -473,8 +473,8 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                   <CheckCircle2 className="w-7 h-7 text-emerald-600" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black font-headline text-on-surface">Finalizar Serviço</h3>
-                  <p className="text-[10px] text-secondary font-black uppercase tracking-[0.2em] mt-0.5">
+                  <h3 className="text-2xl font-bold font-headline text-on-surface">Finalizar Serviço</h3>
+                  <p className="text-xs text-secondary font-bold uppercase tracking-[0.2em] mt-0.5">
                     Cliente: {selectedContactForFinalize.name}
                   </p>
                 </div>
@@ -496,7 +496,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                 <div className="space-y-6">
                   <div className="flex items-center gap-2 text-secondary">
                     <div className="w-1 h-4 bg-primary rounded-full"></div>
-                    <p className="text-xs font-black uppercase tracking-widest">Selecione a Ordem de Serviço</p>
+                    <p className="text-xs font-bold uppercase tracking-widest">Selecione a Ordem de Serviço</p>
                   </div>
                   <div className="grid gap-3">
                     {serviceOrders
@@ -509,7 +509,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                         >
                           <div className="flex justify-between items-start mb-2">
                             <h5 className="font-bold text-on-surface group-hover:text-primary transition-colors">{os.subject}</h5>
-                            <span className="text-primary font-black text-sm">{os.value}</span>
+                            <span className="text-primary font-bold text-sm">{os.value}</span>
                           </div>
                           <p className="text-xs text-secondary line-clamp-2 leading-relaxed">{os.description}</p>
                           <div className="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -529,7 +529,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                   <div className="bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/10 relative group">
                     <div className="flex justify-between items-start mb-3">
                       <div>
-                        <p className="text-[9px] font-black text-primary uppercase tracking-widest mb-1">Serviço Selecionado</p>
+                        <p className="text-xs font-bold text-primary uppercase tracking-widest mb-1">Serviço Selecionado</p>
                         <h5 className="text-lg font-bold text-on-surface">{selectedOS.subject}</h5>
                       </div>
                       <button 
@@ -543,13 +543,13 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                     <p className="text-xs text-secondary leading-relaxed mb-4">{selectedOS.description}</p>
                     <div className="flex items-center gap-2 pt-4 border-t border-outline-variant/10">
                       <DollarSign className="w-3.5 h-3.5 text-primary" />
-                      <span className="text-xs font-black text-on-surface uppercase tracking-widest">Valor: {selectedOS.value}</span>
+                      <span className="text-xs font-bold text-on-surface uppercase tracking-widest">Valor: {selectedOS.value}</span>
                     </div>
                   </div>
 
                   <div className="space-y-6">
                     <div className="space-y-2.5">
-                      <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                      <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                         <Package className="w-3 h-3" /> Produtos do Estoque
                       </label>
                       <div className="space-y-3">
@@ -557,7 +557,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                           <div key={index} className="flex items-center gap-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant/10">
                             <div className="flex-1">
                               <p className="text-xs font-bold text-on-surface">{used.name}</p>
-                              <p className="text-[10px] text-secondary uppercase tracking-tighter">{used.unit}</p>
+                              <p className="text-xs text-secondary uppercase tracking-tighter">{used.unit}</p>
                             </div>
                             <div className="flex items-center gap-2">
                               <input 
@@ -627,7 +627,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                     </div>
 
                     <div className="space-y-2.5">
-                      <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                      <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                         <Briefcase className="w-3 h-3" /> Materiais Utilizados (Texto Livre)
                       </label>
                       <textarea
@@ -640,7 +640,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                     </div>
 
                     <div className="space-y-2.5">
-                      <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                      <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                         <ChatBubble className="w-3 h-3" /> Relatório de Finalização
                       </label>
                       <textarea
@@ -654,12 +654,12 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
 
                     <div className="space-y-2.5">
                       <div className="flex items-center justify-between ml-1">
-                        <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary flex items-center gap-2">
+                        <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary flex items-center gap-2">
                           <EditNote className="w-3 h-3" /> Assinatura do Cliente
                         </label>
                         <button 
                           onClick={() => sigCanvas.current?.clear()}
-                          className="text-[10px] font-bold text-primary hover:underline"
+                          className="text-xs font-bold text-primary hover:underline"
                         >
                           Limpar
                         </button>
@@ -679,7 +679,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <button
                       onClick={() => setSelectedOS(null)}
-                      className="flex-1 py-4 bg-surface-container-low text-secondary rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-surface-container-high transition-all"
+                      className="flex-1 py-4 bg-surface-container-low text-secondary rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-surface-container-high transition-all"
                     >
                       Voltar
                     </button>
@@ -688,7 +688,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                         <button
                           onClick={() => handleFinalizeOS('Orçamento Rejeitado')}
                           disabled={finalizingOS}
-                          className="flex-1 py-4 bg-error-container/20 text-error rounded-2xl font-black uppercase tracking-widest text-[11px] border border-error/20 hover:bg-error-container/30 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                          className="flex-1 py-4 bg-error-container/20 text-error rounded-2xl font-bold uppercase tracking-widest text-xs border border-error/20 hover:bg-error-container/30 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                         >
                           {finalizingOS ? <Loader2 className="w-5 h-5 animate-spin" /> : <X className="w-5 h-5" />}
                           Rejeitar
@@ -696,7 +696,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                         <button
                           onClick={() => handleFinalizeOS('Orçamento Aceito')}
                           disabled={finalizingOS}
-                          className="flex-[1.5] py-4 milled-gradient text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                          className="flex-[1.5] py-4 milled-gradient text-white rounded-2xl font-bold uppercase tracking-widest text-xs shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                         >
                           {finalizingOS ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                           Aceitar
@@ -706,7 +706,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                       <button
                         onClick={() => handleFinalizeOS('Finalizada')}
                         disabled={finalizingOS}
-                        className="flex-[2.5] py-4 milled-gradient text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                        className="flex-[2.5] py-4 milled-gradient text-white rounded-2xl font-bold uppercase tracking-widest text-xs shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                       >
                         {finalizingOS ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                         Finalizar OS
@@ -724,23 +724,23 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary">
             <TrendingUp className="w-5 h-5" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Sales Pipeline</span>
+            <span className="text-xs font-bold uppercase tracking-[0.2em]">Sales Pipeline</span>
           </div>
-          <h2 className="text-4xl font-headline font-black tracking-tight text-on-surface">Fluxo de Trabalho</h2>
+          <h2 className="text-4xl font-headline font-bold tracking-tight text-on-surface">Fluxo de Trabalho</h2>
           <p className="text-secondary font-body text-sm max-w-md">Acompanhe seus leads desde o primeiro contato até o fechamento do contrato.</p>
         </div>
         
         <div className="flex flex-wrap items-center gap-4">
           <div className="bg-surface-container-low/50 backdrop-blur-sm border border-outline-variant/10 rounded-2xl p-4 flex items-center gap-4">
             <div className="text-right pr-4 border-r border-outline-variant/10">
-              <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-0.5">Pipeline Ativo</p>
-              <p className="text-xl font-black text-primary">
+              <p className="text-xs font-semibold text-secondary uppercase tracking-wider mb-0.5">Pipeline Ativo</p>
+              <p className="text-xl font-bold text-primary">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalOpenValue)}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-0.5">Conversão Total</p>
-              <p className="text-xl font-black text-on-surface">
+              <p className="text-xs font-semibold text-secondary uppercase tracking-wider mb-0.5">Conversão Total</p>
+              <p className="text-xl font-bold text-on-surface">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(closedValue)}
               </p>
             </div>
@@ -774,10 +774,10 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                     <StageIcon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-headline text-[11px] font-black uppercase tracking-widest text-on-surface">
+                    <h3 className="font-headline text-xs font-bold uppercase tracking-wider text-on-surface">
                       {stage}
                     </h3>
-                    <p className="text-[9px] font-bold text-secondary/60 uppercase tracking-tighter">
+                    <p className="text-xs font-medium text-secondary uppercase tracking-wider">
                       {stageContacts.length} {stageContacts.length === 1 ? 'Contato' : 'Contatos'}
                     </p>
                   </div>
@@ -798,7 +798,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                       key={contact.id} 
                       onClick={() => setExpandedContactId(expandedContactId === contact.id ? null : contact.id)}
                       className={cn(
-                        "bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-outline-variant/5 group hover:shadow-xl hover:border-primary/20 transition-all cursor-pointer relative overflow-hidden",
+                        "bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-outline-variant/20 group hover:shadow-xl hover:border-primary/20 transition-all cursor-pointer relative overflow-hidden",
                         stage === 'FECHADO' && "opacity-80 grayscale-[0.3]",
                         expandedContactId === contact.id && "ring-2 ring-primary/20 shadow-lg"
                       )}
@@ -806,12 +806,12 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                       {/* Status Badge */}
                       <div className="flex justify-between items-start mb-4">
                         {stage === 'FECHADO' ? (
-                          <div className="flex items-center gap-1.5 text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter">
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter">
                             <CheckCircle className="w-3 h-3" /> Ganho
                           </div>
                         ) : (
                           <span className={cn(
-                            "px-2 py-1 text-[9px] font-black rounded-full uppercase tracking-tighter",
+                            "px-2 py-1 text-xs font-bold rounded-full uppercase tracking-tighter",
                             contact.status === 'Orçamento Enviado' ? "bg-amber-50 text-amber-600" :
                             contact.status === 'Manutenção Pendente' ? "bg-blue-50 text-blue-600" :
                             "bg-primary/5 text-primary"
@@ -819,7 +819,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                             {contact.status}
                           </span>
                         )}
-                        <span className={cn("font-headline font-black text-sm", stage === 'FECHADO' ? "text-secondary" : "text-primary")}>
+                        <span className={cn("font-headline font-bold text-sm", stage === 'FECHADO' ? "text-secondary" : "text-primary")}>
                           {getCardDisplayValue(contact, stage)}
                         </span>
                       </div>
@@ -858,10 +858,10 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                   <Clock className="w-3.5 h-3.5 text-secondary/60" />
-                                  <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">Último Status</span>
+                                  <span className="text-xs font-semibold text-secondary uppercase tracking-wider">Último Status</span>
                                 </div>
                                 <span className={cn(
-                                  "text-[10px] font-bold px-2 py-0.5 rounded-md",
+                                  "text-xs font-bold px-2 py-0.5 rounded-md",
                                   getContactStats(contact.id).lastStatus === 'Finalizada' ? "bg-emerald-50 text-emerald-600" :
                                   getContactStats(contact.id).lastStatus === 'Aberta' ? "bg-blue-50 text-blue-600" :
                                   "bg-surface-container-high text-secondary"
@@ -872,9 +872,9 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                   <FileText className="w-3.5 h-3.5 text-secondary/60" />
-                                  <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">Total Contratos</span>
+                                  <span className="text-xs font-semibold text-secondary uppercase tracking-wider">Total Contratos</span>
                                 </div>
-                                <span className="text-[10px] font-black text-on-surface">
+                                <span className="text-xs font-bold text-on-surface">
                                   {getContactStats(contact.id).totalValue}
                                 </span>
                               </div>
@@ -888,7 +888,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                         <div className="flex flex-wrap gap-1.5 mb-5">
                           {contact.financialStatus && (
                             <span className={cn(
-                              "px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider",
+                              "px-2 py-0.5 rounded-md text-[8px] font-bold uppercase tracking-wider",
                               contact.financialStatus === 'Adimplente' ? "bg-emerald-50 text-emerald-600" :
                               contact.financialStatus === 'Inadimplente' ? "bg-rose-50 text-rose-600" :
                               "bg-amber-50 text-amber-600"
@@ -897,7 +897,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                             </span>
                           )}
                           {contact.paymentMethod && (
-                            <span className="px-2 py-0.5 bg-surface-container-high/50 text-secondary rounded-md text-[8px] font-black uppercase tracking-wider">
+                            <span className="px-2 py-0.5 bg-surface-container-high/50 text-secondary rounded-md text-[8px] font-bold uppercase tracking-wider">
                               {contact.paymentMethod}
                             </span>
                           )}
@@ -911,14 +911,14 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                             {contact.avatar ? (
                               <img src={contact.avatar} className="w-6 h-6 rounded-full border-2 border-white shadow-sm" alt={contact.name} referrerPolicy="no-referrer" />
                             ) : (
-                              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-[9px] font-black text-primary border-2 border-white shadow-sm">
+                              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary border-2 border-white shadow-sm">
                                 {contact.initials}
                               </div>
                             )}
                             <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></div>
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-bold text-on-surface leading-tight">{contact.name.split(' ')[0]}</span>
+                            <span className="text-xs font-bold text-on-surface leading-tight">{contact.name.split(' ')[0]}</span>
                             <span className="text-[8px] text-secondary font-medium">Responsável</span>
                           </div>
                         </div>
@@ -968,7 +968,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                     <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-secondary/40 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
                       <PlusCircle className="w-5 h-5" />
                     </div>
-                    <span className="text-[10px] font-black text-secondary/40 uppercase tracking-widest group-hover:text-primary transition-colors">Novo Negócio</span>
+                    <span className="text-xs font-bold text-secondary/40 uppercase tracking-widest group-hover:text-primary transition-colors">Novo Negócio</span>
                   </motion.button>
                 )}
               </div>
@@ -984,22 +984,22 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
             <Insights className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <h3 className="text-xl font-headline font-black text-on-surface">Análise de Performance</h3>
+            <h3 className="text-xl font-headline font-bold text-on-surface">Análise de Performance</h3>
             <p className="text-xs text-secondary font-medium">Insights baseados no seu pipeline atual</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Metric 1 */}
-          <div className="bg-surface-container-lowest p-6 rounded-[24px] shadow-sm border border-outline-variant/5">
+          <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/20">
             <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-blue-50 rounded-lg">
                 <DollarSign className="w-4 h-4 text-blue-500" />
               </div>
-              <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+8.4%</span>
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+8.4%</span>
             </div>
-            <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1">Valor em Aberto</p>
-            <h4 className="text-2xl font-headline font-black text-on-surface">
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Valor em Aberto</p>
+            <h4 className="text-2xl font-headline font-bold text-on-surface">
               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalOpenValue)}
             </h4>
             <div className="mt-4 h-1.5 bg-surface-container rounded-full overflow-hidden">
@@ -1008,15 +1008,15 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
           </div>
 
           {/* Metric 2 */}
-          <div className="bg-surface-container-lowest p-6 rounded-[24px] shadow-sm border border-outline-variant/5">
+          <div className="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/20">
             <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-emerald-50 rounded-lg">
                 <CheckCircle className="w-4 h-4 text-emerald-500" />
               </div>
-              <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+12.2%</span>
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+12.2%</span>
             </div>
-            <p className="text-[10px] font-black text-secondary uppercase tracking-widest mb-1">Negócios Fechados</p>
-            <h4 className="text-2xl font-headline font-black text-on-surface">
+            <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Negócios Fechados</p>
+            <h4 className="text-2xl font-headline font-bold text-on-surface">
               {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(closedValue)}
             </h4>
             <div className="mt-4 h-1.5 bg-surface-container rounded-full overflow-hidden">
@@ -1025,9 +1025,9 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
           </div>
 
           {/* Distribution Chart */}
-          <div className="bg-surface-container-low p-6 rounded-[24px] border border-outline-variant/10">
+          <div className="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
             <div className="flex items-center justify-between mb-6">
-              <h5 className="text-[11px] font-black text-on-surface uppercase tracking-widest">Distribuição</h5>
+              <h5 className="text-xs font-bold text-on-surface uppercase tracking-wider">Distribuição</h5>
               <div className="flex gap-1">
                 {[1, 2, 3].map(i => <div key={i} className="w-1 h-1 rounded-full bg-secondary/30"></div>)}
               </div>
@@ -1050,36 +1050,36 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
             </div>
             <div className="flex justify-between mt-3">
               {['INST', 'VIST', 'ORÇAM', 'NEGOC', 'FECH'].map(s => (
-                <span key={s} className="text-[8px] font-black text-secondary uppercase tracking-tighter">{s}</span>
+                <span key={s} className="text-[8px] font-bold text-secondary uppercase tracking-tighter">{s}</span>
               ))}
             </div>
           </div>
 
           {/* Activity Timeline */}
-          <div className="bg-surface-container-highest p-6 rounded-[24px] flex flex-col justify-between">
+          <div className="bg-surface-container-highest p-6 rounded-xl flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h5 className="text-[11px] font-black text-on-surface uppercase tracking-widest">Atividade</h5>
+                <h5 className="text-xs font-bold text-on-surface uppercase tracking-wider">Atividade</h5>
                 <Clock className="w-3.5 h-3.5 text-secondary/40" />
               </div>
               <div className="space-y-4">
                 <div className="flex gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shadow-[0_0_8px_rgba(var(--primary-rgb),0.4)]"></div>
                   <div>
-                    <p className="text-[11px] text-on-surface font-bold leading-tight">Arthur enviou proposta</p>
-                    <p className="text-[9px] text-secondary font-medium">há 2 horas</p>
+                    <p className="text-xs text-on-surface font-bold leading-tight">Arthur enviou proposta</p>
+                    <p className="text-xs text-secondary font-medium">há 2 horas</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
                   <div>
-                    <p className="text-[11px] text-on-surface font-bold leading-tight">Novo lead: Eco Varejo</p>
-                    <p className="text-[9px] text-secondary font-medium">há 5 horas</p>
+                    <p className="text-xs text-on-surface font-bold leading-tight">Novo lead: Eco Varejo</p>
+                    <p className="text-xs text-secondary font-medium">há 5 horas</p>
                   </div>
                 </div>
               </div>
             </div>
-            <button className="w-full py-2.5 mt-4 bg-white/50 backdrop-blur-sm text-primary text-[10px] font-black uppercase tracking-widest rounded-xl border border-primary/10 hover:bg-primary/5 transition-all">Relatório Completo</button>
+            <button className="w-full py-2.5 mt-4 bg-white/50 backdrop-blur-sm text-primary text-xs font-bold uppercase tracking-wider rounded-xl border border-primary/10 hover:bg-primary/5 transition-all">Relatório Completo</button>
           </div>
         </div>
       </section>

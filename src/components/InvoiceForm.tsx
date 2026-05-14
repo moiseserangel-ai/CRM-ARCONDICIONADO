@@ -224,7 +224,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         </button>
         <div className="flex items-center gap-4">
           <span className={cn(
-            "px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest",
+            "px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest",
             formData.status === 'Emitida' ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
           )}>
             Status: {formData.status}
@@ -232,13 +232,13 @@ const handleSubmit = async (e: React.FormEvent) => {
         </div>
       </div>
 
-      <div className="bg-surface-container-lowest p-10 rounded-[48px] border border-outline-variant/10 shadow-2xl relative overflow-hidden">
+      <div className="bg-surface-container-lowest p-10 rounded-3xl border border-outline-variant/10 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
         
         <form onSubmit={handleSubmit} className="space-y-10 relative">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pb-8 border-b border-outline-variant/10">
             <div>
-              <h2 className="text-3xl font-black font-headline tracking-tighter text-on-surface mb-2">
+              <h2 className="text-3xl font-bold font-headline tracking-tighter text-on-surface mb-2">
                 {invoice ? 'Editar Nota Fiscal' : 'Emitir Nota Fiscal'}
               </h2>
               <p className="text-secondary font-medium">Preencha os dados para emissão do documento fiscal</p>
@@ -246,7 +246,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             <div className="flex flex-col items-end gap-2">
               <div className="flex items-center gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Número</label>
+                  <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Número</label>
                   <input 
                     type="text" 
                     value={formData.number || ''}
@@ -255,7 +255,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Série</label>
+                  <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Série</label>
                   <input 
                     type="text" 
                     value={formData.series || ''}
@@ -270,7 +270,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Tipo de Nota</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Tipo de Nota</label>
                 <div className="flex gap-4">
                   <button
                     type="button"
@@ -296,7 +296,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Cliente</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Cliente</label>
                 <div className="relative">
                   <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                   <select
@@ -316,7 +316,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Data de Emissão</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Data de Emissão</label>
                 <div className="relative">
                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                   <input 
@@ -330,7 +330,7 @@ const handleSubmit = async (e: React.FormEvent) => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">CPF/CNPJ do Cliente</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">CPF/CNPJ do Cliente</label>
                 <div className="relative">
                   <FileText className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                   <input 
@@ -363,7 +363,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <div key={index} className="bg-surface-container-low p-6 rounded-3xl border border-outline-variant/10 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
                     <div className="md:col-span-12 lg:col-span-5 space-y-1">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-secondary ml-1">Descrição / Produto</label>
+                      <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Descrição / Produto</label>
                       <div className="flex flex-col sm:flex-row gap-2">
                         <select
                           onChange={(e) => handleProductSelect(index, e.target.value)}
@@ -385,7 +385,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       </div>
                     </div>
                     <div className="md:col-span-3 lg:col-span-2 space-y-1">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-secondary ml-1">Qtd</label>
+                      <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Qtd</label>
                       <input 
                         type="number" 
                         required
@@ -396,7 +396,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                       />
                     </div>
                     <div className="md:col-span-4 lg:col-span-2 space-y-1">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-secondary ml-1">Valor Unit.</label>
+                      <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Valor Unit.</label>
                       <input 
                         type="number" 
                         required
@@ -407,8 +407,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                       />
                     </div>
                     <div className="md:col-span-4 lg:col-span-2 space-y-1">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-secondary ml-1">Total</label>
-                      <div className="w-full bg-surface-container-high border border-outline-variant/20 rounded-xl px-4 py-2 text-sm font-black text-primary text-center">
+                      <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Total</label>
+                      <div className="w-full bg-surface-container-high border border-outline-variant/20 rounded-xl px-4 py-2 text-sm font-bold text-primary text-center">
                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.totalPrice)}
                       </div>
                     </div>
@@ -436,7 +436,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
           <div className="flex flex-col md:flex-row gap-8 pt-8 border-t border-outline-variant/10">
             <div className="flex-1 space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Observações</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Observações</label>
               <textarea 
                 rows={4}
                 value={formData.observations || ''}
@@ -454,15 +454,15 @@ const handleSubmit = async (e: React.FormEvent) => {
                   </span>
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t border-primary/10">
-                  <span className="text-primary text-lg font-black uppercase tracking-tighter">Total</span>
-                  <span className="text-primary text-2xl font-black tracking-tighter">
+                  <span className="text-primary text-lg font-bold uppercase tracking-tighter">Total</span>
+                  <span className="text-primary text-2xl font-bold tracking-tighter">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(formData.totalAmount || 0)}
                   </span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Status da Nota</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Status da Nota</label>
                 <select
                   value={formData.status || ''}
                   onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as any }))}

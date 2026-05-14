@@ -687,7 +687,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
       {/* Confirmation Modal */}
       {showConfirm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-2xl p-8 shadow-2xl border border-outline-variant/10">
             <div className="w-16 h-16 bg-error-container/20 rounded-2xl flex items-center justify-center mb-6">
               <Trash2 className="w-8 h-8 text-error" />
             </div>
@@ -716,7 +716,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
       {/* Breadcrumbs & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
           <button onClick={onBack} className="text-secondary hover:text-primary transition-colors">Cadastro</button>
           <ChevronRight className="w-4 h-4 text-outline-variant" />
           <span className="text-on-surface">{contact.name}</span>
@@ -724,14 +724,14 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         <div className="flex flex-wrap gap-3">
           <button 
             onClick={() => setShowOSModal(true)}
-            className="px-6 py-3 milled-gradient text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+            className="px-6 py-3 milled-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
           >
             <FileText className="w-4 h-4" />
             Abrir OS
           </button>
           <button 
             onClick={onEdit}
-            className="px-6 py-3 bg-surface-container-low text-secondary rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-surface-container-high transition-all border border-outline-variant/10 flex items-center gap-2"
+            className="px-6 py-3 bg-surface-container-low text-secondary rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-surface-container-high transition-all border border-outline-variant/10 flex items-center gap-2"
           >
             <EditNote className="w-4 h-4" />
             Editar Perfil
@@ -739,7 +739,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
           <button 
             onClick={() => setShowConfirm(true)}
             disabled={deleting}
-            className="px-6 py-3 bg-error-container/10 text-error rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-error-container/20 transition-all border border-error/10 flex items-center gap-2"
+            className="px-6 py-3 bg-error-container/10 text-error rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-error-container/20 transition-all border border-error/10 flex items-center gap-2"
           >
             {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
             Encerrar
@@ -750,13 +750,13 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
       {/* Bento Layout Header */}
       <div className="grid grid-cols-12 gap-8">
         {/* Main Identity Card */}
-        <div className="col-span-12 xl:col-span-8 bg-surface-container-lowest rounded-[40px] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center gap-10 group border border-outline-variant/5">
+        <div className="col-span-12 xl:col-span-8 bg-surface-container-lowest rounded-3xl p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center gap-10 group border border-outline-variant/20">
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-10 w-full">
             <div className="relative shrink-0">
               {contact.avatar ? (
-                <img src={contact.avatar} className="w-32 h-32 rounded-[32px] border-4 border-surface shadow-xl object-cover" alt={contact.name} referrerPolicy="no-referrer" />
+                <img src={contact.avatar} className="w-32 h-32 rounded-2xl border-4 border-surface shadow-xl object-cover" alt={contact.name} referrerPolicy="no-referrer" />
               ) : (
-                <div className="w-32 h-32 rounded-[32px] border-4 border-surface shadow-xl bg-surface-container-highest flex items-center justify-center text-4xl font-black text-primary">
+                <div className="w-32 h-32 rounded-2xl border-4 border-surface shadow-xl bg-surface-container-highest flex items-center justify-center text-4xl font-bold text-primary">
                   {contact.initials}
                 </div>
               )}
@@ -764,8 +764,8 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
             </div>
             <div className="text-center md:text-left flex-1 min-w-0 w-full">
               <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-3 w-full">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black font-headline tracking-tight text-on-surface w-full break-words line-clamp-3 md:line-clamp-none">{contact.name}</h2>
-                <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shrink-0 mt-1 md:mt-2">Enterprise</span>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-headline tracking-tight text-on-surface w-full break-words line-clamp-3 md:line-clamp-none">{contact.name}</h2>
+                <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shrink-0 mt-1 md:mt-2">Enterprise</span>
               </div>
               <p className="text-base md:text-lg text-secondary font-medium mb-6">
                 {contact.cnpjCpf} • 
@@ -773,7 +773,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address || contact.location || '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary font-black hover:underline transition-all ml-1"
+                  className="text-primary font-bold hover:underline transition-all ml-1"
                   title="Ver no Google Maps"
                 >
                   {contact.address}
@@ -805,18 +805,18 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         </div>
 
         {/* Relationship Score */}
-        <div className="col-span-12 xl:col-span-4 milled-gradient text-white rounded-[40px] p-8 md:p-10 flex flex-col items-center justify-center relative overflow-hidden shadow-xl">
+        <div className="col-span-12 xl:col-span-4 milled-gradient text-white rounded-3xl p-8 md:p-10 flex flex-col items-center justify-center relative overflow-hidden shadow-xl">
           <div className="relative z-10 text-center w-full">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-80">Relationship Score</p>
-            <h3 className="text-6xl md:text-8xl font-black font-headline leading-none mb-4">94</h3>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] mb-3 opacity-80">Relationship Score</p>
+            <h3 className="text-6xl md:text-8xl font-bold font-headline leading-none mb-4">94</h3>
             <div className="inline-flex items-center gap-2 bg-surface-container-lowest/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 mb-6">
               <TrendingUp className="w-4 h-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">+12% este mês</span>
+              <span className="text-xs font-bold uppercase tracking-wider">+12% este mês</span>
             </div>
             
             <div className="grid grid-cols-2 gap-4 w-full border-t border-white/20 pt-6 mt-2">
               <div className="text-center">
-                <p className="text-[9px] font-black uppercase tracking-widest text-white/70 mb-1">Tempo de Cadastro</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-white/70 mb-1">Tempo de Cadastro</p>
                 <p className="text-sm font-bold">
                   {contact.createdAt ? (
                     (() => {
@@ -838,7 +838,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-[9px] font-black uppercase tracking-widest text-white/70 mb-1">Contrato</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-white/70 mb-1">Contrato</p>
                 <p className="text-sm font-bold truncate px-2" title={contact.status}>
                   {contact.status === 'Contrato Ativo' ? 'Ativo' : 
                    contact.status === 'Serviço Concluído' ? 'Concluído' : 
@@ -857,7 +857,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         <button 
           onClick={() => setActiveTab('geral')}
           className={cn(
-            "pb-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap",
+            "pb-4 text-xs font-bold uppercase tracking-[0.2em] transition-all relative whitespace-nowrap",
             activeTab === 'geral' ? "text-primary" : "text-secondary hover:text-on-surface"
           )}
         >
@@ -867,7 +867,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
         <button 
           onClick={() => setActiveTab('financeiro')}
           className={cn(
-            "pb-4 text-[11px] font-black uppercase tracking-[0.2em] transition-all relative whitespace-nowrap",
+            "pb-4 text-xs font-bold uppercase tracking-[0.2em] transition-all relative whitespace-nowrap",
             activeTab === 'financeiro' ? "text-primary" : "text-secondary hover:text-on-surface"
           )}
         >
@@ -882,12 +882,12 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
             {/* Timeline & Notes */}
             <div className="col-span-12 xl:col-span-8 space-y-8">
               {/* Technical Specs Section */}
-              <section className="bg-surface-container-lowest rounded-[32px] p-8 shadow-sm border border-outline-variant/5">
+              <section className="bg-surface-container-lowest rounded-2xl p-8 shadow-sm border border-outline-variant/20">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-2.5 bg-primary/5 rounded-xl text-primary">
                     <SmartToy className="w-6 h-6" />
                   </div>
-                  <h3 className="text-2xl font-black font-headline text-on-surface">Especificações Técnicas</h3>
+                  <h3 className="text-2xl font-bold font-headline text-on-surface">Especificações Técnicas</h3>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                   {[
@@ -901,8 +901,8 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                     { label: 'Data de Instalação', value: contact.installationDate ? new Date(contact.installationDate).toLocaleDateString('pt-BR') : null },
                     { label: 'Data de Nascimento', value: contact.birthDate ? new Date(contact.birthDate).toLocaleDateString('pt-BR') : null },
                   ].map((spec, i) => (
-                    <div key={i} className="bg-surface-container-low/40 p-5 rounded-2xl border border-outline-variant/5">
-                      <p className="text-[9px] font-black text-secondary/60 uppercase tracking-[0.2em] mb-1.5">{spec.label}</p>
+                    <div key={i} className="bg-surface-container-low/40 p-5 rounded-2xl border border-outline-variant/20">
+                      <p className="text-xs font-bold text-secondary/60 uppercase tracking-[0.2em] mb-1.5">{spec.label}</p>
                       <p className={cn("text-sm font-bold", spec.highlight ? "text-primary" : "text-on-surface")}>
                         {spec.value || 'Não informado'}
                       </p>
@@ -911,13 +911,13 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                 </div>
               </section>
 
-              <section className="bg-surface-container-lowest rounded-[32px] p-8 shadow-sm border border-outline-variant/5">
+              <section className="bg-surface-container-lowest rounded-2xl p-8 shadow-sm border border-outline-variant/20">
                 <div className="flex items-center justify-between mb-10">
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-secondary/5 rounded-xl text-secondary">
                       <Calendar className="w-6 h-6" />
                     </div>
-                    <h3 className="text-2xl font-black font-headline text-on-surface">Histórico de Interações</h3>
+                    <h3 className="text-2xl font-bold font-headline text-on-surface">Histórico de Interações</h3>
                   </div>
                   <div className="flex gap-2">
                     <button className="p-3 rounded-xl bg-surface-container-low text-secondary hover:bg-surface-container-high transition-all">
@@ -939,8 +939,8 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                           </div>
                           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                             <div className="flex-1">
-                              <p className="text-base font-black text-on-surface mb-1">{os.subject}</p>
-                              <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-4">
+                              <p className="text-base font-bold text-on-surface mb-1">{os.subject}</p>
+                              <p className="text-xs font-semibold text-secondary uppercase tracking-wider mb-4">
                                 {new Date(os.createdAt).toLocaleDateString('pt-BR')} • {os.status}
                               </p>
                               <div className="bg-surface-container-low/60 p-5 rounded-2xl border border-outline-variant/10 text-sm leading-relaxed text-on-surface-variant max-w-2xl">
@@ -962,7 +962,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                                 )}
                               </div>
                             </div>
-                            <span className="px-3 py-1 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-full shrink-0">{os.value}</span>
+                            <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider rounded-full shrink-0">{os.value}</span>
                           </div>
                         </div>
                       ))
@@ -980,28 +980,28 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                     <div className="p-2.5 bg-tertiary/5 rounded-xl text-tertiary">
                       <EditNote className="w-6 h-6" />
                     </div>
-                    <h3 className="text-2xl font-black font-headline text-on-surface">Notas Estratégicas</h3>
+                    <h3 className="text-2xl font-bold font-headline text-on-surface">Notas Estratégicas</h3>
                   </div>
-                  <button className="text-primary text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:underline">
+                  <button className="text-primary text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:underline">
                     <Add className="w-4 h-4" />
                     Nova Nota
                   </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-surface-container-high/40 p-8 rounded-[32px] border-l-8 border-tertiary shadow-sm">
-                    <p className="text-[9px] font-black text-tertiary uppercase tracking-[0.2em] mb-3">Insight Crítico</p>
+                  <div className="bg-surface-container-high/40 p-6 rounded-2xl border-l-8 border-tertiary shadow-sm">
+                    <p className="text-xs font-bold text-tertiary uppercase tracking-[0.2em] mb-3">Insight Crítico</p>
                     <p className="text-sm leading-relaxed text-on-surface font-bold">Cliente extremamente exigente com horários. Prefere atendimentos antes das 09:00 ou após as 18:00.</p>
                     <div className="mt-6 pt-4 border-t border-outline-variant/10 flex items-center justify-between">
-                      <p className="text-[9px] font-black text-secondary uppercase tracking-widest">Adicionado por Alex S.</p>
-                      <p className="text-[9px] font-bold text-secondary/60">2 dias atrás</p>
+                      <p className="text-xs font-bold text-secondary uppercase tracking-widest">Adicionado por Alex S.</p>
+                      <p className="text-xs font-bold text-secondary/60">2 dias atrás</p>
                     </div>
                   </div>
-                  <div className="bg-surface-container-low p-8 rounded-[32px] border border-outline-variant/5 shadow-sm">
-                    <p className="text-[9px] font-black text-secondary uppercase tracking-[0.2em] mb-3">Detalhe Pessoal</p>
+                  <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
+                    <p className="text-xs font-bold text-secondary uppercase tracking-[0.2em] mb-3">Detalhe Pessoal</p>
                     <p className="text-sm leading-relaxed text-on-surface font-bold">Possui pets no local. Necessário cuidado redobrado com as portas durante a manutenção.</p>
                     <div className="mt-6 pt-4 border-t border-outline-variant/10 flex items-center justify-between">
-                      <p className="text-[9px] font-black text-secondary uppercase tracking-widest">Adicionado por Sarah M.</p>
-                      <p className="text-[9px] font-bold text-secondary/60">1 semana atrás</p>
+                      <p className="text-xs font-bold text-secondary uppercase tracking-widest">Adicionado por Sarah M.</p>
+                      <p className="text-xs font-bold text-secondary/60">1 semana atrás</p>
                     </div>
                   </div>
                 </div>
@@ -1010,32 +1010,32 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
             {/* Sidebar for Geral */}
             <div className="col-span-12 xl:col-span-4 space-y-8">
-              <section className="bg-surface-container-lowest rounded-[32px] p-8 border border-outline-variant/10 relative overflow-hidden shadow-sm">
+              <section className="bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant/10 relative overflow-hidden shadow-sm">
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-8">
                     <div className="p-2.5 bg-primary/5 rounded-xl text-primary">
                       <Psychology className="w-5 h-5" />
                     </div>
-                    <h3 className="text-[11px] font-black font-headline uppercase tracking-[0.2em] text-on-surface">Análise de IA Cardoso</h3>
+                    <h3 className="text-xs font-bold font-headline uppercase tracking-[0.2em] text-on-surface">Análise de IA Cardoso</h3>
                   </div>
                   <ul className="space-y-6">
                     <li className="flex items-start gap-4">
                       <div className="mt-1 w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
                         <CheckCircle className="w-3 h-3 text-emerald-600" />
                       </div>
-                      <p className="text-xs text-on-surface-variant leading-relaxed"><span className="font-black text-on-surface uppercase tracking-tighter mr-1">Intenção:</span> Alta frequência de solicitações de orçamento indica expansão iminente.</p>
+                      <p className="text-xs text-on-surface-variant leading-relaxed"><span className="font-bold text-on-surface uppercase tracking-tighter mr-1">Intenção:</span> Alta frequência de solicitações de orçamento indica expansão iminente.</p>
                     </li>
                     <li className="flex items-start gap-4">
                       <div className="mt-1 w-5 h-5 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
                         <Warning className="w-3 h-3 text-amber-600" />
                       </div>
-                      <p className="text-xs text-on-surface-variant leading-relaxed"><span className="font-black text-on-surface uppercase tracking-tighter mr-1">Risco:</span> Moderado. Equipamento antigo pode gerar insatisfação se não houver troca preventiva.</p>
+                      <p className="text-xs text-on-surface-variant leading-relaxed"><span className="font-bold text-on-surface uppercase tracking-tighter mr-1">Risco:</span> Moderado. Equipamento antigo pode gerar insatisfação se não houver troca preventiva.</p>
                     </li>
                     <li className="flex items-start gap-4">
                       <div className="mt-1 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                         <Lightbulb className="w-3 h-3 text-primary" />
                       </div>
-                      <p className="text-xs text-on-surface-variant leading-relaxed"><span className="font-black text-on-surface uppercase tracking-tighter mr-1">Oportunidade:</span> Oferecer contrato de limpeza semestral para as 5 unidades.</p>
+                      <p className="text-xs text-on-surface-variant leading-relaxed"><span className="font-bold text-on-surface uppercase tracking-tighter mr-1">Oportunidade:</span> Oferecer contrato de limpeza semestral para as 5 unidades.</p>
                     </li>
                   </ul>
                 </div>
@@ -1046,7 +1046,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.address || contact.location || '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-surface-container-lowest rounded-[32px] overflow-hidden shadow-sm h-64 relative group border border-outline-variant/10 block"
+                className="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm h-64 relative group border border-outline-variant/10 block"
                 title="Abrir no Google Maps"
               >
                 <img 
@@ -1057,8 +1057,8 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"></div>
                 <div className="absolute bottom-6 left-6">
-                  <p className="text-[10px] font-black text-on-surface uppercase tracking-widest">{contact.location || 'Localização'}</p>
-                  <p className="text-[9px] font-bold text-secondary/60 uppercase tracking-tighter">{contact.address}</p>
+                  <p className="text-xs font-bold text-on-surface uppercase tracking-widest">{contact.location || 'Localização'}</p>
+                  <p className="text-xs font-medium text-secondary uppercase tracking-wider">{contact.address}</p>
                 </div>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                   <div className="relative">
@@ -1079,7 +1079,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                 { label: 'Status Financeiro', value: contact.financialStatus || 'Adimplente', sub: `Forma: ${contact.paymentMethod || 'Pix'}`, icon: ShieldCheck, trend: 'Status', color: 'emerald' },
                 { label: 'Ordens Ativas', value: serviceOrders.filter(os => os.status === 'Aberta').length.toString(), sub: 'Serviços em andamento', icon: FileText, trend: 'Volume', color: 'primary' },
               ].map((m, i) => (
-                <div key={i} className="bg-surface-container-lowest p-6 md:p-8 rounded-[32px] shadow-sm border border-outline-variant/5 group hover:border-primary/20 transition-all relative overflow-hidden">
+                <div key={i} className="bg-surface-container-lowest p-6 md:p-6 rounded-2xl shadow-sm border border-outline-variant/20 group hover:border-primary/20 transition-all relative overflow-hidden">
                   <div className="flex justify-between items-start mb-4 md:mb-6">
                     <div className={cn(
                       "p-3 rounded-2xl transition-colors shrink-0",
@@ -1090,7 +1090,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                       <m.icon className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
                     <span className={cn(
-                      "text-[8px] md:text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest truncate max-w-[100px]",
+                      "text-[8px] md:text-xs font-bold px-2 py-1 rounded-full uppercase tracking-widest truncate max-w-[100px]",
                       m.color === 'primary' ? "bg-primary/10 text-primary" :
                       m.color === 'amber' ? "bg-amber-100 text-amber-700" :
                       "bg-emerald-100 text-emerald-700"
@@ -1098,9 +1098,9 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                       {m.trend}
                     </span>
                   </div>
-                  <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-secondary/60 mb-1.5 truncate">{m.label}</p>
-                  <h3 className="text-xl md:text-2xl font-black font-headline text-on-surface tracking-tight truncate">{m.value}</h3>
-                  <p className="text-[9px] md:text-[10px] font-bold text-secondary/40 mt-3 uppercase tracking-tighter truncate">{m.sub}</p>
+                  <p className="text-xs md:text-xs font-bold uppercase tracking-wider text-secondary/60 mb-1.5 truncate">{m.label}</p>
+                  <h3 className="text-xl md:text-2xl font-bold font-headline text-on-surface tracking-tight truncate">{m.value}</h3>
+                  <p className="text-xs md:text-xs font-bold text-secondary/40 mt-3 uppercase tracking-tighter truncate">{m.sub}</p>
                   
                   {m.label === 'Total em Serviço' && (
                     <button 
@@ -1116,20 +1116,20 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               ))}
             </div>
 
-            <section className="bg-surface-container-lowest rounded-[40px] p-10 shadow-sm border border-outline-variant/5">
+            <section className="bg-surface-container-lowest rounded-3xl p-10 shadow-sm border border-outline-variant/20">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-primary/5 rounded-2xl text-primary">
                     <FileText className="w-7 h-7" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black font-headline text-on-surface">Histórico de Ordens de Serviço</h3>
-                    <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mt-1">Gestão de serviços e orçamentos</p>
+                    <h3 className="text-2xl font-bold font-headline text-on-surface">Histórico de Ordens de Serviço</h3>
+                    <p className="text-xs font-semibold text-secondary uppercase tracking-wider mt-1">Gestão de serviços e orçamentos</p>
                   </div>
                 </div>
                 <button 
                   onClick={() => setShowOSModal(true)}
-                  className="px-8 py-4 milled-gradient text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-3"
+                  className="px-8 py-4 milled-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-3"
                 >
                   <Add className="w-5 h-5" />
                   Nova OS
@@ -1137,9 +1137,9 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               </div>
 
               {/* OS Filters */}
-              <div className="flex flex-wrap gap-4 mb-8 p-6 bg-surface-container-low/30 rounded-[32px] border border-outline-variant/10">
+              <div className="flex flex-wrap gap-4 mb-8 p-6 bg-surface-container-low/30 rounded-2xl border border-outline-variant/10">
                 <div className="flex-1 min-w-[200px] space-y-2">
-                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary ml-1 flex items-center gap-2">
+                  <label className="text-xs font-bold uppercase tracking-[0.2em] text-secondary ml-1 flex items-center gap-2">
                     <Filter className="w-3 h-3" /> Status da OS
                   </label>
                   <select 
@@ -1155,7 +1155,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   </select>
                 </div>
                 <div className="flex-1 min-w-[200px] space-y-2">
-                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary ml-1 flex items-center gap-2">
+                  <label className="text-xs font-bold uppercase tracking-[0.2em] text-secondary ml-1 flex items-center gap-2">
                     <Calendar className="w-3 h-3" /> Data de Criação
                   </label>
                   <input 
@@ -1169,7 +1169,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   <div className="flex items-end">
                     <button 
                       onClick={() => { setOsStatusFilter('Todos'); setOsDateFilter(''); }}
-                      className="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/5 rounded-2xl transition-all border border-primary/10"
+                      className="px-6 py-3 text-xs font-bold uppercase tracking-wider text-primary hover:bg-primary/5 rounded-2xl transition-all border border-primary/10"
                     >
                       Limpar Filtros
                     </button>
@@ -1180,21 +1180,21 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               {loadingOS ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
                   <Loader2 className="w-10 h-10 animate-spin text-primary/30" />
-                  <p className="text-[10px] font-black text-secondary/40 uppercase tracking-[0.3em]">Carregando Ordens...</p>
+                  <p className="text-xs font-bold text-secondary/40 uppercase tracking-[0.3em]">Carregando Ordens...</p>
                 </div>
               ) : serviceOrders.length === 0 ? (
-                <div className="text-center py-20 bg-surface-container-low/30 rounded-[32px] border border-dashed border-outline-variant/20">
+                <div className="text-center py-20 bg-surface-container-low/30 rounded-2xl border border-dashed border-outline-variant/20">
                   <p className="text-sm text-secondary font-bold">Nenhuma ordem de serviço registrada para este cliente.</p>
                 </div>
               ) : filteredServiceOrders.length === 0 ? (
-                <div className="text-center py-20 bg-surface-container-low/30 rounded-[32px] border border-dashed border-outline-variant/20">
+                <div className="text-center py-20 bg-surface-container-low/30 rounded-2xl border border-dashed border-outline-variant/20">
                   <p className="text-sm text-secondary font-bold">Nenhuma ordem de serviço corresponde aos filtros selecionados.</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-outline-variant/20 text-[10px] font-black text-secondary uppercase tracking-widest">
+                      <tr className="border-b border-outline-variant/20 text-xs font-bold text-secondary uppercase tracking-wider">
                         <th className="p-4">Data</th>
                         <th className="p-4">Assunto</th>
                         <th className="p-4">Status</th>
@@ -1220,7 +1220,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                               </td>
                               <td className="p-4">
                                 <span className={cn(
-                                  "text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md whitespace-nowrap",
+                                  "text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md whitespace-nowrap",
                                   os.status === 'Orçamento Aceito' || os.status === 'Finalizada' 
                                     ? "bg-green-100 text-green-700" 
                                     : os.status === 'Orçamento Rejeitado'
@@ -1230,7 +1230,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                                   {os.status}
                                 </span>
                               </td>
-                              <td className="p-4 text-sm font-black text-on-surface whitespace-nowrap">
+                              <td className="p-4 text-sm font-bold text-on-surface whitespace-nowrap">
                                 {os.value}
                               </td>
                               <td className="p-4 text-right space-x-2 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
@@ -1294,19 +1294,19 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                                       <div className="p-6 space-y-4">
                                         {os.materials && (
                                           <div className="bg-surface-container-high/50 p-4 rounded-2xl">
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-2">Materiais Utilizados</p>
+                                            <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-2">Materiais Utilizados</p>
                                             <p className="text-xs text-on-surface-variant italic leading-relaxed">{os.materials}</p>
                                           </div>
                                         )}
 
                                         {os.usedProducts && os.usedProducts.length > 0 && (
                                           <div className="bg-surface-container-high/50 p-4 rounded-2xl">
-                                            <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-3">Produtos do Estoque</p>
+                                            <p className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-3">Produtos do Estoque</p>
                                             <div className="space-y-2">
                                               {os.usedProducts.map((up, idx) => (
                                                 <div key={idx} className="flex justify-between items-center text-xs bg-surface-container-lowest/50 p-2 rounded-lg">
                                                   <span className="font-bold text-on-surface">{up.name}</span>
-                                                  <span className="text-secondary font-black">{up.quantity} {up.unit}</span>
+                                                  <span className="text-secondary font-bold">{up.quantity} {up.unit}</span>
                                                 </div>
                                               ))}
                                             </div>
@@ -1315,19 +1315,19 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
                                         {os.finalizationNotes && (
                                           <div className="bg-surface-container-high/50 p-4 rounded-2xl">
-                                            <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-2">Relatório de Finalização</p>
+                                            <p className="text-xs font-bold text-emerald-600 uppercase tracking-[0.2em] mb-2">Relatório de Finalização</p>
                                             <p className="text-xs text-on-surface-variant leading-relaxed">{os.finalizationNotes}</p>
                                           </div>
                                         )}
 
                                         <div className="grid grid-cols-2 gap-4">
                                           <div className="bg-surface-container-high/30 p-3 rounded-xl">
-                                            <p className="text-[8px] font-black text-secondary uppercase tracking-widest mb-1">ID da OS</p>
-                                            <p className="text-[10px] font-mono font-bold text-on-surface">{os.id.substring(0, 12).toUpperCase()}</p>
+                                            <p className="text-[8px] font-bold text-secondary uppercase tracking-widest mb-1">ID da OS</p>
+                                            <p className="text-xs font-mono font-bold text-on-surface">{os.id.substring(0, 12).toUpperCase()}</p>
                                           </div>
                                           <div className="bg-surface-container-high/30 p-3 rounded-xl">
-                                            <p className="text-[8px] font-black text-secondary uppercase tracking-widest mb-1">Valor do Serviço</p>
-                                            <p className="text-[10px] font-bold text-on-surface">{os.value}</p>
+                                            <p className="text-[8px] font-bold text-secondary uppercase tracking-widest mb-1">Valor do Serviço</p>
+                                            <p className="text-xs font-bold text-on-surface">{os.value}</p>
                                           </div>
                                         </div>
                                       </div>
@@ -1356,7 +1356,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
       {/* OS Modal */}
       {showOSModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-surface-container-lowest max-w-2xl w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+          <div className="bg-surface-container-lowest max-w-2xl w-full rounded-2xl p-8 shadow-2xl border border-outline-variant/10">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
@@ -1390,7 +1390,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Assunto da OS</label>
+                  <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Assunto da OS</label>
                   <input 
                     type="text" 
                     value={osData.subject || ''}
@@ -1400,7 +1400,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Valor do Serviço</label>
+                  <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Valor do Serviço</label>
                   <input 
                     type="text" 
                     value={osData.value || ''}
@@ -1423,7 +1423,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Descrição do Serviço</label>
+                <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Descrição do Serviço</label>
                 <textarea 
                   rows={6}
                   value={osData.description || ''}
@@ -1461,7 +1461,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
       {/* Finalize OS Modal */}
       {showFinalizeModal && selectedOS && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-surface-container-lowest max-w-2xl w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+          <div className="bg-surface-container-lowest max-w-2xl w-full rounded-2xl p-8 shadow-2xl border border-outline-variant/10">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -1484,7 +1484,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               </div>
 
               <div className="space-y-3">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <Package className="w-3 h-3" /> Produtos do Estoque
                 </label>
                 <div className="space-y-3">
@@ -1492,7 +1492,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                     <div key={index} className="flex items-center gap-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant/10">
                       <div className="flex-1">
                         <p className="text-xs font-bold text-on-surface">{used.name}</p>
-                        <p className="text-[10px] text-secondary uppercase tracking-tighter">{used.unit}</p>
+                        <p className="text-xs text-secondary uppercase tracking-tighter">{used.unit}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <input 
@@ -1562,7 +1562,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1 flex items-center gap-2">
                   <Briefcase className="w-3 h-3" /> Materiais Utilizados (Texto Livre)
                 </label>
                 <textarea 
@@ -1575,7 +1575,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1 flex items-center gap-2">
                   <CheckCircle2 className="w-3 h-3" /> Relatório de Finalização
                 </label>
                 <textarea 
@@ -1589,12 +1589,12 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between ml-1">
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-secondary flex items-center gap-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-secondary flex items-center gap-2">
                     <EditNote className="w-3 h-3" /> Assinatura do Cliente
                   </label>
                   <button 
                     onClick={() => sigCanvas.current?.clear()}
-                    className="text-[10px] font-bold text-primary hover:underline"
+                    className="text-xs font-bold text-primary hover:underline"
                   >
                     Limpar
                   </button>
@@ -1623,7 +1623,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   <button 
                     onClick={() => handleFinalizeOS('Orçamento Rejeitado')}
                     disabled={finalizingOS}
-                    className="flex-1 py-4 bg-error-container/20 text-error rounded-2xl font-black uppercase tracking-widest text-[10px] border border-error/20 hover:bg-error-container/30 transition-all flex items-center justify-center gap-3"
+                    className="flex-1 py-4 bg-error-container/20 text-error rounded-2xl font-bold uppercase tracking-widest text-xs border border-error/20 hover:bg-error-container/30 transition-all flex items-center justify-center gap-3"
                   >
                     {finalizingOS ? <Loader2 className="w-5 h-5 animate-spin" /> : <CloseIcon className="w-5 h-5" />}
                     Rejeitar
@@ -1631,7 +1631,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                   <button 
                     onClick={() => handleFinalizeOS('Orçamento Aceito')}
                     disabled={finalizingOS}
-                    className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-emerald-700 transition-all flex items-center justify-center gap-3"
+                    className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-bold uppercase tracking-widest text-xs shadow-xl hover:bg-emerald-700 transition-all flex items-center justify-center gap-3"
                   >
                     {finalizingOS ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                     Aceitar
@@ -1641,7 +1641,7 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
                 <button 
                   onClick={() => handleFinalizeOS('Finalizada')}
                   disabled={finalizingOS}
-                  className="flex-[2] py-4 milled-gradient text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+                  className="flex-[2] py-4 milled-gradient text-white rounded-2xl font-bold uppercase tracking-widest text-xs shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
                 >
                   {finalizingOS ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                   Finalizar OS

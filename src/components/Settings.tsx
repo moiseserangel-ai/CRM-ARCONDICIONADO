@@ -204,7 +204,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
             <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
               <Building2 className="w-5 h-5 text-primary" />
             </div>
-            <h2 className="text-4xl font-black font-headline tracking-tight text-on-surface">Configurações</h2>
+            <h2 className="text-4xl font-bold font-headline tracking-tight text-on-surface">Configurações</h2>
           </div>
           <p className="text-secondary font-medium text-lg">Personalize sua experiência e gerencie sua equipe.</p>
         </div>
@@ -213,7 +213,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
           <button 
             onClick={() => setActiveSubTab('empresa')}
             className={cn(
-              "relative px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all overflow-hidden",
+              "relative px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all overflow-hidden",
               activeSubTab === 'empresa' ? "text-white" : "text-secondary hover:bg-surface-container-high"
             )}
           >
@@ -229,7 +229,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
           <button 
             onClick={() => setActiveSubTab('usuarios')}
             className={cn(
-              "relative px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all overflow-hidden",
+              "relative px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all overflow-hidden",
               activeSubTab === 'usuarios' ? "text-white" : "text-secondary hover:bg-surface-container-high"
             )}
           >
@@ -257,7 +257,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
           >
             {/* Company Profile Bento Card */}
             <div className="lg:col-span-2 space-y-8">
-              <section className="bg-surface-container-lowest p-10 rounded-[40px] shadow-sm border border-outline-variant/10 relative overflow-hidden group">
+              <section className="bg-surface-container-lowest p-10 rounded-3xl shadow-sm border border-outline-variant/10 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-primary/10 transition-colors duration-700" />
                 
                 <div className="relative z-10">
@@ -266,14 +266,14 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       <Building2 className="w-7 h-7 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-black font-headline text-on-surface">Perfil da Empresa</h3>
+                      <h3 className="text-2xl font-bold font-headline text-on-surface">Perfil da Empresa</h3>
                       <p className="text-xs text-secondary font-bold uppercase tracking-[0.2em]">Identidade & Contato</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Nome Fantasia</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Nome Fantasia</label>
                       <input 
                         type="text" 
                         value={companyName || ''}
@@ -283,7 +283,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">CNPJ</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">CNPJ</label>
                       <div className="relative">
                         <Shield className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
                         <input 
@@ -297,7 +297,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Website Oficial</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Website Oficial</label>
                       <div className="relative">
                         <Globe className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
                         <input 
@@ -310,7 +310,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">E-mail Corporativo</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">E-mail Corporativo</label>
                       <div className="relative">
                         <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
                         <input 
@@ -324,7 +324,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Telefone Principal</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Telefone Principal</label>
                       <div className="relative">
                         <Phone className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
                         <input 
@@ -338,7 +338,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Localização / Sede</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Localização / Sede</label>
                       <div className="relative">
                         <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
                         <input 
@@ -358,7 +358,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                 <button 
                   onClick={handleSave}
                   disabled={saving}
-                  className="milled-gradient text-white px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-3"
+                  className="milled-gradient text-white px-10 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-3"
                 >
                   {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                   {saving ? 'Salvando...' : 'Salvar Alterações'}
@@ -368,9 +368,9 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
 
             {/* Logo Bento Card */}
             <div className="space-y-8">
-              <section className="bg-surface-container-lowest p-10 rounded-[40px] shadow-sm border border-outline-variant/10 h-full flex flex-col">
+              <section className="bg-surface-container-lowest p-10 rounded-3xl shadow-sm border border-outline-variant/10 h-full flex flex-col">
                 <div className="mb-10">
-                  <h3 className="text-2xl font-black font-headline text-on-surface">Logo da Marca</h3>
+                  <h3 className="text-2xl font-bold font-headline text-on-surface">Logo da Marca</h3>
                   <p className="text-xs text-secondary font-bold uppercase tracking-[0.2em] mt-1">Visual do Sistema</p>
                 </div>
                 
@@ -378,7 +378,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                   <div className="relative group">
                     <motion.div 
                       whileHover={{ scale: 1.05 }}
-                      className="w-48 h-48 bg-surface-container-low rounded-[40px] border-2 border-dashed border-outline-variant/30 flex items-center justify-center overflow-hidden transition-all group-hover:border-primary/50 shadow-inner"
+                      className="w-48 h-48 bg-surface-container-low rounded-3xl border-2 border-dashed border-outline-variant/30 flex items-center justify-center overflow-hidden transition-all group-hover:border-primary/50 shadow-inner"
                     >
                       {companyLogo ? (
                         <img src={companyLogo} alt="Logo" className="w-full h-full object-contain p-4" />
@@ -401,11 +401,11 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                         <Upload className="w-6 h-6 text-primary" />
                       </div>
-                      <span className="text-xs font-black text-secondary uppercase tracking-widest">Carregar Nova Logo</span>
+                      <span className="text-xs font-bold text-secondary uppercase tracking-widest">Carregar Nova Logo</span>
                       <input type="file" className="hidden" accept="image/*" onChange={handleLogoUpload} />
                     </label>
-                    <div className="bg-surface-container-low/50 p-4 rounded-2xl border border-outline-variant/5">
-                      <p className="text-[10px] text-secondary/60 text-center font-bold uppercase tracking-widest leading-relaxed">
+                    <div className="bg-surface-container-low/50 p-4 rounded-2xl border border-outline-variant/20">
+                      <p className="text-xs text-secondary/60 text-center font-bold uppercase tracking-widest leading-relaxed">
                         PNG, SVG ou JPG<br />Mínimo 512x512px recomendado
                       </p>
                     </div>
@@ -423,14 +423,14 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
             transition={{ duration: 0.4, ease: "easeOut" }}
             className="space-y-8"
           >
-            <section className="bg-surface-container-lowest p-10 rounded-[40px] shadow-sm border border-outline-variant/10">
+            <section className="bg-surface-container-lowest p-10 rounded-3xl shadow-sm border border-outline-variant/10">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-12">
                 <div className="flex items-center gap-5">
                   <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center shadow-inner">
                     <Users className="w-7 h-7 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black font-headline text-on-surface">Gestão de Usuários</h3>
+                    <h3 className="text-2xl font-bold font-headline text-on-surface">Gestão de Usuários</h3>
                     <p className="text-xs text-secondary font-bold uppercase tracking-[0.2em]">Controle de Acessos</p>
                   </div>
                 </div>
@@ -452,7 +452,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       setUserData({ name: '', email: '', username: '', password: '', role: '', privilege: 'Técnico', status: 'Ativo' });
                       setShowUserModal(true);
                     }}
-                    className="px-8 py-4 milled-gradient text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+                    className="px-8 py-4 milled-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
                   >
                     <UserPlus className="w-5 h-5" />
                     Novo Usuário
@@ -466,10 +466,10 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                     <div className="w-16 h-16 border-4 border-primary/10 border-t-primary rounded-full animate-spin" />
                     <Users className="absolute inset-0 m-auto w-6 h-6 text-primary/30" />
                   </div>
-                  <p className="text-xs font-black text-secondary/40 uppercase tracking-[0.4em]">Sincronizando Equipe...</p>
+                  <p className="text-xs font-bold text-secondary/40 uppercase tracking-[0.4em]">Sincronizando Equipe...</p>
                 </div>
               ) : filteredUsers.length === 0 ? (
-                <div className="text-center py-32 bg-surface-container-low/30 rounded-[40px] border-2 border-dashed border-outline-variant/20">
+                <div className="text-center py-32 bg-surface-container-low/30 rounded-3xl border-2 border-dashed border-outline-variant/20">
                   <div className="w-20 h-20 bg-surface-container-low rounded-3xl flex items-center justify-center mx-auto mb-6">
                     <Search className="w-10 h-10 text-secondary/20" />
                   </div>
@@ -485,19 +485,19 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       layout
                       key={user.id} 
                       className={cn(
-                        "bg-surface-container-low p-8 rounded-[32px] border border-outline-variant/10 group hover:border-primary/30 transition-all relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1",
+                        "bg-surface-container-low p-6 rounded-2xl border border-outline-variant/10 group hover:border-primary/30 transition-all relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1",
                         user.status === 'Inativo' && "opacity-60 grayscale-[0.5]"
                       )}
                     >
                       {user.status === 'Inativo' && (
-                        <div className="absolute top-0 right-0 bg-error/10 text-error text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl">
+                        <div className="absolute top-0 right-0 bg-error/10 text-error text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-bl-2xl">
                           Inativo
                         </div>
                       )}
                       
                       <div className="flex justify-between items-start mb-8">
                         <div className="flex items-center gap-5">
-                          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary font-black text-2xl relative shadow-inner">
+                          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary font-bold text-2xl relative shadow-inner">
                             {user.name.charAt(0).toUpperCase()}
                             <div className={cn(
                               "absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-4 border-surface-container-low shadow-sm",
@@ -505,12 +505,12 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                             )}></div>
                           </div>
                           <div>
-                            <h4 className="text-lg font-black text-on-surface leading-tight">{user.name}</h4>
+                            <h4 className="text-lg font-bold text-on-surface leading-tight">{user.name}</h4>
                             <p className="text-sm text-secondary font-medium">{user.email}</p>
                             {user.username && (
                               <div className="flex items-center gap-1.5 mt-2">
-                                <span className="text-[9px] font-black text-primary/60 uppercase tracking-widest">Login:</span>
-                                <span className="text-[10px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded-lg">{user.username}</span>
+                                <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Login:</span>
+                                <span className="text-xs font-bold text-primary bg-primary/5 px-2 py-0.5 rounded-lg">{user.username}</span>
                               </div>
                             )}
                           </div>
@@ -520,11 +520,11 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       <div className="space-y-6">
                         <div className="grid grid-cols-2 gap-6">
                           <div className="space-y-1">
-                            <p className="text-[9px] font-black text-secondary/50 uppercase tracking-widest">Cargo / Função</p>
+                            <p className="text-xs font-bold text-secondary/50 uppercase tracking-widest">Cargo / Função</p>
                             <p className="text-sm font-bold text-on-surface truncate">{user.role || 'Não definido'}</p>
                           </div>
                           <div className="space-y-1">
-                            <p className="text-[9px] font-black text-secondary/50 uppercase tracking-widest">Privilégio</p>
+                            <p className="text-xs font-bold text-secondary/50 uppercase tracking-widest">Privilégio</p>
                             <div className="flex items-center gap-2">
                               <Shield className="w-3.5 h-3.5 text-primary" />
                               <p className="text-sm font-bold text-primary">{user.privilege}</p>
@@ -572,7 +572,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-surface-container-lowest max-w-lg w-full rounded-[40px] p-10 shadow-2xl border border-outline-variant/10 overflow-hidden"
+              className="relative bg-surface-container-lowest max-w-lg w-full rounded-3xl p-10 shadow-2xl border border-outline-variant/10 overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
               
@@ -583,7 +583,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       <UserPlus className="w-7 h-7 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-3xl font-black font-headline text-on-surface">{editingUser ? 'Editar Perfil' : 'Novo Membro'}</h3>
+                      <h3 className="text-3xl font-bold font-headline text-on-surface">{editingUser ? 'Editar Perfil' : 'Novo Membro'}</h3>
                       <p className="text-xs text-secondary uppercase tracking-[0.2em] font-bold">Gestão de Equipe</p>
                     </div>
                   </div>
@@ -595,7 +595,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                 <form onSubmit={handleSaveUser} className="space-y-8">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Nome Completo</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Nome Completo</label>
                       <input 
                         type="text" 
                         required
@@ -607,7 +607,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">E-mail Profissional</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">E-mail Profissional</label>
                       <input 
                         type="email" 
                         required
@@ -621,7 +621,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Login / Usuário</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Login / Usuário</label>
                       <input 
                         type="text" 
                         required
@@ -632,7 +632,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Senha de Acesso</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Senha de Acesso</label>
                       <div className="relative">
                         <input 
                           type={showPassword ? "text" : "password"} 
@@ -655,7 +655,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Cargo / Função</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Cargo / Função</label>
                       <input 
                         type="text" 
                         required
@@ -666,7 +666,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Status da Conta</label>
+                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Status da Conta</label>
                       <div className="relative">
                         <select 
                           value={userData.status}
@@ -682,7 +682,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-widest text-secondary/60 ml-1">Nível de Privilégio</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Nível de Privilégio</label>
                     <div className="relative">
                       <select 
                         value={userData.privilege}
@@ -702,7 +702,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                     <button 
                       type="submit"
                       disabled={saving}
-                      className="w-full py-5 milled-gradient text-white rounded-3xl font-black text-sm uppercase tracking-widest shadow-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
+                      className="w-full py-5 milled-gradient text-white rounded-3xl font-bold text-sm uppercase tracking-widest shadow-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
                     >
                       {saving ? <Loader2 className="w-6 h-6 animate-spin" /> : (editingUser ? 'Atualizar Membro' : 'Confirmar Cadastro')}
                     </button>
@@ -729,23 +729,23 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-surface-container-lowest max-w-sm w-full rounded-[40px] p-10 shadow-2xl border border-outline-variant/10 text-center"
+              className="relative bg-surface-container-lowest max-w-sm w-full rounded-3xl p-10 shadow-2xl border border-outline-variant/10 text-center"
             >
-              <div className="w-20 h-20 bg-error/10 rounded-[32px] flex items-center justify-center mx-auto mb-8">
+              <div className="w-20 h-20 bg-error/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
                 <AlertTriangle className="w-10 h-10 text-error" />
               </div>
-              <h3 className="text-2xl font-black font-headline text-on-surface mb-3">Remover Usuário?</h3>
+              <h3 className="text-2xl font-bold font-headline text-on-surface mb-3">Remover Usuário?</h3>
               <p className="text-sm text-secondary font-medium mb-10 leading-relaxed">Esta ação é irreversível. O colaborador perderá acesso imediato a todas as ferramentas do sistema.</p>
               <div className="flex flex-col gap-3">
                 <button 
                   onClick={() => setShowDeleteConfirm(null)}
-                  className="w-full py-4 bg-surface-container-low text-secondary font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-surface-container-high transition-all"
+                  className="w-full py-4 bg-surface-container-low text-secondary font-bold text-xs uppercase tracking-widest rounded-2xl hover:bg-surface-container-high transition-all"
                 >
                   Cancelar
                 </button>
                 <button 
                   onClick={() => handleDeleteUser(showDeleteConfirm)}
-                  className="w-full py-4 bg-error text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-error/20 hover:scale-[1.02] active:scale-95 transition-all"
+                  className="w-full py-4 bg-error text-white font-bold text-xs uppercase tracking-widest rounded-2xl shadow-xl shadow-error/20 hover:scale-[1.02] active:scale-95 transition-all"
                 >
                   Confirmar Remoção
                 </button>

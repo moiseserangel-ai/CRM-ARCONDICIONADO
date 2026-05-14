@@ -223,9 +223,9 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-primary">
             <Users className="w-5 h-5" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Diretório de Relacionamentos</span>
+            <span className="text-xs font-bold uppercase tracking-wider">Diretório de Relacionamentos</span>
           </div>
-          <h2 className="text-4xl font-headline font-black tracking-tight text-on-surface">Cadastro</h2>
+          <h2 className="text-4xl font-headline font-bold tracking-tight text-on-surface">Cadastro</h2>
           <p className="text-secondary font-body text-sm max-w-md">Gerencie sua base de clientes, contratos e histórico de manutenções em um só lugar.</p>
         </div>
         
@@ -234,7 +234,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             <button 
               onClick={() => setViewMode('table')}
               className={cn(
-                "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all",
                 viewMode === 'table' ? "bg-surface-container-lowest text-primary shadow-sm" : "text-secondary hover:text-on-surface"
               )}
             >
@@ -243,20 +243,20 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             <button 
               onClick={() => setViewMode('grid')}
               className={cn(
-                "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all",
                 viewMode === 'grid' ? "bg-white text-primary shadow-sm" : "text-secondary hover:text-on-surface"
               )}
             >
               Cards
             </button>
           </div>
-          <button className="flex items-center gap-2 px-6 py-3.5 bg-surface-container-low text-secondary font-black text-[10px] rounded-2xl border border-outline-variant/10 hover:bg-surface-container-high transition-all uppercase tracking-widest">
+          <button className="flex items-center gap-2 px-6 py-3.5 bg-surface-container-low text-secondary font-bold text-xs rounded-2xl border border-outline-variant/10 hover:bg-surface-container-high transition-all uppercase tracking-widest">
             <FileUp className="w-4 h-4" />
             Exportar
           </button>
           <button 
             onClick={onAddContact}
-            className="flex items-center gap-2 px-8 py-3.5 milled-gradient text-white font-black text-[10px] rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
+            className="flex items-center gap-2 px-8 py-3.5 milled-gradient text-white font-bold text-xs rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
           >
             <PersonAdd className="w-4 h-4" />
             Novo Cliente
@@ -277,28 +277,28 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.05 }}
-            className="bg-surface-container-lowest p-6 rounded-[32px] shadow-sm border border-outline-variant/5 group hover:border-primary/20 transition-all"
+            className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20 group hover:border-primary/20 transition-all"
           >
             <div className="flex justify-between items-start mb-4">
               <div className="p-2.5 bg-surface-container-low rounded-xl text-secondary group-hover:text-primary transition-colors">
                 <m.icon className="w-5 h-5" />
               </div>
               {m.trend && (
-                <span className={cn("text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-tighter", m.trendColor)}>
+                <span className={cn("text-xs font-bold px-2 py-1 rounded-full uppercase tracking-tighter", m.trendColor)}>
                   {m.trend}
                 </span>
               )}
             </div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-secondary/60 mb-1">{m.label}</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-secondary/60 mb-1">{m.label}</p>
             <div className="flex items-baseline gap-2">
-              <h3 className="text-3xl font-headline font-black text-on-surface tracking-tight">{m.value}</h3>
+              <h3 className="text-3xl font-headline font-bold text-on-surface tracking-tight">{m.value}</h3>
             </div>
           </motion.div>
         ))}
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col xl:flex-row items-center justify-between bg-surface-container-low/30 backdrop-blur-sm p-4 rounded-[32px] border border-outline-variant/10 gap-4">
+      <div className="flex flex-col xl:flex-row items-center justify-between bg-surface-container-low/30 backdrop-blur-sm p-4 rounded-2xl border border-outline-variant/10 gap-4">
         <div className="flex-1 flex items-center gap-4 w-full">
           <div className="relative flex-1">
             <div className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary">
@@ -313,14 +313,14 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             />
           </div>
           
-          <div className="hidden sm:flex items-center gap-2 bg-surface-container-lowest px-5 py-4 rounded-2xl text-[10px] font-black text-secondary uppercase tracking-widest border border-outline-variant/10 cursor-pointer hover:bg-surface-container-low transition-all shrink-0">
+          <div className="hidden sm:flex items-center gap-2 bg-surface-container-lowest px-5 py-4 rounded-2xl text-xs font-bold text-secondary uppercase tracking-wider border border-outline-variant/10 cursor-pointer hover:bg-surface-container-low transition-all shrink-0">
             <Filter className="w-4 h-4" />
             <span>Filtros Avançados</span>
           </div>
         </div>
 
         <div className="flex items-center gap-4 w-full xl:w-auto justify-between xl:justify-end shrink-0">
-          <span className="text-[10px] font-black text-secondary uppercase tracking-widest">Exibindo {filteredContacts.length} Clientes</span>
+          <span className="text-xs font-bold text-secondary uppercase tracking-wider">Exibindo {filteredContacts.length} Clientes</span>
           <div className="flex gap-2">
             <button className="p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/10 text-secondary hover:text-primary transition-all shadow-sm">
               <ChevronLeft className="w-5 h-5" />
@@ -335,35 +335,35 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
       {/* Data Display */}
       <div className={cn(
         "min-h-[400px] flex flex-col",
-        viewMode === 'table' ? "bg-surface-container-lowest rounded-[40px] shadow-sm border border-outline-variant/5 overflow-hidden" : ""
+        viewMode === 'table' ? "bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant/20 overflow-hidden" : ""
       )}>
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-4 py-32">
             <Loader2 className="w-12 h-12 text-primary animate-spin" />
-            <p className="text-secondary font-black text-[10px] uppercase tracking-[0.3em]">Sincronizando Dados...</p>
+            <p className="text-secondary font-bold text-xs uppercase tracking-[0.3em]">Sincronizando Dados...</p>
           </div>
         ) : error ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-6 py-32 text-center px-6">
-            <div className="w-20 h-20 bg-error-container/20 rounded-[32px] flex items-center justify-center mb-2 border border-error/10">
+            <div className="w-20 h-20 bg-error-container/20 rounded-2xl flex items-center justify-center mb-2 border border-error/10">
               <X className="w-10 h-10 text-error" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-black font-headline text-on-surface">Acesso Interrompido</h3>
+              <h3 className="text-2xl font-bold font-headline text-on-surface">Acesso Interrompido</h3>
               <p className="text-secondary max-w-md text-sm font-medium">{error}</p>
             </div>
           </div>
         ) : filteredContacts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-6 py-32 text-center px-6">
-            <div className="w-20 h-20 bg-primary/5 rounded-[32px] flex items-center justify-center mb-2 border border-primary/10">
+            <div className="w-20 h-20 bg-primary/5 rounded-2xl flex items-center justify-center mb-2 border border-primary/10">
               <PersonAdd className="w-10 h-10 text-primary" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-black font-headline text-on-surface">Nenhum Registro</h3>
+              <h3 className="text-2xl font-bold font-headline text-on-surface">Nenhum Registro</h3>
               <p className="text-secondary max-w-md text-sm font-medium">Sua base de dados está vazia ou os filtros não retornaram resultados.</p>
             </div>
             <button 
               onClick={onAddContact}
-              className="mt-4 px-8 py-3.5 milled-gradient text-white font-black text-[10px] rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
+              className="mt-4 px-8 py-3.5 milled-gradient text-white font-bold text-xs rounded-2xl shadow-xl hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
             >
               Adicionar Primeiro Cliente
             </button>
@@ -373,11 +373,11 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
             <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
                 <tr className="bg-surface-container-low/30">
-                  <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-secondary/60">Cliente / Identidade</th>
-                  <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-secondary/60">Contato Direto</th>
-                  <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-secondary/60 text-right">Volume de Serviço</th>
-                  <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-secondary/60">Última Atividade</th>
-                  <th className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-secondary/60 text-center">Gestão</th>
+                  <th className="px-10 py-6 text-xs font-bold uppercase tracking-wider text-secondary/60">Cliente / Identidade</th>
+                  <th className="px-10 py-6 text-xs font-bold uppercase tracking-wider text-secondary/60">Contato Direto</th>
+                  <th className="px-10 py-6 text-xs font-bold uppercase tracking-wider text-secondary/60 text-right">Volume de Serviço</th>
+                  <th className="px-10 py-6 text-xs font-bold uppercase tracking-wider text-secondary/60">Última Atividade</th>
+                  <th className="px-10 py-6 text-xs font-bold uppercase tracking-wider text-secondary/60 text-center">Gestão</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/5">
@@ -397,7 +397,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                             {contact.avatar ? (
                               <img src={contact.avatar} className="w-12 h-12 rounded-2xl object-cover shadow-sm border border-outline-variant/10" alt={contact.name} referrerPolicy="no-referrer" />
                             ) : (
-                              <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-black bg-surface-container-highest text-primary text-lg shadow-sm border border-outline-variant/10">
+                              <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold bg-surface-container-highest text-primary text-lg shadow-sm border border-outline-variant/10">
                                 {contact.initials || contact.name.charAt(0)}
                               </div>
                             )}
@@ -407,20 +407,20 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                             )}></div>
                           </div>
                           <div>
-                            <p className="font-headline font-black text-on-surface text-base group-hover:text-primary transition-colors line-clamp-2 break-words max-w-[150px] sm:max-w-[250px] md:max-w-[300px]">{contact.name}</p>
-                            <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">{contact.address}</p>
+                            <p className="font-headline font-bold text-on-surface text-base group-hover:text-primary transition-colors line-clamp-2 break-words max-w-[150px] sm:max-w-[250px] md:max-w-[300px]">{contact.name}</p>
+                            <p className="text-xs font-semibold text-secondary uppercase tracking-wider">{contact.address}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-10 py-7">
                         <p className="text-sm font-bold text-on-surface">{contact.phone}</p>
-                        <p className="text-[10px] font-medium text-secondary/60">{contact.email}</p>
+                        <p className="text-xs font-medium text-secondary/60">{contact.email}</p>
                       </td>
                       <td className="px-10 py-7 text-right">
-                        <p className="font-headline font-black text-lg text-on-surface">{getContactFinalizedTotal(contact)}</p>
+                        <p className="font-headline font-bold text-lg text-on-surface">{getContactFinalizedTotal(contact)}</p>
                         {contact.growth && (
                           <span className={cn(
-                            "text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter",
+                            "text-xs font-bold px-1.5 py-0.5 rounded-md uppercase tracking-tighter",
                             contact.growth.includes('+') ? "bg-emerald-50 text-emerald-600" : 
                             contact.growth.includes('-') ? "bg-error-container/20 text-error" : "bg-surface-container-high text-secondary"
                           )}>
@@ -431,7 +431,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                       <td className="px-10 py-7">
                         <div className="flex flex-col">
                           <span className="text-sm font-bold text-on-surface">{contact.lastInteraction}</span>
-                          <span className="text-[10px] font-black text-secondary/60 uppercase tracking-widest">{contact.lastInteractionTime}</span>
+                          <span className="text-xs font-bold text-secondary/60 uppercase tracking-widest">{contact.lastInteractionTime}</span>
                         </div>
                       </td>
                       <td className="px-10 py-7 text-center">
@@ -468,12 +468,12 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
                   onClick={() => onSelectContact(contact)}
-                  className="bg-surface-container-lowest p-8 rounded-[40px] shadow-sm border border-outline-variant/5 hover:border-primary/20 hover:shadow-2xl transition-all cursor-pointer group relative flex flex-col h-full"
+                  className="bg-surface-container-lowest p-8 rounded-3xl shadow-sm border border-outline-variant/20 hover:border-primary/20 hover:shadow-2xl transition-all cursor-pointer group relative flex flex-col h-full"
                 >
                   {/* Card Header: Status & Value */}
                   <div className="flex justify-between items-start mb-6">
                     <span className={cn(
-                      "px-3 py-1.5 text-[9px] font-black rounded-full uppercase tracking-widest",
+                      "px-3 py-1.5 text-xs font-bold rounded-full uppercase tracking-widest",
                       contact.status === 'Contrato Ativo' ? "bg-emerald-50 text-emerald-600" :
                       contact.status === 'Serviço Concluído' ? "bg-blue-50 text-blue-600" :
                       "bg-amber-50 text-amber-600"
@@ -481,8 +481,8 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                       {contact.status}
                     </span>
                     <div className="text-right">
-                      <p className="text-[9px] font-black text-secondary/40 uppercase tracking-widest mb-0.5">Volume Total</p>
-                      <p className="font-headline font-black text-lg text-primary">{getContactFinalizedTotal(contact)}</p>
+                      <p className="text-xs font-bold text-secondary/40 uppercase tracking-widest mb-0.5">Volume Total</p>
+                      <p className="font-headline font-bold text-lg text-primary">{getContactFinalizedTotal(contact)}</p>
                     </div>
                   </div>
 
@@ -490,19 +490,19 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                   <div className="flex items-center gap-5 mb-8">
                     <div className="relative">
                       {contact.avatar ? (
-                        <img src={contact.avatar} className="w-16 h-16 rounded-[24px] object-cover shadow-md border border-outline-variant/10" alt={contact.name} referrerPolicy="no-referrer" />
+                        <img src={contact.avatar} className="w-16 h-16 rounded-xl object-cover shadow-md border border-outline-variant/10" alt={contact.name} referrerPolicy="no-referrer" />
                       ) : (
-                        <div className="w-16 h-16 rounded-[24px] flex items-center justify-center font-black bg-surface-container-highest text-primary text-2xl shadow-md border border-outline-variant/10">
+                        <div className="w-16 h-16 rounded-xl flex items-center justify-center font-bold bg-surface-container-highest text-primary text-2xl shadow-md border border-outline-variant/10">
                           {contact.initials || contact.name.charAt(0)}
                         </div>
                       )}
                       <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-4 border-surface-container-lowest rounded-full shadow-sm"></div>
                     </div>
                     <div>
-                      <h4 className="text-xl font-headline font-black text-on-surface group-hover:text-primary transition-colors leading-tight line-clamp-2 break-words">{contact.name}</h4>
+                      <h4 className="text-xl font-headline font-bold text-on-surface group-hover:text-primary transition-colors leading-tight line-clamp-2 break-words">{contact.name}</h4>
                       <div className="flex items-center gap-1.5 mt-1">
                         <TrendingUp className="w-3 h-3 text-secondary/40" />
-                        <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">{contact.address}</p>
+                        <p className="text-xs font-semibold text-secondary uppercase tracking-wider">{contact.address}</p>
                       </div>
                     </div>
                   </div>
@@ -511,19 +511,19 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                   <div className="flex flex-wrap gap-2 mb-8">
                     {contact.financialStatus && (
                       <span className={cn(
-                        "px-2.5 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider",
+                        "px-2.5 py-1 rounded-lg text-[8px] font-bold uppercase tracking-wider",
                         contact.financialStatus === 'Adimplente' ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"
                       )}>
                         {contact.financialStatus}
                       </span>
                     )}
                     {contact.paymentMethod && (
-                      <span className="px-2.5 py-1 bg-surface-container-high/50 text-secondary rounded-lg text-[8px] font-black uppercase tracking-wider border border-outline-variant/10">
+                      <span className="px-2.5 py-1 bg-surface-container-high/50 text-secondary rounded-lg text-[8px] font-bold uppercase tracking-wider border border-outline-variant/10">
                         {contact.paymentMethod}
                       </span>
                     )}
                     {contact.relationshipScore && (
-                      <span className="px-2.5 py-1 bg-primary/5 text-primary rounded-lg text-[8px] font-black uppercase tracking-wider border border-primary/10">
+                      <span className="px-2.5 py-1 bg-primary/5 text-primary rounded-lg text-[8px] font-bold uppercase tracking-wider border border-primary/10">
                         Score: {contact.relationshipScore}
                       </span>
                     )}
@@ -532,7 +532,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
                   {/* Footer Info */}
                   <div className="mt-auto pt-6 border-t border-outline-variant/10 flex items-center justify-between">
                     <div className="flex flex-col">
-                      <p className="text-[9px] font-black text-secondary/40 uppercase tracking-widest mb-0.5">Última Interação</p>
+                      <p className="text-xs font-bold text-secondary/40 uppercase tracking-widest mb-0.5">Última Interação</p>
                       <div className="flex items-center gap-2">
                         <Zap className="w-3 h-3 text-amber-500" />
                         <p className="text-xs font-bold text-on-surface">{contact.lastInteraction}</p>
@@ -568,7 +568,7 @@ export default function Contacts({ user, onSelectContact, onAddContact, onEditCo
       {/* Confirmation Modal */}
       {contactToDelete && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-2xl p-8 shadow-2xl border border-outline-variant/10">
             <div className="w-16 h-16 bg-error-container/20 rounded-2xl flex items-center justify-center mb-6">
               <Trash2 className="w-8 h-8 text-error" />
             </div>

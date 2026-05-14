@@ -159,7 +159,7 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess, isEx
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-extrabold font-headline tracking-tight text-on-surface">
+            <h1 className="text-3xl font-bold font-headline tracking-tight text-on-surface">
               {transaction ? 'Editar Transação' : 'Nova Transação'}
             </h1>
             <p className="text-secondary font-medium">Preencha os dados financeiros abaixo</p>
@@ -170,14 +170,14 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess, isEx
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Main Info */}
-          <div className="bg-surface-container-lowest p-8 rounded-[40px] border border-outline-variant/10 shadow-sm space-y-6">
-            <h2 className="text-lg font-extrabold text-on-surface flex items-center gap-2 mb-2">
+          <div className="bg-surface-container-lowest p-8 rounded-3xl border border-outline-variant/10 shadow-sm space-y-6">
+            <h2 className="text-lg font-bold text-on-surface flex items-center gap-2 mb-2">
               <FileText className="w-5 h-5 text-primary" />
               Informações Básicas
             </h2>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Descrição</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Descrição</label>
               <div className="relative">
                 <FileText className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <input 
@@ -192,7 +192,7 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess, isEx
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Valor</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Valor</label>
               <div className="relative">
                 <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <input 
@@ -207,7 +207,7 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess, isEx
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Data</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Data</label>
               <div className="relative">
                 <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <input 
@@ -222,14 +222,14 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess, isEx
           </div>
 
           {/* Classification */}
-          <div className="bg-surface-container-lowest p-8 rounded-[40px] border border-outline-variant/10 shadow-sm space-y-6">
-            <h2 className="text-lg font-extrabold text-on-surface flex items-center gap-2 mb-2">
+          <div className="bg-surface-container-lowest p-8 rounded-3xl border border-outline-variant/10 shadow-sm space-y-6">
+            <h2 className="text-lg font-bold text-on-surface flex items-center gap-2 mb-2">
               <Tag className="w-5 h-5 text-primary" />
               Classificação
             </h2>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Tipo de Transação</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Tipo de Transação</label>
               <div className="grid grid-cols-2 gap-4">
                 {!isExpensesOnly && (
                   <button
@@ -264,7 +264,7 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess, isEx
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Categoria</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Categoria</label>
               <div className="relative">
                 <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <select 
@@ -281,7 +281,7 @@ export default function FinanceForm({ user, transaction, onBack, onSuccess, isEx
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Status de Pagamento</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Status de Pagamento</label>
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"

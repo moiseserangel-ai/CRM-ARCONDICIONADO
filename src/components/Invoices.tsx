@@ -250,7 +250,7 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Notas Fiscais</h2>
+          <h2 className="text-3xl font-bold font-headline tracking-tight text-on-surface">Notas Fiscais</h2>
           <p className="text-secondary font-medium">Gerencie suas emissões de produtos e serviços</p>
         </div>
         <button
@@ -305,7 +305,7 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               key={invoice.id}
-              className="bg-surface-container-lowest p-6 rounded-[32px] border border-outline-variant/10 hover:shadow-xl transition-all group"
+              className="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 hover:shadow-xl transition-all group"
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-center gap-5">
@@ -318,10 +318,10 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
                   <div>
                     <div className="flex items-center gap-3 mb-1">
                       <h3 className="text-lg font-bold text-on-surface tracking-tight">#{invoice.number}</h3>
-                      <span className={cn("px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider", getStatusColor(invoice.status))}>
+                      <span className={cn("px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider", getStatusColor(invoice.status))}>
                         {invoice.status}
                       </span>
-                      <span className="text-[10px] font-bold text-secondary/60 uppercase tracking-widest bg-surface-container px-2 py-1 rounded-md">
+                      <span className="text-xs font-bold text-secondary/60 uppercase tracking-widest bg-surface-container px-2 py-1 rounded-md">
                         {invoice.type}
                       </span>
                     </div>
@@ -331,10 +331,10 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
                 </div>
 
                 <div className="flex flex-col items-end gap-1">
-                  <p className="text-2xl font-black text-primary tracking-tighter">
+                  <p className="text-2xl font-bold text-primary tracking-tighter">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(invoice.totalAmount)}
                   </p>
-                  <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">Valor Total</p>
+                  <p className="text-xs font-semibold text-secondary uppercase tracking-wider">Valor Total</p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -371,7 +371,7 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
             </motion.div>
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 bg-surface-container-low rounded-[48px] border-2 border-dashed border-outline-variant/20">
+          <div className="flex flex-col items-center justify-center py-20 bg-surface-container-low rounded-3xl border-2 border-dashed border-outline-variant/20">
             <div className="w-20 h-20 bg-surface-container-high rounded-full flex items-center justify-center mb-6">
               <FileText className="w-10 h-10 text-secondary/30" />
             </div>
@@ -392,7 +392,7 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
       {/* Confirmation Modal */}
       {invoiceToDelete && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-surface-container-lowest max-w-md w-full rounded-[32px] p-8 shadow-2xl border border-outline-variant/10">
+          <div className="bg-surface-container-lowest max-w-md w-full rounded-2xl p-8 shadow-2xl border border-outline-variant/10">
             <div className="w-16 h-16 bg-error-container/20 rounded-2xl flex items-center justify-center mb-6">
               <Trash2 className="w-8 h-8 text-error" />
             </div>

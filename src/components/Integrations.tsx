@@ -88,7 +88,7 @@ export default function Integrations({ user }: IntegrationsProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Integrações</h1>
+        <h1 className="text-3xl font-bold font-headline tracking-tight text-on-surface mb-2">Integrações</h1>
         <p className="text-secondary font-medium">Conecte sua conta a serviços externos (N8N, Email, Chatwoot).</p>
       </div>
 
@@ -125,7 +125,7 @@ export default function Integrations({ user }: IntegrationsProps) {
         </button>
       </div>
 
-      <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-[32px] p-8 shadow-sm">
+      <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-8 shadow-sm">
         {activeTab === 'n8n' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
             <div className="mb-6">
@@ -135,7 +135,7 @@ export default function Integrations({ user }: IntegrationsProps) {
             
             <div className="space-y-4">
               <div>
-                <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Webhook URL Global</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Webhook URL Global</label>
                 <input
                   type="url"
                   placeholder="https://n8n.exemplo.com/webhook/..."
@@ -147,7 +147,7 @@ export default function Integrations({ user }: IntegrationsProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Autenticação</label>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Autenticação</label>
                   <select
                     value={settings.n8n.authType}
                     onChange={(e) => updateSettings('n8n', 'authType', e.target.value)}
@@ -160,7 +160,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                 </div>
                 {settings.n8n.authType === 'bearer' && (
                   <div>
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Token</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Token</label>
                     <input
                       type="password"
                       value={settings.n8n.token}
@@ -172,7 +172,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                 {settings.n8n.authType === 'basic' && (
                   <>
                     <div>
-                      <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Usuário</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Usuário</label>
                       <input
                         type="text"
                         value={settings.n8n.username || ''}
@@ -181,7 +181,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Senha</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Senha</label>
                       <input
                         type="password"
                         value={settings.n8n.password || ''}
@@ -205,7 +205,7 @@ export default function Integrations({ user }: IntegrationsProps) {
             
             <div className="space-y-6">
               <div>
-                <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Provedor de Email</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Provedor de Email</label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer bg-surface-container-low px-4 py-3 border border-outline-variant/20 rounded-xl">
                     <input type="radio" value="none" checked={settings.emailType === 'none'} onChange={(e) => updateSettings('emailType', '', e.target.value)} className="accent-primary" />
@@ -225,7 +225,7 @@ export default function Integrations({ user }: IntegrationsProps) {
               {settings.emailType === 'sendgrid' && (
                 <div className="grid gap-4">
                   <div>
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">SendGrid API Key</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">SendGrid API Key</label>
                     <input
                       type="password"
                       value={settings.sendgrid.apiKey}
@@ -234,7 +234,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Email de Remetente (From)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Email de Remetente (From)</label>
                     <input
                       type="email"
                       value={settings.sendgrid.fromEmail}
@@ -248,7 +248,7 @@ export default function Integrations({ user }: IntegrationsProps) {
               {settings.emailType === 'nodemailer' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Servidor SMTP</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Servidor SMTP</label>
                     <input
                       type="text"
                       placeholder="smtp.exemplo.com"
@@ -258,7 +258,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Porta</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Porta</label>
                     <input
                       type="number"
                       placeholder="587"
@@ -268,7 +268,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Usuário</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Usuário</label>
                     <input
                       type="text"
                       value={settings.nodemailer.user}
@@ -277,7 +277,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Senha</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Senha</label>
                     <input
                       type="password"
                       value={settings.nodemailer.pass}
@@ -286,7 +286,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Email de Remetente (From)</label>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Email de Remetente (From)</label>
                     <input
                       type="email"
                       value={settings.nodemailer.fromEmail}
@@ -309,7 +309,7 @@ export default function Integrations({ user }: IntegrationsProps) {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">URL Base do Chatwoot</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">URL Base do Chatwoot</label>
                 <input
                   type="url"
                   placeholder="https://app.chatwoot.com"
@@ -319,7 +319,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Account ID</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Account ID</label>
                 <input
                   type="text"
                   placeholder="Ex: 1"
@@ -329,7 +329,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                 />
               </div>
               <div>
-                <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">Inbox ID (WhatsApp)</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">Inbox ID (WhatsApp)</label>
                 <input
                   type="text"
                   placeholder="Ex: 15"
@@ -339,7 +339,7 @@ export default function Integrations({ user }: IntegrationsProps) {
                 />
               </div>
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-[11px] font-black uppercase tracking-widest text-secondary mb-2">User API Access Token</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-secondary mb-2">User API Access Token</label>
                 <input
                   type="password"
                   placeholder="Token de acesso da API"
@@ -356,7 +356,7 @@ export default function Integrations({ user }: IntegrationsProps) {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-[11px] hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+            className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
           >
             {saving ? (
               <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

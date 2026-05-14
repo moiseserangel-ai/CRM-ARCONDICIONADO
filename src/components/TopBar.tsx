@@ -157,7 +157,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-tertiary text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-surface">
+                <span className="absolute top-1.5 right-1.5 w-4 h-4 bg-tertiary text-white text-xs font-bold flex items-center justify-center rounded-full border-2 border-surface">
                   {unreadCount}
                 </span>
               )}
@@ -169,11 +169,11 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute -right-[110px] md:right-0 mt-2 w-[320px] sm:w-80 max-w-[calc(100vw-2rem)] bg-surface-container-lowest rounded-[24px] shadow-2xl border border-outline-variant/10 overflow-hidden z-50"
+                  className="absolute -right-[110px] md:right-0 mt-2 w-[320px] sm:w-80 max-w-[calc(100vw-2rem)] bg-surface-container-lowest rounded-xl shadow-2xl border border-outline-variant/10 overflow-hidden z-50"
                 >
                   <div className="p-4 border-bottom border-outline-variant/10 flex items-center justify-between bg-surface-container-low/30">
                     <h3 className="text-sm font-bold text-on-surface">Notificações</h3>
-                    <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">{unreadCount} não lidas</span>
+                    <span className="text-xs font-semibold text-secondary uppercase tracking-wider">{unreadCount} não lidas</span>
                   </div>
 
                   <div className="max-h-[400px] overflow-y-auto">
@@ -201,10 +201,10 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
                                 )}>
                                   {notification.title}
                                 </p>
-                                <p className="text-[11px] text-secondary line-clamp-2 mt-0.5">
+                                <p className="text-xs text-secondary line-clamp-2 mt-0.5">
                                   {notification.description}
                                 </p>
-                                <div className="flex items-center gap-1.5 mt-2 text-[9px] font-bold text-secondary/50 uppercase tracking-tighter">
+                                <div className="flex items-center gap-1.5 mt-2 text-xs font-bold text-secondary/50 uppercase tracking-tighter">
                                   <Clock className="w-3 h-3" />
                                   {new Date(notification.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </div>
@@ -244,7 +244,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
 
                   {notifications.length > 0 && (
                     <div className="p-3 bg-surface-container-low/30 border-t border-outline-variant/10 text-center">
-                      <button className="text-[10px] font-bold text-primary uppercase tracking-widest hover:underline">
+                      <button className="text-xs font-bold text-primary uppercase tracking-widest hover:underline">
                         Ver tudo
                       </button>
                     </div>
@@ -272,7 +272,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
         <div className="flex items-center space-x-3">
           <div className="text-right hidden sm:block">
             <p className="text-xs font-bold text-on-surface leading-none">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário'}</p>
-            <p className="text-[10px] text-secondary font-medium mt-1">Admin</p>
+            <p className="text-xs text-secondary font-medium mt-1">Admin</p>
           </div>
           {user?.user_metadata?.avatar_url ? (
             <img

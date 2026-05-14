@@ -289,7 +289,7 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
       <motion.div 
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-surface-container-lowest w-full max-w-2xl rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-outline-variant/10"
+        className="bg-surface-container-lowest w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-outline-variant/10"
       >
         <div className="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-low/30">
           <div className="flex items-center gap-4">
@@ -297,8 +297,8 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
               <FileText className="w-7 h-7 text-primary" />
             </div>
             <div>
-              <h3 className="text-2xl font-black font-headline text-on-surface">Nova Ordem de Serviço</h3>
-              <p className="text-[10px] text-secondary font-black uppercase tracking-[0.2em] mt-0.5">
+              <h3 className="text-2xl font-bold font-headline text-on-surface">Nova Ordem de Serviço</h3>
+              <p className="text-xs text-secondary font-bold uppercase tracking-[0.2em] mt-0.5">
                 {step === 'select' ? 'Selecione o Cliente' : `Cliente: ${selectedContact?.name}`}
               </p>
             </div>
@@ -343,12 +343,12 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
                         }}
                         className="w-full flex items-center p-4.5 rounded-2xl hover:bg-primary/5 transition-all border border-transparent hover:border-primary/20 group text-left"
                       >
-                        <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary font-black text-xs mr-4 group-hover:scale-110 group-hover:bg-surface-container-lowest transition-all shadow-sm border border-outline-variant/10">
+                        <div className="w-11 h-11 rounded-xl bg-surface-container-low flex items-center justify-center text-primary font-bold text-xs mr-4 group-hover:scale-110 group-hover:bg-surface-container-lowest transition-all shadow-sm border border-outline-variant/10">
                           {contact.initials}
                         </div>
                         <div className="flex-1">
                           <p className="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{contact.name}</p>
-                          <p className="text-[9px] text-secondary font-black uppercase tracking-widest mt-0.5">{contact.address}</p>
+                          <p className="text-xs text-secondary font-bold uppercase tracking-widest mt-0.5">{contact.address}</p>
                         </div>
                         <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
                           <ArrowRight className="w-4 h-4 text-primary" />
@@ -368,7 +368,7 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
                       onClose();
                       onViewChange('contact-form');
                     }}
-                    className="w-full py-4.5 bg-surface-container-low text-primary rounded-2xl font-black uppercase tracking-widest text-[11px] flex items-center justify-center gap-3 hover:bg-primary/5 transition-all border border-primary/10"
+                    className="w-full py-4.5 bg-surface-container-low text-primary rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:bg-primary/5 transition-all border border-primary/10"
                   >
                     <UserPlus className="w-5 h-5" />
                     Cadastrar Novo Cliente
@@ -391,7 +391,7 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
                     </div>
                   )}
                   <div className="space-y-2.5">
-                    <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                    <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                       <Briefcase className="w-3 h-3" /> Assunto do Serviço
                     </label>
                     <input
@@ -404,20 +404,20 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
                   </div>
 
                   <div className="space-y-2.5">
-                    <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                    <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                       <DollarSign className="w-3 h-3" /> Valor do Serviço
                     </label>
                     <input
                       type="text"
                       value={osData.value || ''}
                       onChange={handleValueChange}
-                      className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm font-black text-primary"
+                      className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm font-bold text-primary"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                  <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                     <AlignLeft className="w-3 h-3" /> Descrição Detalhada
                   </label>
                   <textarea
@@ -432,14 +432,14 @@ export default function QuickOSModal({ user, contacts, onClose, onViewChange, de
                 <div className="flex flex-wrap gap-3 pt-4">
                   <button
                     onClick={() => setStep('select')}
-                    className="flex-1 min-w-[120px] py-4 bg-surface-container-low text-secondary rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-surface-container-high transition-all"
+                    className="flex-1 min-w-[120px] py-4 bg-surface-container-low text-secondary rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-surface-container-high transition-all"
                   >
                     Voltar
                   </button>
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="w-full md:w-auto md:flex-[1.5] py-4 milled-gradient text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                    className="w-full md:w-auto md:flex-[1.5] py-4 milled-gradient text-white rounded-2xl font-bold uppercase tracking-widest text-xs shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                   >
                     {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle className="w-5 h-5" />}
                     Abrir OS

@@ -120,12 +120,12 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
             <ChevronLeft className="w-6 h-6 text-secondary" />
           </button>
           <div>
-            <nav className="flex text-[10px] font-bold uppercase tracking-widest text-secondary/60 mb-1 gap-2">
+            <nav className="flex text-xs font-bold uppercase tracking-widest text-secondary/60 mb-1 gap-2">
               <span>Produtos</span>
               <span>/</span>
               <span className="text-primary">{product ? 'Editar' : 'Novo'}</span>
             </nav>
-            <h2 className="text-3xl font-headline font-extrabold text-on-surface tracking-tight">
+            <h2 className="text-3xl font-headline font-bold text-on-surface tracking-tight">
               {product ? 'Editar Produto' : 'Cadastrar Novo Produto'}
             </h2>
           </div>
@@ -134,7 +134,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
 
       <form onSubmit={handleSubmit} className="space-y-8 pb-20">
         {/* Basic Info */}
-        <section className="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-outline-variant/10">
+        <section className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
           <div className="flex items-center gap-3 mb-8">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Package className="w-5 h-5 text-primary" />
@@ -144,7 +144,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2 md:col-span-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Nome do Produto</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Nome do Produto</label>
               <div className="relative">
                 <Box className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <input 
@@ -159,7 +159,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Descrição Detalhada</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Descrição Detalhada</label>
               <div className="relative">
                 <Info className="absolute left-4 top-4 w-4 h-4 text-secondary/50" />
                 <textarea 
@@ -173,7 +173,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Categoria</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Categoria</label>
               <div className="relative">
                 <Layers className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <select 
@@ -194,7 +194,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Preço de Venda</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Preço de Venda</label>
               <div className="relative">
                 <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
                 <input 
@@ -209,7 +209,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Estoque Inicial</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Estoque Inicial</label>
               <input 
                 type="number" 
                 required
@@ -221,7 +221,7 @@ export default function ProductForm({ user, product, onBack, onSuccess }: Produc
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-secondary ml-1">Unidade de Medida</label>
+              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Unidade de Medida</label>
               <select 
                 required
                 value={formData.unit || ''}

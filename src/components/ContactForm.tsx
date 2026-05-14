@@ -166,12 +166,12 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
           <div className="flex items-center gap-2 text-sm mb-4">
             <button 
               onClick={onBack} 
-              className="text-[10px] font-black uppercase tracking-widest text-secondary hover:text-primary transition-colors"
+              className="text-xs font-bold uppercase tracking-wider text-secondary hover:text-primary transition-colors"
             >
               Diretório de Clientes
             </button>
             <ChevronRight className="w-3 h-3 text-outline-variant" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-on-surface">
+            <span className="text-xs font-bold uppercase tracking-wider text-on-surface">
               {contact ? 'Edição de Perfil' : 'Novo Registro'}
             </span>
           </div>
@@ -180,9 +180,9 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
             <div className="p-2 bg-primary/10 rounded-xl">
               <UserIcon className="w-5 h-5" />
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Gestão de Identidade</span>
+            <span className="text-xs font-bold uppercase tracking-[0.2em]">Gestão de Identidade</span>
           </div>
-          <h2 className="text-4xl font-headline font-black tracking-tight text-on-surface">
+          <h2 className="text-4xl font-headline font-bold tracking-tight text-on-surface">
             {contact ? 'Atualizar Cliente' : 'Cadastro de Cliente'}
           </h2>
           <p className="text-secondary font-body text-sm max-w-md">
@@ -194,7 +194,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
           <button
             type="button"
             onClick={onBack}
-            className="px-6 py-3.5 bg-surface-container-low text-secondary rounded-2xl font-black uppercase tracking-widest text-[10px] border border-outline-variant/10 hover:bg-surface-container-high transition-all"
+            className="px-6 py-3.5 bg-surface-container-low text-secondary rounded-2xl font-bold uppercase tracking-widest text-xs border border-outline-variant/10 hover:bg-surface-container-high transition-all"
           >
             Descartar
           </button>
@@ -202,7 +202,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
             onClick={handleSubmit}
             disabled={loading}
             className={cn(
-              "px-8 py-3.5 milled-gradient text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2",
+              "px-8 py-3.5 milled-gradient text-white rounded-2xl font-bold uppercase tracking-widest text-xs shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2",
               loading && "opacity-50 cursor-not-allowed"
             )}
           >
@@ -229,19 +229,19 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Identity & Contact */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-surface-container-lowest rounded-[40px] p-10 shadow-sm border border-outline-variant/5 relative overflow-hidden group">
+          <div className="bg-surface-container-lowest rounded-3xl p-10 shadow-sm border border-outline-variant/20 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
               <UserIcon className="w-32 h-32" />
             </div>
             
             <div className="flex items-center gap-3 mb-8">
               <div className="w-1 h-5 bg-primary rounded-full"></div>
-              <h3 className="text-xl font-headline font-black text-on-surface uppercase tracking-tight">Identidade & Localização</h3>
+              <h3 className="text-xl font-headline font-bold text-on-surface uppercase tracking-tight">Identidade & Localização</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <UserIcon className="w-3 h-3" /> Nome Completo
                 </label>
                 <input
@@ -255,7 +255,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <MapPin className="w-3 h-3" /> Endereço Completo
                 </label>
                 <input
@@ -269,7 +269,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <FileText className="w-3 h-3" /> CPF / CNPJ
                 </label>
                 <input
@@ -283,7 +283,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <Mail className="w-3 h-3" /> E-mail de Contato
                 </label>
                 <input
@@ -298,7 +298,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <Phone className="w-3 h-3" /> Telefone / WhatsApp
                 </label>
                 <input
@@ -311,7 +311,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <Calendar className="w-3 h-3" /> Data de Nascimento
                 </label>
                 <input
@@ -324,7 +324,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <MapPin className="w-3 h-3" /> Cidade / UF
                 </label>
                 <input
@@ -337,7 +337,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <DollarSign className="w-3 h-3" /> Volume de Serviço
                 </label>
                 <input
@@ -350,7 +350,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
             </div>
             <div className="space-y-2.5 mt-8">
-              <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+              <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                 <FileText className="w-3 h-3" /> Observações Internas
               </label>
               <textarea
@@ -365,16 +365,16 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
           </div>
 
           {/* Technical Specs Bento Section */}
-          <div className="bg-surface-container-lowest rounded-[40px] p-10 shadow-sm border border-outline-variant/5">
+          <div className="bg-surface-container-lowest rounded-3xl p-10 shadow-sm border border-outline-variant/20">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-1 h-5 bg-tertiary rounded-full"></div>
-              <h3 className="text-xl font-headline font-black text-on-surface uppercase tracking-tight">Especificações Técnicas</h3>
+              <h3 className="text-xl font-headline font-bold text-on-surface uppercase tracking-tight">Especificações Técnicas</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1">Tipo de Equipamento</label>
+                  <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1">Tipo de Equipamento</label>
                   <input
                     name="equipmentType"
                     value={formData.equipmentType || ''}
@@ -384,7 +384,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
                   />
                 </div>
                 <div className="space-y-2.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1">Marca / Fabricante</label>
+                  <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1">Marca / Fabricante</label>
                   <input
                     name="equipmentBrand"
                     value={formData.equipmentBrand || ''}
@@ -394,7 +394,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
                   />
                 </div>
                 <div className="space-y-2.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1">Modelo / Série</label>
+                  <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1">Modelo / Série</label>
                   <input
                     name="equipmentModel"
                     value={formData.equipmentModel || ''}
@@ -404,7 +404,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
                   />
                 </div>
                 <div className="space-y-2.5">
-                  <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1">Capacidade (BTUs)</label>
+                  <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1">Capacidade (BTUs)</label>
                   <input
                     name="btus"
                     value={formData.btus || ''}
@@ -420,13 +420,13 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
                   <Zap className="w-6 h-6" />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary mb-2 block">Quantidade de Unidades</label>
+                  <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary mb-2 block">Quantidade de Unidades</label>
                   <input
                     name="equipmentQuantity"
                     value={formData.equipmentQuantity || ''}
                     onChange={handleChange}
                     placeholder="0"
-                    className="w-20 bg-surface-container-lowest border border-outline-variant/20 rounded-xl py-3 text-center font-black text-xl focus:ring-2 focus:ring-tertiary/20 outline-none transition-all"
+                    className="w-20 bg-surface-container-lowest border border-outline-variant/20 rounded-xl py-3 text-center font-bold text-xl focus:ring-2 focus:ring-tertiary/20 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -434,7 +434,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <Calendar className="w-3 h-3" /> Instalação
                 </label>
                 <input
@@ -446,7 +446,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
                 />
               </div>
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <Calendar className="w-3 h-3" /> Última Manutenção
                 </label>
                 <input
@@ -458,7 +458,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
                 />
               </div>
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1 flex items-center gap-2">
                   <Calendar className="w-3 h-3" /> Próxima Revisão
                 </label>
                 <input
@@ -475,15 +475,15 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
 
         {/* Right Column: Financial & Status */}
         <div className="space-y-8">
-          <div className="bg-surface-container-lowest rounded-[40px] p-8 shadow-sm border border-outline-variant/5">
+          <div className="bg-surface-container-lowest rounded-3xl p-8 shadow-sm border border-outline-variant/20">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-1 h-5 bg-emerald-500 rounded-full"></div>
-              <h3 className="text-xl font-headline font-black text-on-surface uppercase tracking-tight">Financeiro</h3>
+              <h3 className="text-xl font-headline font-bold text-on-surface uppercase tracking-tight">Financeiro</h3>
             </div>
 
             <div className="space-y-6">
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1">Status de Adimplência</label>
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1">Status de Adimplência</label>
                 <select
                   name="financialStatus"
                   value={formData.financialStatus || ''}
@@ -497,7 +497,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
               </div>
 
               <div className="space-y-2.5">
-                <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1">Método Preferencial</label>
+                <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1">Método Preferencial</label>
                 <select
                   name="paymentMethod"
                   value={formData.paymentMethod || ''}
@@ -513,14 +513,14 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
             </div>
           </div>
 
-          <div className="bg-surface-container-lowest rounded-[40px] p-8 shadow-sm border border-outline-variant/5">
+          <div className="bg-surface-container-lowest rounded-3xl p-8 shadow-sm border border-outline-variant/20">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-1 h-5 bg-amber-500 rounded-full"></div>
-              <h3 className="text-xl font-headline font-black text-on-surface uppercase tracking-tight">Pipeline</h3>
+              <h3 className="text-xl font-headline font-bold text-on-surface uppercase tracking-tight">Pipeline</h3>
             </div>
             
             <div className="space-y-2.5">
-              <label className="text-[10px] font-black uppercase tracking-[0.15em] text-secondary ml-1">Estágio Atual</label>
+              <label className="text-xs font-bold uppercase tracking-[0.15em] text-secondary ml-1">Estágio Atual</label>
               <select
                 name="status"
                 value={formData.status || ''}
@@ -543,11 +543,11 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-6 bg-error-container/20 border border-error/20 text-error rounded-[32px] flex items-start gap-4"
+              className="p-6 bg-error-container/20 border border-error/20 text-error rounded-2xl flex items-start gap-4"
             >
               <X className="w-6 h-6 shrink-0" />
               <div className="space-y-1">
-                <p className="text-xs font-black uppercase tracking-widest">Erro de Sincronização</p>
+                <p className="text-xs font-bold uppercase tracking-widest">Erro de Sincronização</p>
                 <p className="text-sm font-medium leading-relaxed">{error}</p>
               </div>
             </motion.div>
