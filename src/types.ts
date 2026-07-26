@@ -143,7 +143,7 @@ export interface SystemUser {
   name: string;
   email: string;
   username?: string;
-  password?: string;
+  authUserId?: string;
   role: string; // Cargo
   privilege: 'Admin' | 'Técnico' | 'Vendedor' | 'Visualizador';
   status: 'Ativo' | 'Inativo';
@@ -165,10 +165,10 @@ export interface Notification {
   id: string;
   title: string;
   description: string;
-  type: 'lead' | 'os' | 'contact' | 'system';
+  type: 'lead' | 'os' | 'contact' | 'system' | 'alert';
   createdAt: string;
   read: boolean;
-  ownerUid: string;
+  userId: string;
 }
 
 export interface InvoiceItem {

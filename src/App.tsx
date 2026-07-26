@@ -1,26 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import Sidebar from './components/Sidebar';
-import TopBar from './components/TopBar';
-import Dashboard from './components/Dashboard';
-import Pipeline from './components/Pipeline';
-import Contacts from './components/Contacts';
-import ContactDetail from './components/ContactDetail';
-import ContactForm from './components/ContactForm';
-import Products from './components/Products';
-import ProductForm from './components/ProductForm';
-import Finance from './components/Finance';
-import FinanceForm from './components/FinanceForm';
-import Invoices from './components/Invoices';
-import InvoiceForm from './components/InvoiceForm';
-import Settings from './components/Settings';
-import Integrations from './components/Integrations';
-import Reports from './components/Reports';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
 import { View, Contact, Product, Transaction, Settings as SettingsType, Invoice } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase, isSupabaseConfigured } from './lib/supabase';
 import { SmartToy, Loader2, Mail, Lock, User as UserIcon, Wind, Snowflake, AlertTriangle } from './components/Icons';
 import { cn } from './lib/utils';
+
+const Sidebar = lazy(() => import('./components/Sidebar'));
+const TopBar = lazy(() => import('./components/TopBar'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const Pipeline = lazy(() => import('./components/Pipeline'));
+const Contacts = lazy(() => import('./components/Contacts'));
+const ContactDetail = lazy(() => import('./components/ContactDetail'));
+const ContactForm = lazy(() => import('./components/ContactForm'));
+const Products = lazy(() => import('./components/Products'));
+const ProductForm = lazy(() => import('./components/ProductForm'));
+const Finance = lazy(() => import('./components/Finance'));
+const FinanceForm = lazy(() => import('./components/FinanceForm'));
+const Invoices = lazy(() => import('./components/Invoices'));
+const InvoiceForm = lazy(() => import('./components/InvoiceForm'));
+const Settings = lazy(() => import('./components/Settings'));
+const Integrations = lazy(() => import('./components/Integrations'));
+const Reports = lazy(() => import('./components/Reports'));
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -577,6 +578,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-surface">
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      }>
       <Sidebar 
         currentView={currentView} 
         onViewChange={handleViewChange} 
@@ -632,6 +638,7 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+      </Suspense>
     </div>
   );
 }

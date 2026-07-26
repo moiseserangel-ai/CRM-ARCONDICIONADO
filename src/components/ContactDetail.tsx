@@ -298,57 +298,19 @@ export default function ContactDetail({ user, contact, onBack, onEdit, onViewCha
 
     setFinalizingOS(true);
     try {
-      const { data: updatedOS, error: osError } = await supabase
-        .from('serviceOrders')
-        .update({
-          materials: finalizeData.materials,
-          finalizationNotes: finalizeData.finalizationNotes,
-          usedProducts: finalizeData.usedProducts,
-          signature: signatureData,
-          status: finalStatus,
-          updatedAt: new Date().toISOString()
-        })
-        .eq('id', selectedOS.id)
-        .eq('userId', user.id)
-        .select()
-        .single();
+      const { data: updatedOS, error: osError } = await supabase.rpc('finalize_service_order', {
+        p_service_order_id: selectedOS.id,
+        p_status: finalStatus,
+        p_materials: finalizeData.materials,
+        p_finalization_notes: finalizeData.finalizationNotes,
+        p_used_products: finalizeData.usedProducts,
+        p_signature: signatureData
+      });
       
       if (osError) throw osError;
       
       if (updatedOS) {
         setServiceOrders(prev => prev.map(so => so.id === updatedOS.id ? (updatedOS as ServiceOrder) : so));
-      }
-
-      // Deduct stock if OS is finalized or accepted
-      if (finalStatus === 'Finalizada' || finalStatus === 'Orçamento Aceito') {
-        for (const usedProd of finalizeData.usedProducts) {
-          const currentProduct = products.find(p => p.id === usedProd.productId);
-          if (currentProduct) {
-            const currentStock = getProductStock(currentProduct);
-            const newStock = Math.max(0, currentStock - usedProd.quantity);
-            
-            // Update both stock_quantity and sku to ensure backward compatibility
-            let newSku = currentProduct.sku;
-            try {
-              const skuData = currentProduct.sku ? JSON.parse(currentProduct.sku) : {};
-              skuData.stock = newStock;
-              skuData.stock_quantity = newStock;
-              newSku = JSON.stringify(skuData);
-            } catch (e) {
-              newSku = JSON.stringify({ stock: newStock, stock_quantity: newStock, unit: getProductUnit(currentProduct) });
-            }
-
-            const { error: prodError } = await supabase
-              .from('products')
-              .update({
-                stock_quantity: newStock,
-                sku: newSku
-              })
-              .eq('id', usedProd.productId);
-            
-            if (prodError) throw prodError;
-          }
-        }
       }
 
       // Calculate new portfolio value based on ALL finalized OS including this one (if accepted or finalized)

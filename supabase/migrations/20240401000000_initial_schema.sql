@@ -1,38 +1,36 @@
--- Drop existing tables if they exist to ensure a clean slate
-DROP TABLE IF EXISTS settings CASCADE;
-DROP TABLE IF EXISTS invoices CASCADE;
-DROP TABLE IF EXISTS transactions CASCADE;
-DROP TABLE IF EXISTS products CASCADE;
-DROP TABLE IF EXISTS contacts CASCADE;
+-- Initial development schema for Cardoso Ar CRM.
+-- This migration is intended for a fresh Supabase project.
 
--- Create settings table
-CREATE TABLE settings (
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE TABLE public.settings (
   "userId" UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  "companyName" TEXT DEFAULT 'Cardoso Ar Condicionado',
+  "companyName" TEXT NOT NULL DEFAULT 'Cardoso Ar Condicionado',
   cnpj TEXT,
   email TEXT,
   phone TEXT,
   address TEXT,
   website TEXT,
-  logo TEXT
+  logo TEXT,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Create contacts table
-CREATE TABLE contacts (
+CREATE TABLE public.contacts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId" UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  "userId" UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   email TEXT,
   phone TEXT,
   address TEXT,
   "cnpjCpf" TEXT,
-  status TEXT DEFAULT 'lead', -- lead, opportunity, customer, inactive
+  status TEXT NOT NULL DEFAULT 'Em Negociação',
   source TEXT,
   notes TEXT,
   location TEXT,
   avatar TEXT,
   initials TEXT,
-  "portfolioValue" TEXT,
+  "portfolioValue" TEXT NOT NULL DEFAULT 'R$ 0,00',
   growth TEXT,
   "lastInteraction" TEXT,
   "lastInteractionTime" TEXT,
@@ -41,172 +39,191 @@ CREATE TABLE contacts (
   "equipmentModel" TEXT,
   "equipmentQuantity" TEXT,
   btus TEXT,
-  "lastMaintenanceDate" TEXT,
-  "nextMaintenanceDate" TEXT,
-  "installationDate" TEXT,
-  "birthDate" TEXT,
+  "lastMaintenanceDate" DATE,
+  "nextMaintenanceDate" DATE,
+  "installationDate" DATE,
+  "birthDate" DATE,
   "financialStatus" TEXT,
   "paymentMethod" TEXT,
-  "relationshipScore" INTEGER,
-  "lastContactAt" TIMESTAMP WITH TIME ZONE,
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  "relationshipScore" INTEGER CHECK ("relationshipScore" BETWEEN 0 AND 100),
+  "lastContactAt" TIMESTAMPTZ,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Create products table
-CREATE TABLE products (
+CREATE TABLE public.products (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId" UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  "userId" UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   description TEXT,
-  price DECIMAL(12, 2) NOT NULL DEFAULT 0,
+  price NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (price >= 0),
   category TEXT,
   sku TEXT,
-  stock INTEGER DEFAULT 0,
-  unit TEXT DEFAULT 'un',
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  stock_quantity INTEGER NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
+  unit TEXT NOT NULL DEFAULT 'un',
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Create system_users table
-CREATE TABLE system_users (
+CREATE TABLE public."systemUsers" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId" UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  "userId" UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  "authUserId" UUID UNIQUE REFERENCES auth.users(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
   email TEXT NOT NULL,
   username TEXT,
-  password TEXT,
   role TEXT,
-  privilege TEXT DEFAULT 'Técnico',
-  status TEXT DEFAULT 'Ativo',
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  privilege TEXT NOT NULL DEFAULT 'Técnico'
+    CHECK (privilege IN ('Admin', 'Técnico', 'Vendedor', 'Visualizador')),
+  status TEXT NOT NULL DEFAULT 'Ativo'
+    CHECK (status IN ('Ativo', 'Inativo')),
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE ("userId", email)
 );
 
--- Create transactions table (Finance)
-CREATE TABLE transactions (
+CREATE TABLE public."serviceOrders" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId" UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  "contactId" UUID REFERENCES contacts(id) ON DELETE SET NULL,
-  type TEXT NOT NULL, -- income, expense
-  amount DECIMAL(12, 2) NOT NULL,
-  description TEXT,
+  "userId" UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  "contactId" UUID NOT NULL REFERENCES public.contacts(id) ON DELETE CASCADE,
+  "contactName" TEXT,
+  subject TEXT NOT NULL,
+  description TEXT NOT NULL,
+  materials TEXT,
+  "finalizationNotes" TEXT,
+  "usedProducts" JSONB NOT NULL DEFAULT '[]'::JSONB,
+  signature TEXT,
+  value TEXT NOT NULL DEFAULT 'R$ 0,00',
+  status TEXT NOT NULL DEFAULT 'Aberta'
+    CHECK (status IN ('Aberta', 'Finalizada', 'Orçamento Aceito', 'Orçamento Rejeitado')),
+  "stockDeductedAt" TIMESTAMPTZ,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE public.transactions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  "userId" UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  "contactId" UUID REFERENCES public.contacts(id) ON DELETE SET NULL,
+  type TEXT NOT NULL CHECK (type IN ('Entrada', 'Saída')),
+  amount NUMERIC(12,2) NOT NULL CHECK (amount >= 0),
+  description TEXT NOT NULL,
   category TEXT,
   date DATE NOT NULL DEFAULT CURRENT_DATE,
-  status TEXT DEFAULT 'completed', -- pending, completed, cancelled
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  status TEXT NOT NULL DEFAULT 'completed'
+    CHECK (status IN ('pending', 'completed', 'cancelled')),
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Create invoices table
-CREATE TABLE invoices (
+CREATE TABLE public.invoices (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId" UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  "contactId" UUID REFERENCES contacts(id) ON DELETE SET NULL,
+  "userId" UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  "contactId" UUID REFERENCES public.contacts(id) ON DELETE SET NULL,
   number TEXT NOT NULL,
+  series TEXT,
+  type TEXT NOT NULL CHECK (type IN ('Produto', 'Serviço')),
+  "contactName" TEXT NOT NULL,
+  "contactCnpjCpf" TEXT,
   "issueDate" DATE NOT NULL DEFAULT CURRENT_DATE,
   "dueDate" DATE,
-  amount DECIMAL(12, 2) NOT NULL,
-  status TEXT DEFAULT 'draft', -- draft, sent, paid, overdue, cancelled
-  items JSONB DEFAULT '[]'::jsonb,
-  notes TEXT,
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (amount >= 0),
+  "totalAmount" NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK ("totalAmount" >= 0),
+  status TEXT NOT NULL DEFAULT 'Rascunho'
+    CHECK (status IN ('Emitida', 'Cancelada', 'Rascunho')),
+  items JSONB NOT NULL DEFAULT '[]'::JSONB,
+  observations TEXT,
+  "xmlUrl" TEXT,
+  "pdfUrl" TEXT,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Create notifications table
-CREATE TABLE notifications (
+CREATE TABLE public.notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId" UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  "userId" UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   description TEXT,
-  type TEXT NOT NULL, -- lead, os, contact, system
-  read BOOLEAN DEFAULT FALSE,
-  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  type TEXT NOT NULL CHECK (type IN ('lead', 'os', 'contact', 'system', 'alert')),
+  read BOOLEAN NOT NULL DEFAULT FALSE,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Set up Row Level Security (RLS)
-ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
-ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE products ENABLE ROW LEVEL SECURITY;
-ALTER TABLE system_users ENABLE ROW LEVEL SECURITY;
-ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
-ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+CREATE INDEX contacts_user_id_idx ON public.contacts ("userId");
+CREATE INDEX contacts_next_maintenance_idx ON public.contacts ("userId", "nextMaintenanceDate");
+CREATE INDEX products_user_id_idx ON public.products ("userId");
+CREATE INDEX service_orders_user_id_idx ON public."serviceOrders" ("userId");
+CREATE INDEX service_orders_contact_id_idx ON public."serviceOrders" ("contactId");
+CREATE INDEX transactions_user_date_idx ON public.transactions ("userId", date);
+CREATE INDEX invoices_user_id_idx ON public.invoices ("userId");
+CREATE INDEX notifications_user_created_idx ON public.notifications ("userId", "createdAt" DESC);
 
--- Settings policies
-CREATE POLICY "Users can manage their own settings." ON settings
-  FOR ALL USING (auth.uid() = "userId");
+CREATE OR REPLACE FUNCTION public.set_updated_at()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = ''
+AS $$
+BEGIN
+  NEW."updatedAt" = NOW();
+  RETURN NEW;
+END;
+$$;
 
--- Contacts policies
-CREATE POLICY "Users can view their own contacts." ON contacts
-  FOR SELECT USING (auth.uid() = "userId");
+CREATE TRIGGER settings_set_updated_at BEFORE UPDATE ON public.settings
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE TRIGGER contacts_set_updated_at BEFORE UPDATE ON public.contacts
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE TRIGGER products_set_updated_at BEFORE UPDATE ON public.products
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE TRIGGER system_users_set_updated_at BEFORE UPDATE ON public."systemUsers"
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE TRIGGER service_orders_set_updated_at BEFORE UPDATE ON public."serviceOrders"
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE TRIGGER transactions_set_updated_at BEFORE UPDATE ON public.transactions
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE TRIGGER invoices_set_updated_at BEFORE UPDATE ON public.invoices
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
-CREATE POLICY "Users can insert their own contacts." ON contacts
-  FOR INSERT WITH CHECK (auth.uid() = "userId");
+ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.contacts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public."systemUsers" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public."serviceOrders" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.transactions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can update their own contacts." ON contacts
-  FOR UPDATE USING (auth.uid() = "userId");
+CREATE POLICY settings_owner_all ON public.settings
+  FOR ALL USING ((SELECT auth.uid()) = "userId")
+  WITH CHECK ((SELECT auth.uid()) = "userId");
+CREATE POLICY contacts_owner_all ON public.contacts
+  FOR ALL USING ((SELECT auth.uid()) = "userId")
+  WITH CHECK ((SELECT auth.uid()) = "userId");
+CREATE POLICY products_owner_all ON public.products
+  FOR ALL USING ((SELECT auth.uid()) = "userId")
+  WITH CHECK ((SELECT auth.uid()) = "userId");
+CREATE POLICY system_users_owner_all ON public."systemUsers"
+  FOR ALL USING ((SELECT auth.uid()) = "userId")
+  WITH CHECK ((SELECT auth.uid()) = "userId");
+CREATE POLICY service_orders_owner_all ON public."serviceOrders"
+  FOR ALL USING ((SELECT auth.uid()) = "userId")
+  WITH CHECK ((SELECT auth.uid()) = "userId");
+CREATE POLICY transactions_owner_all ON public.transactions
+  FOR ALL USING ((SELECT auth.uid()) = "userId")
+  WITH CHECK ((SELECT auth.uid()) = "userId");
+CREATE POLICY invoices_owner_all ON public.invoices
+  FOR ALL USING ((SELECT auth.uid()) = "userId")
+  WITH CHECK ((SELECT auth.uid()) = "userId");
+CREATE POLICY notifications_owner_all ON public.notifications
+  FOR ALL USING ((SELECT auth.uid()) = "userId")
+  WITH CHECK ((SELECT auth.uid()) = "userId");
 
-CREATE POLICY "Users can delete their own contacts." ON contacts
-  FOR DELETE USING (auth.uid() = "userId");
-
--- Products policies
-CREATE POLICY "Users can view their own products." ON products
-  FOR SELECT USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can insert their own products." ON products
-  FOR INSERT WITH CHECK (auth.uid() = "userId");
-
-CREATE POLICY "Users can update their own products." ON products
-  FOR UPDATE USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can delete their own products." ON products
-  FOR DELETE USING (auth.uid() = "userId");
-
--- System users policies
-CREATE POLICY "Users can view their own system users." ON system_users
-  FOR SELECT USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can insert their own system users." ON system_users
-  FOR INSERT WITH CHECK (auth.uid() = "userId");
-
-CREATE POLICY "Users can update their own system users." ON system_users
-  FOR UPDATE USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can delete their own system users." ON system_users
-  FOR DELETE USING (auth.uid() = "userId");
-
--- Transactions policies
-CREATE POLICY "Users can view their own transactions." ON transactions
-  FOR SELECT USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can insert their own transactions." ON transactions
-  FOR INSERT WITH CHECK (auth.uid() = "userId");
-
-CREATE POLICY "Users can update their own transactions." ON transactions
-  FOR UPDATE USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can delete their own transactions." ON transactions
-  FOR DELETE USING (auth.uid() = "userId");
-
--- Invoices policies
-CREATE POLICY "Users can view their own invoices." ON invoices
-  FOR SELECT USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can insert their own invoices." ON invoices
-  FOR INSERT WITH CHECK (auth.uid() = "userId");
-
-CREATE POLICY "Users can update their own invoices." ON invoices
-  FOR UPDATE USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can delete their own invoices." ON invoices
-  FOR DELETE USING (auth.uid() = "userId");
-
--- Notifications policies
-CREATE POLICY "Users can view their own notifications." ON notifications
-  FOR SELECT USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can insert their own notifications." ON notifications
-  FOR INSERT WITH CHECK (auth.uid() = "userId");
-
-CREATE POLICY "Users can update their own notifications." ON notifications
-  FOR UPDATE USING (auth.uid() = "userId");
-
-CREATE POLICY "Users can delete their own notifications." ON notifications
-  FOR DELETE USING (auth.uid() = "userId");
+ALTER PUBLICATION supabase_realtime ADD TABLE
+  public.settings,
+  public.contacts,
+  public.products,
+  public."systemUsers",
+  public."serviceOrders",
+  public.transactions,
+  public.invoices,
+  public.notifications;

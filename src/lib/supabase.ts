@@ -24,7 +24,7 @@ export const supabase = createClient(
 export const createNotification = async (userId: string, title: string, description: string, type: 'lead' | 'os' | 'contact' | 'system') => {
   try {
     const payload = {
-      ownerUid: userId,
+      userId,
       title,
       description,
       type,
@@ -57,12 +57,13 @@ export const checkAndGenerateNotifications = async (userId: string) => {
     if (contactsError || !contacts) return;
 
     // Fetch today's notifications to avoid duplicates
-    const startOfToday = new Date(today.setHours(0,0,0,0)).toISOString();
+    const startOfToday = new Date(today);
+    startOfToday.setHours(0, 0, 0, 0);
     const { data: todayNotifs, error: notifsError } = await supabase
       .from('notifications')
       .select('title')
-      .eq('ownerUid', userId)
-      .gte('createdAt', startOfToday);
+      .eq('userId', userId)
+      .gte('createdAt', startOfToday.toISOString());
 
     if (notifsError) return;
 
@@ -75,7 +76,7 @@ export const checkAndGenerateNotifications = async (userId: string) => {
         const title = `Aniversário: ${contact.name}`;
         if (!existingTitles.has(title)) {
           newNotifications.push({
-            ownerUid: userId,
+            userId,
             title,
             description: `Deseje um feliz aniversário para ${contact.name} hoje!`,
             type: 'contact',
@@ -90,7 +91,7 @@ export const checkAndGenerateNotifications = async (userId: string) => {
         const title = `Revisão próxima: ${contact.name}`;
         if (!existingTitles.has(title)) {
           newNotifications.push({
-            ownerUid: userId,
+            userId,
             title,
             description: `A próxima revisão de ${contact.name} está agendada para daqui a 3 dias (${contact.nextMaintenanceDate.split('-').reverse().join('/')}).`,
             type: 'os',
@@ -124,7 +125,7 @@ export const checkAndGenerateNotifications = async (userId: string) => {
           
         if (!existingTitles.has(title)) {
           newNotifications.push({
-            ownerUid: userId,
+            userId,
             title,
             description: `Despesa de ${amountStr} com vencimento ${isToday ? 'hoje' : 'amanhã'} (${trans.date.split('-').reverse().join('/')}).`,
             type: 'alert',

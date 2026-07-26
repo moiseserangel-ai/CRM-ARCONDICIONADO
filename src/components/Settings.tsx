@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, Upload, Trash2, Save, Globe, Mail, Call as Phone, LocationOn as MapPin, Users, UserPlus, Shield, Loader2, Edit2, X, Search, Eye, EyeOff, AlertTriangle, ChevronRight } from './Icons';
+import { Building2, Upload, Trash2, Save, Globe, Mail, Call as Phone, LocationOn as MapPin, Users, UserPlus, Shield, Loader2, Edit2, X, Search, AlertTriangle, ChevronRight } from './Icons';
 import { SystemUser, Settings as SettingsType, User } from '../types';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';
@@ -31,13 +31,11 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingUser, setEditingUser] = useState<SystemUser | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [userData, setUserData] = useState({
     name: '',
     email: '',
     username: '',
-    password: '',
     role: '',
     privilege: 'Técnico' as SystemUser['privilege'],
     status: 'Ativo' as SystemUser['status']
@@ -154,7 +152,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       }
       setShowUserModal(false);
       setEditingUser(null);
-      setUserData({ name: '', email: '', username: '', password: '', role: '', privilege: 'Técnico', status: 'Ativo' });
+      setUserData({ name: '', email: '', username: '', role: '', privilege: 'Técnico', status: 'Ativo' });
     } catch (error) {
       console.error('Error saving system user:', error);
     } finally {
@@ -182,7 +180,6 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       name: user.name,
       email: user.email,
       username: user.username || '',
-      password: user.password || '',
       role: user.role,
       privilege: user.privilege,
       status: user.status || 'Ativo'
@@ -449,7 +446,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                   <button 
                     onClick={() => {
                       setEditingUser(null);
-                      setUserData({ name: '', email: '', username: '', password: '', role: '', privilege: 'Técnico', status: 'Ativo' });
+                      setUserData({ name: '', email: '', username: '', role: '', privilege: 'Técnico', status: 'Ativo' });
                       setShowUserModal(true);
                     }}
                     className="px-8 py-4 milled-gradient text-white rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
@@ -631,25 +628,8 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                         className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 px-5 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-secondary/60 ml-1">Senha de Acesso</label>
-                      <div className="relative">
-                        <input 
-                          type={showPassword ? "text" : "password"} 
-                          required={!editingUser}
-                          value={userData.password || ''}
-                          onChange={(e) => setUserData(prev => ({ ...prev, password: e.target.value }))}
-                          placeholder={editingUser ? "Deixe em branco para manter" : "••••••••"}
-                          className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 pl-5 pr-14 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
-                        />
-                        <button 
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-5 top-1/2 -translate-y-1/2 text-secondary/40 hover:text-primary transition-colors"
-                        >
-                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                        </button>
-                      </div>
+                    <div className="rounded-2xl border border-primary/15 bg-primary/5 p-4 text-sm text-secondary">
+                      A senha não é armazenada pelo CRM. O acesso deve ser criado e redefinido com segurança pelo Supabase Auth.
                     </div>
                   </div>
 

@@ -54,14 +54,29 @@ export default function Integrations({ user }: IntegrationsProps) {
     const savedSettings = localStorage.getItem('@cardoso:integrations');
     if (savedSettings) {
       try {
-        setSettings({ ...defaultSettings, ...JSON.parse(savedSettings) });
+        const parsed = JSON.parse(savedSettings);
+        setSettings({
+          ...defaultSettings,
+          ...parsed,
+          n8n: { ...defaultSettings.n8n, ...parsed.n8n, token: '', password: '' },
+          sendgrid: { ...defaultSettings.sendgrid, ...parsed.sendgrid, apiKey: '' },
+          nodemailer: { ...defaultSettings.nodemailer, ...parsed.nodemailer, pass: '' },
+          chatwoot: { ...defaultSettings.chatwoot, ...parsed.chatwoot, apiAccessToken: '' }
+        });
       } catch (e) {}
     }
   }, []);
 
   const handleSave = () => {
     setSaving(true);
-    localStorage.setItem('@cardoso:integrations', JSON.stringify(settings));
+    const safeSettings = {
+      ...settings,
+      n8n: { ...settings.n8n, token: '', password: '' },
+      sendgrid: { ...settings.sendgrid, apiKey: '' },
+      nodemailer: { ...settings.nodemailer, pass: '' },
+      chatwoot: { ...settings.chatwoot, apiAccessToken: '' }
+    };
+    localStorage.setItem('@cardoso:integrations', JSON.stringify(safeSettings));
     
     setTimeout(() => {
       setSaving(false);
@@ -90,6 +105,9 @@ export default function Integrations({ user }: IntegrationsProps) {
       <div>
         <h1 className="text-3xl font-bold font-headline tracking-tight text-on-surface mb-2">Integrações</h1>
         <p className="text-secondary font-medium">Conecte sua conta a serviços externos (N8N, Email, Chatwoot).</p>
+        <p className="mt-2 text-sm text-tertiary">
+          Por segurança, tokens e senhas não são armazenados no navegador. A ativação definitiva exigirá uma função de backend.
+        </p>
       </div>
 
       <div className="flex border-b border-outline-variant/30 mb-6">
