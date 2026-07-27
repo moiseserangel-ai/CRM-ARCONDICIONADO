@@ -26,6 +26,7 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
   const [saving, setSaving] = useState(false);
   const [exportingBackup, setExportingBackup] = useState(false);
   const [backupMessage, setBackupMessage] = useState<string | null>(null);
+  const [lastBackupAt, setLastBackupAt] = useState<string | null>(null);
 
   // User Management State
   const [systemUsers, setSystemUsers] = useState<SystemUser[]>([]);
@@ -42,6 +43,19 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
     privilege: 'Técnico' as SystemUser['privilege'],
     status: 'Ativo' as SystemUser['status']
   });
+
+  useEffect(() => {
+    supabase
+      .from('backup_history')
+      .select('createdAt')
+      .eq('accountId', user.id)
+      .order('createdAt', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!error) setLastBackupAt(data?.createdAt || null);
+      });
+  }, [user.id]);
 
   useEffect(() => {
     if (activeSubTab === 'usuarios' && user) {
@@ -149,6 +163,8 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       );
 
       const generatedAt = new Date();
+      const fileName = `backup-crm-${generatedAt.toISOString().slice(0, 10)}.json`;
+      const recordCounts = Object.fromEntries(results.map(([table, rows]) => [table, rows.length]));
       const backup = {
         format: 'cardoso-ar-crm-backup',
         version: 1,
@@ -160,11 +176,19 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `backup-crm-${generatedAt.toISOString().slice(0, 10)}.json`;
+      link.download = fileName;
       document.body.appendChild(link);
       link.click();
       link.remove();
       URL.revokeObjectURL(url);
+      const { error: historyError } = await supabase.from('backup_history').insert({
+        accountId: user.id,
+        createdBy: user.authId || user.id,
+        fileName,
+        recordCounts
+      });
+      if (historyError) throw historyError;
+      setLastBackupAt(generatedAt.toISOString());
       setBackupMessage('Backup gerado e baixado com sucesso.');
     } catch (error: any) {
       console.error('Error exporting backup:', error);
@@ -247,7 +271,10 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
     (user.email || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
     (user.role || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
     (user.username || '').toLowerCase().includes(searchQuery.toLowerCase())
-  );  return (
+  );
+  const backupOverdue = !lastBackupAt || Date.now() - new Date(lastBackupAt).getTime() > 7 * 24 * 60 * 60 * 1000;
+
+  return (
     <div className="max-w-6xl mx-auto space-y-10 pb-20">
       {/* Header Section */}
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -406,6 +433,18 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                 </div>
               </section>
 
+              <div className={cn(
+                "p-4 rounded-2xl border flex items-center gap-3",
+                backupOverdue ? "bg-amber-50 border-amber-200 text-amber-800" : "bg-emerald-50 border-emerald-200 text-emerald-800"
+              )}>
+                <Shield className="w-5 h-5 shrink-0" />
+                <div>
+                  <p className="text-sm font-bold">{backupOverdue ? 'Backup semanal pendente' : 'Backup semanal em dia'}</p>
+                  <p className="text-xs opacity-80">
+                    {lastBackupAt ? `Último backup: ${new Date(lastBackupAt).toLocaleString('pt-BR')}` : 'Nenhum backup registrado. Baixe a primeira cópia agora.'}
+                  </p>
+                </div>
+              </div>
               <div className="flex flex-col sm:flex-row justify-end gap-4 pt-4">
                 <button
                   onClick={handleExportBackup}
