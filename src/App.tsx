@@ -22,6 +22,7 @@ const InvoiceForm = lazy(() => import('./components/InvoiceForm'));
 const Settings = lazy(() => import('./components/Settings'));
 const Integrations = lazy(() => import('./components/Integrations'));
 const Reports = lazy(() => import('./components/Reports'));
+const Activities = lazy(() => import('./components/Activities'));
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -435,6 +436,8 @@ export default function App() {
         return <Reports user={user} companyLogo={companyLogo} companyName={settings.companyName} settings={settings} />;
       case 'integrations':
         return <Integrations user={user} />;
+      case 'activities':
+        return <Activities user={user} />;
       case 'settings':
         return (
           <Settings 

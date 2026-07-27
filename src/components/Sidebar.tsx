@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Users, GitBranch, BarChart3, Settings, Plus, HelpCircle, LogOut, Package, Wallet, FileText, X, TrendingDown, Plug } from 'lucide-react';
+import { Activity, LayoutDashboard, Users, GitBranch, BarChart3, Settings, Plus, HelpCircle, LogOut, Package, Wallet, FileText, X, TrendingDown, Plug } from 'lucide-react';
 import { View } from '../types';
 import { cn } from '../lib/utils';
 
@@ -39,6 +39,7 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
     { id: 'pipeline', label: 'Pipeline', icon: GitBranch, roles: ['Admin', 'Vendedor', 'Visualizador'] },
     { id: 'reports', label: 'Relatórios', icon: BarChart3, roles: ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] },
     { id: 'integrations', label: 'Integrações', icon: Plug, roles: ['Admin'] },
+    { id: 'activities', label: 'Atividades', icon: Activity, roles: ['Admin'] },
     { id: 'settings', label: 'Configurações', icon: Settings, roles: ['Admin'] },
   ] as const;
 
