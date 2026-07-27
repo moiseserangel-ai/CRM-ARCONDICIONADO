@@ -122,6 +122,12 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
     const soChannel = supabase
       .channel('pipeline-so')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'serviceOrders' }, (payload) => {
+        const isRelevant =
+          (payload.new && (payload.new as ServiceOrder).userId === user.id) ||
+          (payload.old && (payload.old as ServiceOrder).userId === user.id);
+
+        if (!isRelevant) return;
+
         if (payload.eventType === 'INSERT') setServiceOrders(prev => {
           if (prev.some(so => so.id === payload.new.id)) return prev;
           return [payload.new as ServiceOrder, ...prev];

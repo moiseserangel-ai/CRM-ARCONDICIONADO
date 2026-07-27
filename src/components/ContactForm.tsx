@@ -20,7 +20,7 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
     email: '',
     phone: '',
     location: '',
-    status: 'Orçamento Enviado',
+    status: 'Em Negociação',
     portfolioValue: 'R$ 0,00',
     growth: '+0%',
     lastInteraction: new Date().toLocaleDateString('pt-BR', { month: 'short', day: 'numeric', year: 'numeric' }),
