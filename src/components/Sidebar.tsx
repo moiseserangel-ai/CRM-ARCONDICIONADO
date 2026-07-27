@@ -9,12 +9,13 @@ interface SidebarProps {
   onLogout: () => void;
   companyLogo: string | null;
   companyName: string;
+  privilege: 'Admin' | 'Técnico' | 'Vendedor' | 'Visualizador';
   onToggleDebug?: () => void;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function Sidebar({ currentView, onViewChange, onLogout, companyLogo, companyName, onToggleDebug, isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ currentView, onViewChange, onLogout, companyLogo, companyName, privilege, onToggleDebug, isOpen, onClose }: SidebarProps) {
   const [clickCount, setClickCount] = React.useState(0);
 
   const handleLogoClick = () => {
@@ -29,16 +30,16 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
     setTimeout(() => setClickCount(0), 2000);
   };
   const navItems = [
-    { id: 'dashboard', label: 'Painel', icon: LayoutDashboard },
-    { id: 'contacts', label: 'Cadastro', icon: Users },
-    { id: 'products', label: 'Produtos', icon: Package },
-    { id: 'finance', label: 'Finanças', icon: Wallet },
-    { id: 'expenses', label: 'Despesas', icon: TrendingDown },
-    { id: 'invoices', label: 'Notas Fiscais', icon: FileText },
-    { id: 'pipeline', label: 'Pipeline', icon: GitBranch },
-    { id: 'reports', label: 'Relatórios', icon: BarChart3 },
-    { id: 'integrations', label: 'Integrações', icon: Plug },
-    { id: 'settings', label: 'Configurações', icon: Settings },
+    { id: 'dashboard', label: 'Painel', icon: LayoutDashboard, roles: ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] },
+    { id: 'contacts', label: 'Cadastro', icon: Users, roles: ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] },
+    { id: 'products', label: 'Produtos', icon: Package, roles: ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] },
+    { id: 'finance', label: 'Finanças', icon: Wallet, roles: ['Admin', 'Vendedor', 'Visualizador'] },
+    { id: 'expenses', label: 'Despesas', icon: TrendingDown, roles: ['Admin', 'Vendedor', 'Visualizador'] },
+    { id: 'invoices', label: 'Notas Fiscais', icon: FileText, roles: ['Admin', 'Vendedor', 'Visualizador'] },
+    { id: 'pipeline', label: 'Pipeline', icon: GitBranch, roles: ['Admin', 'Vendedor', 'Visualizador'] },
+    { id: 'reports', label: 'Relatórios', icon: BarChart3, roles: ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] },
+    { id: 'integrations', label: 'Integrações', icon: Plug, roles: ['Admin'] },
+    { id: 'settings', label: 'Configurações', icon: Settings, roles: ['Admin'] },
   ] as const;
 
   return (
@@ -88,7 +89,7 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto">
-          {navItems.map((item) => {
+          {navItems.filter(item => (item.roles as readonly string[]).includes(privilege)).map((item) => {
             const isActive = currentView === item.id || 
                             (item.id === 'contacts' && (currentView === 'contact-detail' || currentView === 'contact-form')) ||
                             (item.id === 'products' && currentView === 'product-form') ||

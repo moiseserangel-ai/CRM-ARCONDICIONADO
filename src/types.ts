@@ -46,7 +46,10 @@ export interface PipelineCard {
 
 export interface User {
   id: string;
+  authId?: string;
   email?: string;
+  privilege?: 'Admin' | 'Técnico' | 'Vendedor' | 'Visualizador';
+  isOwner?: boolean;
   user_metadata?: {
     full_name?: string;
     avatar_url?: string;

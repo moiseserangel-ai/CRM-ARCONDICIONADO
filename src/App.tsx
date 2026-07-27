@@ -1,6 +1,6 @@
 import React, { lazy, Suspense, useState, useEffect } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
-import { View, Contact, Product, Transaction, Settings as SettingsType, Invoice } from './types';
+import { View, Contact, Product, Transaction, Settings as SettingsType, Invoice, User } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase, isSupabaseConfigured } from './lib/supabase';
 import { SmartToy, Loader2, Mail, Lock, User as UserIcon, Wind, Snowflake, AlertTriangle } from './components/Icons';
@@ -29,7 +29,7 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [companyLogo, setCompanyLogo] = useState<string | null>(localStorage.getItem('companyLogo'));
   const [settings, setSettings] = useState<SettingsType>({
@@ -52,6 +52,36 @@ export default function App() {
   const [loginError, setLoginError] = useState<string | null>(null);
 
   useEffect(() => {
+    const loadAuthenticatedUser = async (authUser: any) => {
+      if (!authUser) {
+        setUser(null);
+        setAuthReady(true);
+        return;
+      }
+
+      const { data, error } = await supabase.rpc('get_access_context');
+      const access = Array.isArray(data) ? data[0] : data;
+
+      if (error || !access?.account_id || access.status !== 'Ativo') {
+        console.error('Error loading access context:', error);
+        setLoginError('Seu usuário não está ativo ou ainda não foi vinculado a uma empresa.');
+        await supabase.auth.signOut();
+        setUser(null);
+        setAuthReady(true);
+        return;
+      }
+
+      setUser({
+        id: access.account_id,
+        authId: authUser.id,
+        email: authUser.email,
+        user_metadata: authUser.user_metadata,
+        privilege: access.privilege,
+        isOwner: access.is_owner
+      });
+      setAuthReady(true);
+    };
+
     // Check active sessions and subscribe to auth changes
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (error) {
@@ -67,8 +97,7 @@ export default function App() {
           });
         }
       }
-      setUser(session?.user ?? null);
-      setAuthReady(true);
+      void loadAuthenticatedUser(session?.user ?? null);
     }).catch(err => {
       console.error('Unexpected error getting session:', err);
       Object.keys(localStorage).forEach(key => {
@@ -91,7 +120,8 @@ export default function App() {
           }
         });
       } else {
-        setUser(session?.user ?? null);
+        setAuthReady(false);
+        void loadAuthenticatedUser(session?.user ?? null);
       }
       setAuthReady(true);
     });
@@ -202,7 +232,24 @@ export default function App() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const canAccessView = (view: View) => {
+    const privilege = user?.privilege || 'Visualizador';
+    if (privilege === 'Admin') return true;
+
+    const viewsByPrivilege: Record<Exclude<NonNullable<User['privilege']>, 'Admin'>, View[]> = {
+      'Técnico': ['dashboard', 'contacts', 'contact-detail', 'contact-form', 'products', 'reports'],
+      'Vendedor': ['dashboard', 'contacts', 'contact-detail', 'contact-form', 'products', 'finance', 'finance-form', 'expenses', 'expenses-form', 'invoices', 'invoice-form', 'pipeline', 'reports'],
+      'Visualizador': ['dashboard', 'contacts', 'contact-detail', 'products', 'finance', 'expenses', 'invoices', 'pipeline', 'reports']
+    };
+
+    return viewsByPrivilege[privilege].includes(view);
+  };
+
   const handleViewChange = (view: View) => {
+    if (!canAccessView(view)) {
+      showToast('Acesso Restrito', 'Seu perfil não possui permissão para acessar esta função.', 'error');
+      return;
+    }
     setCurrentView(view);
     setSelectedContact(null);
   };
@@ -213,41 +260,73 @@ export default function App() {
   };
 
   const handleEditContact = (contact: Contact) => {
+    if (!canAccessView('contact-form')) {
+      showToast('Acesso Restrito', 'Seu perfil permite apenas consultar os cadastros.', 'error');
+      return;
+    }
     setSelectedContact(contact);
     setCurrentView('contact-form');
   };
 
   const handleAddContact = () => {
+    if (!canAccessView('contact-form')) {
+      showToast('Acesso Restrito', 'Seu perfil permite apenas consultar os cadastros.', 'error');
+      return;
+    }
     setSelectedContact(null);
     setCurrentView('contact-form');
   };
 
   const handleAddProduct = () => {
+    if (!canAccessView('product-form')) {
+      showToast('Acesso Restrito', 'Somente administradores podem alterar produtos.', 'error');
+      return;
+    }
     setSelectedProduct(null);
     setCurrentView('product-form');
   };
 
   const handleEditProduct = (product: Product) => {
+    if (!canAccessView('product-form')) {
+      showToast('Acesso Restrito', 'Somente administradores podem alterar produtos.', 'error');
+      return;
+    }
     setSelectedProduct(product);
     setCurrentView('product-form');
   };
 
   const handleAddTransaction = () => {
+    if (!canAccessView('finance-form')) {
+      showToast('Acesso Restrito', 'Seu perfil permite apenas consultar as finanças.', 'error');
+      return;
+    }
     setSelectedTransaction(null);
     setCurrentView('finance-form');
   };
 
   const handleEditTransaction = (transaction: Transaction) => {
+    if (!canAccessView('finance-form')) {
+      showToast('Acesso Restrito', 'Seu perfil permite apenas consultar as finanças.', 'error');
+      return;
+    }
     setSelectedTransaction(transaction);
     setCurrentView('finance-form');
   };
 
   const handleAddInvoice = () => {
+    if (!canAccessView('invoice-form')) {
+      showToast('Acesso Restrito', 'Seu perfil permite apenas consultar as notas fiscais.', 'error');
+      return;
+    }
     setSelectedInvoice(null);
     setCurrentView('invoice-form');
   };
 
   const handleEditInvoice = (invoice: Invoice) => {
+    if (!canAccessView('invoice-form')) {
+      showToast('Acesso Restrito', 'Seu perfil permite apenas consultar as notas fiscais.', 'error');
+      return;
+    }
     setSelectedInvoice(invoice);
     setCurrentView('invoice-form');
   };
@@ -314,6 +393,9 @@ export default function App() {
 
   const renderView = () => {
     if (!user) return null;
+    if (!canAccessView(currentView)) {
+      return <Dashboard user={user} onSelectContact={handleSelectContact} onViewChange={handleViewChange} searchTerm={globalSearchTerm} />;
+    }
 
     switch (currentView) {
       case 'dashboard':
@@ -570,6 +652,17 @@ export default function App() {
             </button>
           </form>
 
+          <button
+            type="button"
+            onClick={() => {
+              setIsRegistering(value => !value);
+              setLoginError(null);
+            }}
+            className="mt-6 w-full text-sm font-bold text-primary hover:underline"
+          >
+            {isRegistering ? 'Já tenho uma conta' : 'Criar uma conta'}
+          </button>
+
           <p className="mt-10 text-xs text-secondary/40 font-bold uppercase tracking-widest text-center">Segurança de Nível Empresarial Ativada</p>
         </div>
       </div>
@@ -589,6 +682,7 @@ export default function App() {
         onLogout={() => supabase.auth.signOut()} 
         companyLogo={companyLogo}
         companyName={settings.companyName}
+        privilege={user.privilege || 'Visualizador'}
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
