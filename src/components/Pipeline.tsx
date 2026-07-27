@@ -849,6 +849,19 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                                   {getContactStats(contact.id).totalValue}
                                 </span>
                               </div>
+                              {stage !== 'FECHADO' && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAddOS(stage, contact);
+                                  }}
+                                  className="w-full mt-3 py-3 px-4 bg-primary text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow-md hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                                >
+                                  <PlusCircle className="w-4 h-4" />
+                                  Abrir Ordem de Serviço
+                                </button>
+                              )}
                             </div>
                           </motion.div>
                         )}
