@@ -272,7 +272,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
         <div className="flex items-center space-x-3">
           <div className="text-right hidden sm:block">
             <p className="text-xs font-bold text-on-surface leading-none">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário'}</p>
-            <p className="text-xs text-secondary font-medium mt-1">Admin</p>
+            <p className="text-xs text-secondary font-medium mt-1">{user?.privilege || 'Visualizador'}</p>
           </div>
           {user?.user_metadata?.avatar_url ? (
             <img

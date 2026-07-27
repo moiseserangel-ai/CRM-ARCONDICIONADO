@@ -15,6 +15,8 @@ interface PipelineProps {
 }
 
 export default function Pipeline({ user, onViewChange, onSelectContact, searchTerm = '' }: PipelineProps) {
+  const canCreateOS = ['Admin', 'Técnico', 'Vendedor'].includes(user.privilege || '');
+  const canFinalizeOS = ['Admin', 'Técnico'].includes(user.privilege || '');
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [serviceOrders, setServiceOrders] = useState<ServiceOrder[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -431,7 +433,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
         />
       )}
 
-      {showFinalizeModal && selectedContactForFinalize && (
+      {canFinalizeOS && showFinalizeModal && selectedContactForFinalize && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-6">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -849,7 +851,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                                   {getContactStats(contact.id).totalValue}
                                 </span>
                               </div>
-                              {stage !== 'FECHADO' && (
+                              {canCreateOS && stage !== 'FECHADO' && (
                                 <button
                                   type="button"
                                   onClick={(e) => {
@@ -908,29 +910,18 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                         </div>
 
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                          {stage !== 'FECHADO' && (
+                          {stage !== 'FECHADO' && (canCreateOS || canFinalizeOS) && (
                             <>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleAddOS(stage, contact);
-                                }}
-                                className="p-1.5 hover:bg-primary/10 rounded-lg text-primary transition-colors"
-                                title="Abrir OS"
-                              >
-                                <PlusCircle className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSelectedContactForFinalize(contact);
-                                  setShowFinalizeModal(true);
-                                }}
-                                className="p-1.5 hover:bg-emerald-50 rounded-lg text-emerald-600 transition-colors"
-                                title="Finalizar"
-                              >
-                                <CheckCircle2 className="w-4 h-4" />
-                              </button>
+                              {canCreateOS && (
+                                <button onClick={(e) => { e.stopPropagation(); handleAddOS(stage, contact); }} className="p-1.5 hover:bg-primary/10 rounded-lg text-primary transition-colors" title="Abrir OS">
+                                  <PlusCircle className="w-4 h-4" />
+                                </button>
+                              )}
+                              {canFinalizeOS && (
+                                <button onClick={(e) => { e.stopPropagation(); setSelectedContactForFinalize(contact); setShowFinalizeModal(true); }} className="p-1.5 hover:bg-emerald-50 rounded-lg text-emerald-600 transition-colors" title="Finalizar">
+                                  <CheckCircle2 className="w-4 h-4" />
+                                </button>
+                              )}
                             </>
                           )}
                           <div className="w-6 h-6 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
@@ -942,7 +933,7 @@ export default function Pipeline({ user, onViewChange, onSelectContact, searchTe
                   ))}
                 </AnimatePresence>
                 
-                {stage !== 'FECHADO' && (
+                {canCreateOS && stage !== 'FECHADO' && (
                   <motion.button 
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.98 }}

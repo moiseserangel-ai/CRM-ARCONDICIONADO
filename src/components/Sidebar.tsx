@@ -36,7 +36,7 @@ export default function Sidebar({ currentView, onViewChange, onLogout, companyLo
     { id: 'finance', label: 'Finanças', icon: Wallet, roles: ['Admin', 'Vendedor', 'Visualizador'] },
     { id: 'expenses', label: 'Despesas', icon: TrendingDown, roles: ['Admin', 'Vendedor', 'Visualizador'] },
     { id: 'invoices', label: 'Notas Fiscais', icon: FileText, roles: ['Admin', 'Vendedor', 'Visualizador'] },
-    { id: 'pipeline', label: 'Pipeline', icon: GitBranch, roles: ['Admin', 'Vendedor', 'Visualizador'] },
+    { id: 'pipeline', label: 'Pipeline', icon: GitBranch, roles: ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] },
     { id: 'reports', label: 'Relatórios', icon: BarChart3, roles: ['Admin', 'Técnico', 'Vendedor', 'Visualizador'] },
     { id: 'integrations', label: 'Integrações', icon: Plug, roles: ['Admin'] },
     { id: 'activities', label: 'Atividades', icon: Activity, roles: ['Admin'] },

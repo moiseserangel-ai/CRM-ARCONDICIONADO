@@ -257,7 +257,7 @@ export default function App() {
     if (privilege === 'Admin') return true;
 
     const viewsByPrivilege: Record<Exclude<NonNullable<User['privilege']>, 'Admin'>, View[]> = {
-      'Técnico': ['dashboard', 'contacts', 'contact-detail', 'contact-form', 'products', 'reports'],
+      'Técnico': ['dashboard', 'contacts', 'contact-detail', 'contact-form', 'products', 'pipeline', 'reports'],
       'Vendedor': ['dashboard', 'contacts', 'contact-detail', 'contact-form', 'products', 'finance', 'finance-form', 'expenses', 'expenses-form', 'invoices', 'invoice-form', 'pipeline', 'reports'],
       'Visualizador': ['dashboard', 'contacts', 'contact-detail', 'products', 'finance', 'expenses', 'invoices', 'pipeline', 'reports']
     };
