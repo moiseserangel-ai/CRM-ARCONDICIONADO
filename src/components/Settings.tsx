@@ -238,10 +238,10 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       };
 
       if (data.settings?.[0]) {
-        const { error } = await supabase.from('settings').upsert(
-          { ...data.settings[0], userId: user.id },
-          { onConflict: 'userId' }
-        );
+        const { error } = await supabase
+          .from('settings')
+          .update({ ...data.settings[0], userId: user.id })
+          .eq('userId', user.id);
         if (error) throw new Error(`settings: ${error.message}`);
       }
 
