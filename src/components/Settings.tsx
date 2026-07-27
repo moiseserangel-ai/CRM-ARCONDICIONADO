@@ -27,6 +27,9 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
   const [exportingBackup, setExportingBackup] = useState(false);
   const [backupMessage, setBackupMessage] = useState<string | null>(null);
   const [lastBackupAt, setLastBackupAt] = useState<string | null>(null);
+  const [restoreBackup, setRestoreBackup] = useState<any | null>(null);
+  const [restoreConfirmation, setRestoreConfirmation] = useState('');
+  const [restoring, setRestoring] = useState(false);
 
   // User Management State
   const [systemUsers, setSystemUsers] = useState<SystemUser[]>([]);
@@ -195,6 +198,68 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       setBackupMessage(`Não foi possível gerar o backup: ${error.message || 'erro desconhecido'}`);
     } finally {
       setExportingBackup(false);
+    }
+  };
+
+  const handleBackupFile = async (file?: File) => {
+    setRestoreBackup(null);
+    setRestoreConfirmation('');
+    if (!file) return;
+
+    try {
+      const parsed = JSON.parse(await file.text());
+      if (parsed?.format !== 'cardoso-ar-crm-backup' || parsed?.version !== 1 || !parsed?.data) {
+        throw new Error('Formato de backup inválido ou incompatível.');
+      }
+      if (parsed.accountId !== user.id) {
+        throw new Error('Este backup pertence a outra conta do CRM.');
+      }
+      setRestoreBackup(parsed);
+      setBackupMessage('Arquivo validado. Confira os totais antes de restaurar.');
+    } catch (error: any) {
+      setBackupMessage(`Backup recusado: ${error.message || 'arquivo inválido'}`);
+    }
+  };
+
+  const handleRestoreBackup = async () => {
+    if (!restoreBackup || restoreConfirmation !== 'RESTAURAR') return;
+    setRestoring(true);
+    setBackupMessage(null);
+
+    try {
+      const data = restoreBackup.data as Record<string, any[]>;
+      const restoreTable = async (table: string, rows: any[] = []) => {
+        if (!rows.length) return;
+        const normalized = rows.map(row => ({ ...row, userId: user.id }));
+        for (let index = 0; index < normalized.length; index += 250) {
+          const { error } = await supabase.from(table).upsert(normalized.slice(index, index + 250), { onConflict: 'id' });
+          if (error) throw new Error(`${table}: ${error.message}`);
+        }
+      };
+
+      if (data.settings?.[0]) {
+        const { error } = await supabase.from('settings').upsert(
+          { ...data.settings[0], userId: user.id },
+          { onConflict: 'userId' }
+        );
+        if (error) throw new Error(`settings: ${error.message}`);
+      }
+
+      await restoreTable('contacts', data.contacts);
+      await restoreTable('products', data.products);
+      await restoreTable('serviceOrders', data.serviceOrders);
+      await restoreTable('transactions', data.transactions);
+      await restoreTable('invoices', data.invoices);
+      await restoreTable('notifications', data.notifications);
+
+      setBackupMessage('Restauração concluída. Atualize a página para carregar os dados recuperados.');
+      setRestoreBackup(null);
+      setRestoreConfirmation('');
+    } catch (error: any) {
+      console.error('Error restoring backup:', error);
+      setBackupMessage(`Restauração interrompida: ${error.message || 'erro desconhecido'}`);
+    } finally {
+      setRestoring(false);
     }
   };
 
@@ -466,6 +531,50 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
               {backupMessage && (
                 <p className="text-sm text-secondary text-right">{backupMessage}</p>
               )}
+              <section className="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 space-y-4">
+                <div>
+                  <h4 className="font-bold text-on-surface">Restaurar backup</h4>
+                  <p className="text-xs text-secondary mt-1">Mescla o arquivo com os dados atuais sem excluir registros. Usuários e senhas não são restaurados.</p>
+                </div>
+                <input
+                  type="file"
+                  accept="application/json,.json"
+                  onChange={event => void handleBackupFile(event.target.files?.[0])}
+                  className="w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-primary/10 file:text-primary file:font-bold"
+                />
+                {restoreBackup && (
+                  <div className="bg-surface-container-low rounded-2xl p-5 space-y-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                      {Object.entries(restoreBackup.data as Record<string, any[]>)
+                        .filter(([table]) => table !== 'systemUsers')
+                        .map(([table, rows]) => (
+                          <div key={table} className="bg-surface-container-lowest rounded-xl p-3">
+                            <p className="text-secondary">{table}</p>
+                            <p className="font-bold text-on-surface text-lg">{Array.isArray(rows) ? rows.length : 0}</p>
+                          </div>
+                        ))}
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-secondary">Digite RESTAURAR para confirmar</label>
+                      <input
+                        value={restoreConfirmation}
+                        onChange={event => setRestoreConfirmation(event.target.value)}
+                        className="mt-2 w-full bg-surface-container-lowest rounded-xl px-4 py-3 outline-none"
+                        placeholder="RESTAURAR"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRestoreBackup}
+                      disabled={restoreConfirmation !== 'RESTAURAR' || restoring}
+                      className="w-full py-3 bg-primary text-white rounded-xl font-bold disabled:opacity-40 flex items-center justify-center gap-2"
+                    >
+                      {restoring && <Loader2 className="w-4 h-4 animate-spin" />}
+                      {restoring ? 'Restaurando...' : 'Restaurar dados'}
+                    </button>
+                  </div>
+                )}
+              </section>
             </div>
 
             {/* Logo Bento Card */}
