@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, Upload, Trash2, Save, Globe, Mail, Call as Phone, LocationOn as MapPin, Users, UserPlus, Shield, Loader2, Edit2, X, Search, AlertTriangle, ChevronRight } from './Icons';
+import { Building2, Upload, Download, Trash2, Save, Globe, Mail, Call as Phone, LocationOn as MapPin, Users, UserPlus, Shield, Loader2, Edit2, X, Search, AlertTriangle, ChevronRight } from './Icons';
 import { SystemUser, Settings as SettingsType, User } from '../types';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';
@@ -24,6 +24,8 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
   const [address, setAddress] = useState(settings.address);
   const [website, setWebsite] = useState(settings.website);
   const [saving, setSaving] = useState(false);
+  const [exportingBackup, setExportingBackup] = useState(false);
+  const [backupMessage, setBackupMessage] = useState<string | null>(null);
 
   // User Management State
   const [systemUsers, setSystemUsers] = useState<SystemUser[]>([]);
@@ -116,6 +118,59 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleExportBackup = async () => {
+    setExportingBackup(true);
+    setBackupMessage(null);
+
+    try {
+      const tables = [
+        'settings',
+        'contacts',
+        'products',
+        'serviceOrders',
+        'transactions',
+        'invoices',
+        'systemUsers',
+        'notifications'
+      ] as const;
+
+      const results = await Promise.all(
+        tables.map(async table => {
+          const { data, error } = await supabase
+            .from(table)
+            .select('*')
+            .eq('userId', user.id);
+          if (error) throw new Error(`${table}: ${error.message}`);
+          return [table, data || []] as const;
+        })
+      );
+
+      const generatedAt = new Date();
+      const backup = {
+        format: 'cardoso-ar-crm-backup',
+        version: 1,
+        generatedAt: generatedAt.toISOString(),
+        accountId: user.id,
+        data: Object.fromEntries(results)
+      };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `backup-crm-${generatedAt.toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setBackupMessage('Backup gerado e baixado com sucesso.');
+    } catch (error: any) {
+      console.error('Error exporting backup:', error);
+      setBackupMessage(`Não foi possível gerar o backup: ${error.message || 'erro desconhecido'}`);
+    } finally {
+      setExportingBackup(false);
     }
   };
 
@@ -351,7 +406,15 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                 </div>
               </section>
 
-              <div className="flex justify-end pt-4">
+              <div className="flex flex-col sm:flex-row justify-end gap-4 pt-4">
+                <button
+                  onClick={handleExportBackup}
+                  disabled={exportingBackup}
+                  className="bg-surface-container-lowest text-primary border border-primary/20 px-8 py-4 rounded-2xl font-bold text-sm uppercase tracking-widest shadow-sm hover:bg-primary/5 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                >
+                  {exportingBackup ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
+                  {exportingBackup ? 'Gerando...' : 'Baixar Backup'}
+                </button>
                 <button 
                   onClick={handleSave}
                   disabled={saving}
@@ -361,6 +424,9 @@ export default function Settings({ user, companyLogo, onLogoChange, settings, on
                   {saving ? 'Salvando...' : 'Salvar Alterações'}
                 </button>
               </div>
+              {backupMessage && (
+                <p className="text-sm text-secondary text-right">{backupMessage}</p>
+              )}
             </div>
 
             {/* Logo Bento Card */}
