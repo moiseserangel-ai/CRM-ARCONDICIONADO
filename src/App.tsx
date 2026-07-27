@@ -229,8 +229,27 @@ export default function App() {
 
   const showToast = (message: string, subtext: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, subtext, type });
-    setTimeout(() => setToast(null), 3000);
+    setTimeout(() => setToast(null), 4000);
   };
+
+  useEffect(() => {
+    const nativeAlert = window.alert;
+
+    window.alert = (value?: any) => {
+      const text = String(value ?? '');
+      const isError = /erro|inválid|insuficiente|não foi possível/i.test(text);
+      const isSuccess = /sucesso|atualizad|finalizad|aberta/i.test(text);
+      showToast(
+        isError ? 'Não foi possível concluir' : isSuccess ? 'Operação concluída' : 'Atenção',
+        text,
+        isError ? 'error' : 'success'
+      );
+    };
+
+    return () => {
+      window.alert = nativeAlert;
+    };
+  }, []);
 
   const canAccessView = (view: View) => {
     const privilege = user?.privilege || 'Visualizador';
