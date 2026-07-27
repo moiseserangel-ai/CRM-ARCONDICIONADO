@@ -102,7 +102,11 @@ export default function ContactForm({ user, contact, onBack, onSuccess }: Contac
     try {
       const data = {
         ...formData,
-        userId: user.id
+        userId: user.id,
+        birthDate: formData.birthDate || null,
+        installationDate: formData.installationDate || null,
+        lastMaintenanceDate: formData.lastMaintenanceDate || null,
+        nextMaintenanceDate: formData.nextMaintenanceDate || null
       };
       
       // Merge address into location since address column is missing in DB
