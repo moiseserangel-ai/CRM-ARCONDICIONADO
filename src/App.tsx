@@ -3,7 +3,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { View, Contact, Product, Transaction, Settings as SettingsType, Invoice, User } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase, isSupabaseConfigured } from './lib/supabase';
-import { SmartToy, Loader2, Mail, Lock, User as UserIcon, Wind, Snowflake, AlertTriangle } from './components/Icons';
+import { SmartToy, Loader2, Mail, Lock, User as UserIcon, Wind, Snowflake, AlertTriangle, Eye, EyeOff, ShieldCheck, CheckCircle, BarChart3, Users } from './components/Icons';
 import { cn } from './lib/utils';
 
 const Sidebar = lazy(() => import('./components/Sidebar'));
@@ -48,6 +48,7 @@ export default function App() {
   // Login Form State
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
@@ -573,8 +574,22 @@ export default function App() {
       }
     } catch (err: any) {
       console.error(err);
-      setLoginError(err.message || 'Ocorreu um erro ao processar sua solicitação.');
-      showToast('Erro de Acesso', 'Verifique suas credenciais.', 'error');
+      const authMessage = String(err?.message || '').toLowerCase();
+      const friendlyMessage =
+        authMessage.includes('invalid login credentials')
+          ? 'E-mail ou senha inválidos.'
+          : authMessage.includes('email not confirmed')
+            ? 'Confirme seu e-mail antes de entrar.'
+            : authMessage.includes('user already registered')
+              ? 'Este e-mail já possui uma conta.'
+              : authMessage.includes('password should be at least')
+                ? 'A senha deve ter pelo menos 6 caracteres.'
+                : authMessage.includes('email rate limit exceeded')
+                  ? 'Limite de envio de e-mails atingido. Tente novamente mais tarde.'
+                  : err?.message || 'Ocorreu um erro ao processar sua solicitação.';
+
+      setLoginError(friendlyMessage);
+      showToast('Erro de Acesso', friendlyMessage, 'error');
     } finally {
       setLoginLoading(false);
     }
@@ -593,99 +608,128 @@ export default function App() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center p-6 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-surface to-surface">
-        <div className="max-w-md w-full bg-surface-container-lowest p-10 rounded-3xl shadow-2xl border border-outline-variant/10">
-          <div className="text-center mb-10">
-            <div className="w-24 h-24 bg-primary/5 rounded-3xl flex items-center justify-center mx-auto mb-8 overflow-hidden border border-outline-variant/10 relative">
-              {companyLogo ? (
-                <img 
-                  src={companyLogo} 
-                  alt="Cardoso Ar Condicionado" 
-                  className="w-full h-full object-contain p-2" 
-                  referrerPolicy="no-referrer" 
-                />
-              ) : (
-                <div className="flex flex-col items-center relative">
-                  <div className="absolute -top-1 -right-1">
-                    <Snowflake className="w-4 h-4 text-primary/30 animate-pulse" />
-                  </div>
-                  <Wind className="w-12 h-12 text-primary" />
-                  <span className="text-xs font-bold text-primary/60 uppercase tracking-tighter mt-1">Cardoso AR</span>
-                </div>
-              )}
-            </div>
-            <h1 className="text-3xl font-bold font-headline tracking-tight text-on-surface mb-2">{settings.companyName}</h1>
-            <p className="text-secondary text-sm font-medium">Gestão de Vendas e Manutenção</p>
-          </div>
-
-          {!isSupabaseConfigured && (
-            <div className="mb-6 p-4 bg-error/10 border border-error/20 rounded-2xl flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-error shrink-0 mt-0.5" />
+      <div className="min-h-[100dvh] lg:h-[100dvh] lg:overflow-hidden bg-surface p-3 sm:p-5">
+        <div className="h-full max-w-7xl mx-auto grid lg:grid-cols-[1.15fr_0.85fr] rounded-[2rem] overflow-hidden bg-surface-container-lowest shadow-2xl border border-outline-variant/10">
+          <section className="relative hidden lg:flex flex-col justify-between overflow-hidden p-10 xl:p-14 text-white bg-gradient-to-br from-[#063b65] via-[#075985] to-[#0891b2]">
+            <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_75%_20%,white,transparent_28%),radial-gradient(circle_at_15%_85%,#67e8f9,transparent_35%)]" />
+            <div className="absolute -right-24 top-20 w-80 h-80 rounded-full border border-white/10" />
+            <div className="absolute -right-8 top-36 w-52 h-52 rounded-full border border-white/10" />
+            <div className="relative z-10 flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 backdrop-blur flex items-center justify-center overflow-hidden">
+                {companyLogo ? <img src={companyLogo} alt="" className="w-full h-full object-contain p-1" /> : <Wind className="w-7 h-7" />}
+              </div>
               <div>
-                <h3 className="text-sm font-bold text-error mb-1">Configuração Ausente</h3>
-                <p className="text-xs text-error/80">
-                  As credenciais do Supabase não foram encontradas. Por favor, configure as variáveis de ambiente <code className="bg-error/10 px-1 rounded">VITE_SUPABASE_URL</code> e <code className="bg-error/10 px-1 rounded">VITE_SUPABASE_ANON_KEY</code> no menu de configurações (Secrets).
+                <p className="font-bold text-lg leading-tight">{settings.companyName}</p>
+                <p className="text-xs text-cyan-100 uppercase tracking-[0.22em]">Gestão HVAC</p>
+              </div>
+            </div>
+
+            <div className="relative z-10 max-w-xl">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/15 text-xs font-bold uppercase tracking-widest mb-6">
+                <Snowflake className="w-4 h-4" /> Operação inteligente
+              </span>
+              <h1 className="text-4xl xl:text-5xl font-headline font-bold leading-[1.08] tracking-tight">
+                Gestão completa para empresas de climatização.
+              </h1>
+              <p className="mt-5 text-base xl:text-lg text-cyan-50/80 leading-relaxed max-w-lg">
+                Centralize clientes, ordens de serviço, estoque, equipe e resultados em uma única operação.
+              </p>
+              <div className="grid grid-cols-2 gap-3 mt-8">
+                {[
+                  ['Clientes e Pipeline', Users],
+                  ['Ordens de Serviço', CheckCircle],
+                  ['Estoque e Financeiro', BarChart3],
+                  ['Equipe e Permissões', ShieldCheck]
+                ].map(([label, Icon]: any) => (
+                  <div key={label} className="flex items-center gap-3 p-3.5 rounded-2xl bg-white/[0.08] border border-white/10 backdrop-blur-sm">
+                    <Icon className="w-5 h-5 text-cyan-200 shrink-0" />
+                    <span className="text-sm font-semibold">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative z-10 flex items-center gap-3 text-xs text-cyan-100/80">
+              <ShieldCheck className="w-5 h-5" />
+              <span>Dados protegidos, acesso por perfil e histórico de atividades.</span>
+            </div>
+          </section>
+
+          <section className="flex items-center justify-center p-6 sm:p-10 xl:p-14 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-surface-container-lowest to-surface-container-lowest">
+            <div className="w-full max-w-md">
+              <div className="lg:hidden flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center overflow-hidden">
+                  {companyLogo ? <img src={companyLogo} alt="" className="w-full h-full object-contain p-1" /> : <Wind className="w-6 h-6 text-primary" />}
+                </div>
+                <div>
+                  <p className="font-bold text-on-surface">{settings.companyName}</p>
+                  <p className="text-xs text-secondary">Gestão de Vendas e Manutenção</p>
+                </div>
+              </div>
+
+              <div className="mb-8">
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary mb-3">{isRegistering ? 'Novo acesso' : 'Área segura'}</p>
+                <h2 className="text-3xl sm:text-4xl font-headline font-bold text-on-surface tracking-tight">
+                  {isRegistering ? 'Crie sua conta' : 'Bem-vindo de volta'}
+                </h2>
+                <p className="text-secondary mt-3">
+                  {isRegistering ? 'Use o mesmo e-mail cadastrado pelo administrador.' : 'Entre para continuar gerenciando sua operação.'}
                 </p>
               </div>
-            </div>
-          )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">E-mail</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
-                <input 
-                  type="email" 
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
-                  className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-3.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                />
+              <div className="lg:hidden flex gap-2 mb-6 text-xs text-secondary">
+                <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
+                Acesso protegido e permissões por perfil.
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-secondary ml-1">Senha</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50" />
-                <input 
-                  type="password" 
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-3.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                />
+              {!isSupabaseConfigured && (
+                <div className="mb-5 p-4 bg-error/10 border border-error/20 rounded-2xl flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-error shrink-0" />
+                  <p className="text-xs text-error">As credenciais do Supabase não estão configuradas neste ambiente.</p>
+                </div>
+              )}
+
+              <form onSubmit={handleLogin} className="space-y-5">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-secondary ml-1">E-mail</label>
+                  <div className="relative">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/45" />
+                    <input type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com" className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/25 transition-all text-on-surface" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-secondary ml-1">Senha</label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary/45" />
+                    <input type={showPassword ? 'text' : 'password'} required minLength={6} autoComplete={isRegistering ? 'new-password' : 'current-password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-surface-container-low border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/25 transition-all text-on-surface" />
+                    <button type="button" onClick={() => setShowPassword(value => !value)} className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary hover:text-primary transition-colors" aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}>
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+                </div>
+
+                {loginError && (
+                  <div className="p-3.5 bg-error/10 border border-error/15 rounded-xl text-xs text-error font-medium">{loginError}</div>
+                )}
+
+                <button type="submit" disabled={loginLoading || !isSupabaseConfigured} className="w-full py-4 milled-gradient text-white rounded-2xl font-bold shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:translate-y-0">
+                  {loginLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isRegistering ? 'Criar minha conta' : 'Entrar no CRM')}
+                </button>
+              </form>
+
+              <div className="mt-6 pt-6 border-t border-outline-variant/15 text-center">
+                <p className="text-sm text-secondary">
+                  {isRegistering ? 'Já possui acesso?' : 'Primeiro acesso?'}
+                  <button type="button" onClick={() => { setIsRegistering(value => !value); setLoginError(null); }} className="ml-2 font-bold text-primary hover:underline">
+                    {isRegistering ? 'Entrar' : 'Criar uma conta'}
+                  </button>
+                </p>
               </div>
+
+              <p className="mt-7 text-xs text-secondary/60 text-center">Sessão protegida e encerrada automaticamente após inatividade.</p>
             </div>
-
-            {loginError && (
-              <p className="text-xs text-error font-medium px-1">{loginError}</p>
-            )}
-
-            <button 
-              type="submit"
-              disabled={loginLoading || !isSupabaseConfigured}
-              className="w-full py-4 milled-gradient text-white rounded-2xl font-bold shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-            >
-              {loginLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isRegistering ? 'Criar Conta' : 'Entrar no Sistema')}
-            </button>
-          </form>
-
-          <button
-            type="button"
-            onClick={() => {
-              setIsRegistering(value => !value);
-              setLoginError(null);
-            }}
-            className="mt-6 w-full text-sm font-bold text-primary hover:underline"
-          >
-            {isRegistering ? 'Já tenho uma conta' : 'Criar uma conta'}
-          </button>
-
-          <p className="mt-10 text-xs text-secondary/40 font-bold uppercase tracking-widest text-center">Segurança de Nível Empresarial Ativada</p>
+          </section>
         </div>
       </div>
     );
