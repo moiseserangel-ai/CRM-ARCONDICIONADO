@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, FileText, Download, Trash2, MoreVertical, ExternalLink, AlertCircle, Printer, Loader2 } from 'lucide-react';
+import { Plus, Search, Filter, FileText, Download, Trash2, MoreVertical, ExternalLink, AlertCircle, Printer, Loader2, Settings2, ShieldCheck } from 'lucide-react';
 import { Invoice, User } from '../types';
 import { supabase } from '../lib/supabase';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 import { generateInvoicePDF } from '../lib/pdf-utils';
+import FiscalSettingsWizard from './FiscalSettingsWizard';
 
 interface InvoicesProps {
   user: User;
@@ -22,6 +23,7 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
   const [filterType, setFilterType] = useState<'Todos' | 'Produto' | 'Serviço'>('Todos');
   const [invoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [showFiscalSettings, setShowFiscalSettings] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -253,13 +255,34 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
           <h2 className="text-3xl font-bold font-headline tracking-tight text-on-surface">Notas Fiscais</h2>
           <p className="text-secondary font-medium">Gerencie suas emissões de produtos e serviços</p>
         </div>
-        <button
-          onClick={onAddInvoice}
-          className="milled-gradient text-white px-6 py-3 rounded-2xl font-bold shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Emitir Nova Nota
-        </button>
+        <div className="flex flex-wrap gap-3">
+          {user.privilege === 'Admin' && (
+            <button
+              onClick={() => setShowFiscalSettings(true)}
+              className="bg-surface-container-lowest text-primary border border-primary/15 px-5 py-3 rounded-2xl font-bold hover:bg-primary/5 transition-all flex items-center gap-2"
+            >
+              <Settings2 className="w-5 h-5" />
+              Configuração Fiscal
+            </button>
+          )}
+          <button
+            onClick={onAddInvoice}
+            className="milled-gradient text-white px-6 py-3 rounded-2xl font-bold shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            Emitir Nova Nota
+          </button>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-3 p-4 rounded-2xl bg-primary/5 border border-primary/10">
+        <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+        <div>
+          <p className="text-sm font-bold text-on-surface">Documentos internos do CRM</p>
+          <p className="text-xs text-secondary mt-1">
+            Uma nota só terá validade fiscal após autorização pelo Portal Nacional ou por um provedor fiscal conectado.
+          </p>
+        </div>
       </div>
 
       <div className="flex items-center gap-4 bg-surface-container-low p-2 rounded-2xl border border-outline-variant/10">
@@ -424,6 +447,10 @@ export default function Invoices({ user, onAddInvoice, onEditInvoice, searchTerm
             </div>
           </div>
         </div>
+      )}
+
+      {showFiscalSettings && user.privilege === 'Admin' && (
+        <FiscalSettingsWizard user={user} onClose={() => setShowFiscalSettings(false)} />
       )}
     </div>
   );
