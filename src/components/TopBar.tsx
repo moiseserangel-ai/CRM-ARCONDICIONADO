@@ -26,11 +26,12 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
       // First generate any pending system notifications (birthdays, maintenance)
       await checkAndGenerateNotifications(user.id);
       
-      // Then fetch all notifications
+      // Then fetch unread notifications
       const { data, error } = await supabase
         .from('notifications')
         .select('*')
         .eq('userId', user.id)
+        .eq('read', false)
         .order('createdAt', { ascending: false })
         .limit(20);
 
@@ -58,6 +59,7 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
             .from('notifications')
             .select('*')
             .eq('userId', user.id)
+            .eq('read', false)
             .order('createdAt', { ascending: false })
             .limit(20)
             .then(({ data, error }) => {
@@ -85,15 +87,40 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
   }, []);
 
   const markAsRead = async (id: string) => {
+    const previousNotifications = notifications;
+    setNotifications(current => current.filter(notification => notification.id !== id));
+
     try {
       const { error } = await supabase
         .from('notifications')
         .update({ read: true })
-        .eq('id', id);
+        .eq('id', id)
+        .eq('userId', user?.id);
       
       if (error) throw error;
     } catch (error) {
+      setNotifications(previousNotifications);
       console.error('Error marking notification as read:', error);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    if (!user || notifications.length === 0) return;
+
+    const previousNotifications = notifications;
+    setNotifications([]);
+
+    try {
+      const { error } = await supabase
+        .from('notifications')
+        .update({ read: true })
+        .eq('userId', user.id)
+        .eq('read', false);
+
+      if (error) throw error;
+    } catch (error) {
+      setNotifications(previousNotifications);
+      console.error('Error marking all notifications as read:', error);
     }
   };
 
@@ -173,7 +200,15 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
                 >
                   <div className="p-4 border-bottom border-outline-variant/10 flex items-center justify-between bg-surface-container-low/30">
                     <h3 className="text-sm font-bold text-on-surface">Notificações</h3>
-                    <span className="text-xs font-semibold text-secondary uppercase tracking-wider">{unreadCount} não lidas</span>
+                    {unreadCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={markAllAsRead}
+                        className="text-xs font-bold text-primary hover:underline"
+                      >
+                        Ler todas
+                      </button>
+                    )}
                   </div>
 
                   <div className="max-h-[400px] overflow-y-auto">
@@ -211,19 +246,19 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
                               </div>
                             </div>
                             
-                            <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              {!notification.read && (
-                                <button 
-                                  onClick={() => markAsRead(notification.id)}
-                                  className="p-1.5 bg-white shadow-sm rounded-lg text-secondary hover:text-green-500 transition-colors"
-                                  title="Marcar como lida"
-                                >
-                                  <Check className="w-3 h-3" />
-                                </button>
-                              )}
+                            <div className="mt-3 ml-11 flex items-center justify-between gap-2">
+                              <button
+                                type="button"
+                                onClick={() => markAsRead(notification.id)}
+                                className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline"
+                              >
+                                <Check className="w-3.5 h-3.5" />
+                                Marcar como lida
+                              </button>
                               <button 
+                                type="button"
                                 onClick={() => deleteNotification(notification.id)}
-                                className="p-1.5 bg-white shadow-sm rounded-lg text-secondary hover:text-error transition-colors"
+                                className="p-1.5 rounded-lg text-secondary hover:text-error hover:bg-error/10 transition-colors"
                                 title="Remover"
                               >
                                 <Trash2 className="w-3 h-3" />
@@ -242,13 +277,6 @@ export default function TopBar({ user, searchTerm, onSearchChange, onMenuToggle 
                     )}
                   </div>
 
-                  {notifications.length > 0 && (
-                    <div className="p-3 bg-surface-container-low/30 border-t border-outline-variant/10 text-center">
-                      <button className="text-xs font-bold text-primary uppercase tracking-widest hover:underline">
-                        Ver tudo
-                      </button>
-                    </div>
-                  )}
                 </motion.div>
               )}
             </AnimatePresence>
